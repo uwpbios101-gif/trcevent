@@ -9,33 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VenuesRouteImport } from './routes/venues'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as EventsRouteImport } from './routes/events'
-import { Route as DjsRouteImport } from './routes/djs'
+import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as VenueSlugRouteImport } from './routes/venue.$slug'
-import { Route as EventSlugRouteImport } from './routes/event.$slug'
-import { Route as DjSlugRouteImport } from './routes/dj.$slug'
 
-const VenuesRoute = VenuesRouteImport.update({
-  id: '/venues',
-  path: '/venues',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EventsRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DjsRoute = DjsRouteImport.update({
-  id: '/djs',
-  path: '/djs',
+const CharlyBlackRoute = CharlyBlackRouteImport.update({
+  id: '/charly-black',
+  path: '/charly-black',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,106 +28,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VenueSlugRoute = VenueSlugRouteImport.update({
-  id: '/venue/$slug',
-  path: '/venue/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EventSlugRoute = EventSlugRouteImport.update({
-  id: '/event/$slug',
-  path: '/event/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DjSlugRoute = DjSlugRouteImport.update({
-  id: '/dj/$slug',
-  path: '/dj/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/djs': typeof DjsRoute
-  '/events': typeof EventsRoute
+  '/charly-black': typeof CharlyBlackRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/venues': typeof VenuesRoute
-  '/dj/$slug': typeof DjSlugRoute
-  '/event/$slug': typeof EventSlugRoute
-  '/venue/$slug': typeof VenueSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/djs': typeof DjsRoute
-  '/events': typeof EventsRoute
+  '/charly-black': typeof CharlyBlackRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/venues': typeof VenuesRoute
-  '/dj/$slug': typeof DjSlugRoute
-  '/event/$slug': typeof EventSlugRoute
-  '/venue/$slug': typeof VenueSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/djs': typeof DjsRoute
-  '/events': typeof EventsRoute
+  '/charly-black': typeof CharlyBlackRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/venues': typeof VenuesRoute
-  '/dj/$slug': typeof DjSlugRoute
-  '/event/$slug': typeof EventSlugRoute
-  '/venue/$slug': typeof VenueSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/djs'
-    | '/events'
-    | '/sitemap.xml'
-    | '/venues'
-    | '/dj/$slug'
-    | '/event/$slug'
-    | '/venue/$slug'
+  fullPaths: '/' | '/charly-black' | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/djs'
-    | '/events'
-    | '/sitemap.xml'
-    | '/venues'
-    | '/dj/$slug'
-    | '/event/$slug'
-    | '/venue/$slug'
-  id:
-    | '__root__'
-    | '/'
-    | '/djs'
-    | '/events'
-    | '/sitemap.xml'
-    | '/venues'
-    | '/dj/$slug'
-    | '/event/$slug'
-    | '/venue/$slug'
+  to: '/' | '/charly-black' | '/sitemap.xml'
+  id: '__root__' | '/' | '/charly-black' | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DjsRoute: typeof DjsRoute
-  EventsRoute: typeof EventsRoute
+  CharlyBlackRoute: typeof CharlyBlackRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  VenuesRoute: typeof VenuesRoute
-  DjSlugRoute: typeof DjSlugRoute
-  EventSlugRoute: typeof EventSlugRoute
-  VenueSlugRoute: typeof VenueSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/venues': {
-      id: '/venues'
-      path: '/venues'
-      fullPath: '/venues'
-      preLoaderRoute: typeof VenuesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -150,18 +68,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/djs': {
-      id: '/djs'
-      path: '/djs'
-      fullPath: '/djs'
-      preLoaderRoute: typeof DjsRouteImport
+    '/charly-black': {
+      id: '/charly-black'
+      path: '/charly-black'
+      fullPath: '/charly-black'
+      preLoaderRoute: typeof CharlyBlackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -171,39 +82,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/venue/$slug': {
-      id: '/venue/$slug'
-      path: '/venue/$slug'
-      fullPath: '/venue/$slug'
-      preLoaderRoute: typeof VenueSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/event/$slug': {
-      id: '/event/$slug'
-      path: '/event/$slug'
-      fullPath: '/event/$slug'
-      preLoaderRoute: typeof EventSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dj/$slug': {
-      id: '/dj/$slug'
-      path: '/dj/$slug'
-      fullPath: '/dj/$slug'
-      preLoaderRoute: typeof DjSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DjsRoute: DjsRoute,
-  EventsRoute: EventsRoute,
+  CharlyBlackRoute: CharlyBlackRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  VenuesRoute: VenuesRoute,
-  DjSlugRoute: DjSlugRoute,
-  EventSlugRoute: EventSlugRoute,
-  VenueSlugRoute: VenueSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

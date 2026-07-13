@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { djs, venues, publishedEvents } from "@/data/trc";
 
 const BASE_URL = "";
 
@@ -16,12 +15,7 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
-          { path: "/events", changefreq: "daily", priority: "0.9" },
-          { path: "/djs", changefreq: "weekly", priority: "0.8" },
-          { path: "/venues", changefreq: "weekly", priority: "0.8" },
-          ...publishedEvents().map((e) => ({ path: `/event/${e.slug}`, changefreq: "weekly" as const, priority: "0.7" })),
-          ...djs.map((d) => ({ path: `/dj/${d.slug}`, changefreq: "monthly" as const, priority: "0.6" })),
-          ...venues.map((v) => ({ path: `/venue/${v.slug}`, changefreq: "monthly" as const, priority: "0.6" })),
+          { path: "/charly-black", changefreq: "daily", priority: "1.0" },
         ];
 
         const urls = entries.map((e) =>
