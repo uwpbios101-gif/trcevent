@@ -2,7 +2,7 @@
 // site is currently this one event page, rendered at both "/" and "/charly-black" (no
 // runtime redirect, since the static-exported build has no server to redirect at request
 // time). The "-" prefix excludes this file from route generation (TanStack Router convention).
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CalendarDays,
   Clock,
@@ -157,49 +157,26 @@ function FlyerFlipper() {
   );
 }
 
-// min-width: 640px matches Tailwind's `sm` breakpoint, which is where the photos switch
-// from a 3-across row to a stacked column next to the flyer.
-function useIsDesktopGallery() {
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const mql = window.matchMedia("(min-width: 640px)");
-    const update = () => setIsDesktop(mql.matches);
-    update();
-    mql.addEventListener("change", update);
-    return () => mql.removeEventListener("change", update);
-  }, []);
-  return isDesktop;
-}
-
-// The 3 stacked photos must match the flyer's rendered height exactly. A pure-CSS
-// percentage-height chain doesn't work here — `height: 100%` resolves against an
-// "auto" grid row and falls back to each photo's own natural aspect ratio, which is
-// why they previously ran taller than the flyer. Measuring the flyer's real pixel
-// height via ResizeObserver and applying it directly sidesteps that.
+// The 3 stacked photos must match the flyer's rendered height exactly, with zero JS
+// (no ResizeObserver/measurement — that was fragile across hydration/prerendering and
+// kept regressing). Solved with pure CSS instead, via a fixed aspect-ratio derived
+// algebraically from the two things that determine the flyer's height:
+//   - the grid gives the flyer column 1.6x the width of the photo column
+//     (sm:grid-cols-[1fr_1.6fr]), a ratio that holds at any container width
+//   - the flyer itself is a fixed aspect-[3/4] (width:height), so its height is
+//     always (flyer column width) * 4/3
+// So: photoColumnWidth : flyerHeight = 1 : (1.6 * 4/3) = 1 : 32/15 = 15:32.
+// Giving the photo-stack container that exact aspect-ratio makes its height match
+// the flyer's height at every breakpoint, with no measurement and no timing
+// dependency. (If the column ratio or the flyer's aspect ratio ever changes, this
+// 15/32 must be recalculated to match — see the derivation above.)
 function Gallery() {
   const [lightbox, setLightbox] = useState<string | null>(null);
-  const flyerWrapRef = useRef<HTMLDivElement>(null);
-  const [flyerHeight, setFlyerHeight] = useState<number>();
-  const isDesktop = useIsDesktopGallery();
-
-  useEffect(() => {
-    const el = flyerWrapRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver((entries) => {
-      const height = entries[0]?.contentRect.height;
-      if (height) setFlyerHeight(height);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <>
       <div className="grid grid-cols-3 gap-4 sm:grid-cols-[1fr_1.6fr]">
-        <div
-          className="col-span-3 grid grid-cols-3 gap-3 sm:col-span-1 sm:grid-cols-1 sm:grid-rows-3"
-          style={isDesktop && flyerHeight ? { height: flyerHeight } : undefined}
-        >
+        <div className="col-span-3 grid grid-cols-3 gap-3 sm:col-span-1 sm:aspect-[15/32] sm:grid-cols-1 sm:grid-rows-3">
           {GALLERY_IMAGES.map((src, i) => (
             <button
               key={i}
@@ -215,7 +192,7 @@ function Gallery() {
             </button>
           ))}
         </div>
-        <div ref={flyerWrapRef} className="col-span-3 sm:col-span-1">
+        <div className="col-span-3 sm:col-span-1">
           <FlyerFlipper />
         </div>
       </div>
