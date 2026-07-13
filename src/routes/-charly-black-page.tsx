@@ -54,7 +54,7 @@ const FLYER_FLIP_MS = 700;
 const VENUE_NAME = "Bombay Banquet Hall";
 const VENUE_ADDRESS = "2448 W. Devon Ave., Chicago, IL 60659";
 // Doors 8 PM CDT — parsed as local time like the rest of the app's date helpers.
-const EVENT_DATE = new Date("2026-08-16T20:00:00");
+const EVENT_DATE = new Date("2026-08-28T20:00:00");
 
 // No real listings exist yet for any of the 3 outlets — these are intentionally
 // unlinked until Stephen provides the live URLs.
@@ -67,7 +67,7 @@ export function charlyBlackHead() {
       {
         name: "description",
         content:
-          "Charly Black's first-ever Chicago performance. Historic Chicago Night, presented by TRC Events — Saturday, Aug 16, 2026 at Bombay Banquet Hall.",
+          "Charly Black's first-ever Chicago performance. Historic Chicago Night, presented by TRC Events — Friday, Aug 28, 2026 at Bombay Banquet Hall.",
       },
       { property: "og:title", content: "Charly Black — Good Times | TRC Events" },
       {
@@ -232,7 +232,7 @@ export function CharlyBlackPage() {
     "@context": "https://schema.org",
     "@type": "Event",
     name: "Charly Black — Good Times",
-    startDate: "2026-08-16T20:00:00-05:00",
+    startDate: "2026-08-28T20:00:00-05:00",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
@@ -290,7 +290,7 @@ export function CharlyBlackPage() {
 
           <div className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
-              <CalendarDays className="size-4 text-gold" /> Saturday, Aug 16, 2026
+              <CalendarDays className="size-4 text-gold" /> Friday, Aug 28, 2026
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Clock className="size-4 text-gold" /> Doors 8 PM · Show 9 PM
@@ -380,7 +380,7 @@ export function CharlyBlackPage() {
               </div>
               <div className="flex items-start gap-3">
                 <CalendarDays className="mt-0.5 size-5 shrink-0 text-gold" />
-                <p className="text-sm">Saturday, August 16, 2026</p>
+                <p className="text-sm">Friday, August 28, 2026</p>
               </div>
               <div className="flex items-start gap-3">
                 <Clock className="mt-0.5 size-5 shrink-0 text-gold" />
