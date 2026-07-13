@@ -281,7 +281,7 @@ export function CharlyBlackPage() {
           <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
             <Badge className="bg-gold text-gold-foreground hover:bg-gold">Historic Chicago Night</Badge>
             <Badge variant="outline" className="border-gold/40 text-gold">
-              First-Ever Chicago Performance
+              One Night Only
             </Badge>
             <Badge variant="destructive">Tickets From $20 · Price Rises With Demand</Badge>
           </div>
