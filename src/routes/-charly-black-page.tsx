@@ -53,12 +53,17 @@ const FLYER_FLIP_MS = 700;
 
 const VENUE_NAME = "Bombay Banquet Hall";
 const VENUE_ADDRESS = "2448 W. Devon Ave., Chicago, IL 60659";
-// Doors 8 PM CDT — parsed as local time like the rest of the app's date helpers.
-const EVENT_DATE = new Date("2026-08-28T20:00:00");
+// Doors 9 PM CDT — parsed as local time like the rest of the app's date helpers.
+const EVENT_DATE = new Date("2026-08-28T21:00:00");
 
 // No real listings exist yet for any of the 3 outlets — these are intentionally
 // unlinked until Stephen provides the live URLs.
 const TICKET_OUTLETS = ["Eventbrite", "Ticket Tailor", "Humanitix"];
+const TICKET_TIERS = [
+  { tier: "Early Bird", price: "$20" },
+  { tier: "Regular", price: "$30" },
+  { tier: "Door", price: "$40" },
+];
 
 export function charlyBlackHead() {
   return {
@@ -232,7 +237,7 @@ export function CharlyBlackPage() {
     "@context": "https://schema.org",
     "@type": "Event",
     name: "Charly Black — Good Times",
-    startDate: "2026-08-28T20:00:00-05:00",
+    startDate: "2026-08-28T21:00:00-05:00",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
@@ -278,7 +283,7 @@ export function CharlyBlackPage() {
             <Badge variant="outline" className="border-gold/40 text-gold">
               First-Ever Chicago Performance
             </Badge>
-            <Badge variant="destructive">Only $25 · Price Rises With Demand</Badge>
+            <Badge variant="destructive">Tickets From $20 · Price Rises With Demand</Badge>
           </div>
           <p className="eyebrow mb-2">Presented by TRC Events</p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-7xl">
@@ -293,7 +298,7 @@ export function CharlyBlackPage() {
               <CalendarDays className="size-4 text-gold" /> Friday, Aug 28, 2026
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Clock className="size-4 text-gold" /> Doors 8 PM · Show 9 PM
+              <Clock className="size-4 text-gold" /> Doors 9 PM · Show 10 PM
             </span>
             <span className="inline-flex items-center gap-1.5">
               <MapPin className="size-4 text-gold" /> {VENUE_NAME}
@@ -339,24 +344,17 @@ export function CharlyBlackPage() {
               Good Times is a celebration: real dancehall energy, a room built for the occasion, and
               a kitchen powered by Jerky Jerk keeping the night fed from doors to last call.
             </p>
-            <div className="mt-6 space-y-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Music className="size-4 text-gold" />
-                Music by <span className="font-medium text-foreground">DJ Bad Chargie</span> —
-                official DJ
-              </div>
-              <div className="flex items-center gap-2">
-                <UtensilsCrossed className="size-4 text-gold" />
-                Kitchen powered by{" "}
-                <a
-                  href="https://www.jerkyjerk.net/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-medium text-foreground hover:text-gold hover:underline"
-                >
-                  Jerky Jerk
-                </a>
-              </div>
+            <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
+              <UtensilsCrossed className="size-4 text-gold" />
+              Kitchen powered by{" "}
+              <a
+                href="https://www.jerkyjerk.net/"
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-foreground hover:text-gold hover:underline"
+              >
+                Jerky Jerk
+              </a>
             </div>
           </div>
           <img
@@ -364,6 +362,41 @@ export function CharlyBlackPage() {
             alt="Charly Black"
             className="mx-auto aspect-[4/5] w-full max-w-[280px] rounded-2xl border border-gold/30 object-cover"
           />
+        </section>
+
+        {/* Lineup */}
+        <section>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">Full Lineup</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="eyebrow mb-3 flex items-center gap-1.5">
+                <Music className="size-3.5 text-gold" /> Jamaican Dancehall Selectas
+              </h3>
+              <ul className="space-y-1.5 text-sm text-muted-foreground">
+                <li>
+                  <span className="font-medium text-foreground">DJ Bad Chargie</span>{" "}
+                  <span className="text-xs">— official DJ</span>
+                </li>
+                <li>Matches</li>
+                <li>DJ Poyo</li>
+                <li>Ghetto Story Sound</li>
+              </ul>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="eyebrow mb-3">Chicago Support</h3>
+              <ul className="space-y-1.5 text-sm text-muted-foreground">
+                <li>Solid Chain</li>
+                <li>Nego Heights</li>
+                <li>Krabbit</li>
+              </ul>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="eyebrow mb-3">Sound</h3>
+              <p className="text-sm text-muted-foreground">
+                Production by <span className="font-medium text-foreground">Q-Ality</span>
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Venue */}
@@ -384,7 +417,7 @@ export function CharlyBlackPage() {
               </div>
               <div className="flex items-start gap-3">
                 <Clock className="mt-0.5 size-5 shrink-0 text-gold" />
-                <p className="text-sm">Doors 8:00 PM · Showtime 9:00 PM</p>
+                <p className="text-sm">Doors 9:00 PM · Showtime 10:00 PM</p>
               </div>
               <div className="flex items-start gap-3">
                 <Phone className="mt-0.5 size-5 shrink-0 text-gold" />
@@ -418,12 +451,22 @@ export function CharlyBlackPage() {
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Get Tickets</h2>
           <div className="mt-3 inline-flex flex-wrap items-center gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-2 text-sm font-medium text-destructive">
             <Ticket className="size-4" />
-            Only $25 — secure yours before the price goes up due to demand.
+            Price rises with demand — secure yours at the earliest tier still available.
           </div>
-          <p className="mt-3 text-sm text-muted-foreground">
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            {TICKET_TIERS.map(({ tier, price }) => (
+              <div key={tier} className="rounded-xl border border-gold/30 bg-card p-5 text-center">
+                <p className="eyebrow mb-1">{tier}</p>
+                <p className="font-display text-3xl font-extrabold text-gold">{price}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-6 text-sm text-muted-foreground">
             Tickets will be available soon across all three outlets below.
           </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div className="mt-3 grid gap-4 sm:grid-cols-3">
             {TICKET_OUTLETS.map((outlet) => (
               <div
                 key={outlet}
