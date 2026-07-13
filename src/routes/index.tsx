@@ -1,7 +1,7 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { charlyBlackHead, CharlyBlackPage } from "./-charly-black-page";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: () => {
-    throw redirect({ to: "/charly-black" });
-  },
+  head: charlyBlackHead,
+  component: CharlyBlackPage,
 });
