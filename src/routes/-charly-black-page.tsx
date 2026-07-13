@@ -278,7 +278,7 @@ export function CharlyBlackPage() {
             <Badge variant="outline" className="border-gold/40 text-gold">
               First-Ever Chicago Performance
             </Badge>
-            <Badge variant="destructive">Limited Capacity · 600 Tickets</Badge>
+            <Badge variant="destructive">Only $25 · Price Rises With Demand</Badge>
           </div>
           <p className="eyebrow mb-2">Presented by TRC Events</p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-7xl">
@@ -418,7 +418,7 @@ export function CharlyBlackPage() {
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Get Tickets</h2>
           <div className="mt-3 inline-flex flex-wrap items-center gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-2 text-sm font-medium text-destructive">
             <Ticket className="size-4" />
-            Limited capacity — only 600 tickets. This will sell out.
+            Only $25 — secure yours before the price goes up due to demand.
           </div>
           <p className="mt-3 text-sm text-muted-foreground">
             Tickets will be available soon across all three outlets below.
