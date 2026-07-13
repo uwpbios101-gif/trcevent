@@ -23,11 +23,14 @@ import { SOCIAL_LINKS } from "@/lib/social";
 import heroImg from "@/assets/charly-black-2.jpg";
 import portraitImg from "@/assets/charly-black-1.jpg";
 import galleryImg from "@/assets/charly-black-3.jpg";
-import flyerImg from "@/assets/charly-black-flyer.jpg";
-import flyerImg2 from "@/assets/charly-black-flyer-2.jpg";
-import flyerImg3 from "@/assets/charly-black-flyer-3.jpg";
 import flyerImgSellout from "@/assets/charly-black-flyer-4-sellout.jpg";
-import flyerImgBadChargie from "@/assets/charly-black-flyer-5-badchargie.jpg";
+import flyerImgBikeBack from "@/assets/charly-black-flyer-bikeback.jpg";
+import flyerImgGirlfriend from "@/assets/charly-black-flyer-girlfriend.jpg";
+import flyerImgHoist from "@/assets/charly-black-flyer-hoist.jpg";
+import flyerImgPa from "@/assets/charly-black-flyer-pa.jpg";
+import flyerImgPartyAnimal from "@/assets/charly-black-flyer-partyanimal.jpg";
+import flyerImgWk from "@/assets/charly-black-flyer-wk.jpg";
+import flyerImgBuddyB from "@/assets/charly-black-flyer-buddyb.jpg";
 import heroVideo from "@/assets/charly-black-hero.mp4";
 import heroPoster from "@/assets/charly-black-hero-poster.jpg";
 
@@ -35,7 +38,16 @@ const GALLERY_IMAGES = [portraitImg, heroImg, galleryImg];
 
 // Sellout messaging leads the rotation — it's the most important flyer for the
 // marketing plan (limited capacity / urgency), so it's what visitors see first.
-const FLYERS = [flyerImgSellout, flyerImg, flyerImg2, flyerImg3, flyerImgBadChargie];
+const FLYERS = [
+  flyerImgSellout,
+  flyerImgBikeBack,
+  flyerImgGirlfriend,
+  flyerImgHoist,
+  flyerImgPa,
+  flyerImgPartyAnimal,
+  flyerImgWk,
+  flyerImgBuddyB,
+];
 const FLYER_DISPLAY_MS = 5000;
 const FLYER_FLIP_MS = 700;
 
@@ -63,9 +75,9 @@ export function charlyBlackHead() {
         content: "First-ever Chicago performance. Historic Chicago Night, presented by TRC Events.",
       },
       { property: "og:type", content: "article" },
-      { property: "og:image", content: flyerImg },
+      { property: "og:image", content: flyerImgSellout },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: flyerImg },
+      { name: "twitter:image", content: flyerImgSellout },
     ],
   };
 }
