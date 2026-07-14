@@ -19,6 +19,12 @@ export default defineConfig({
     prerender: {
       enabled: true,
       crawlLinks: true,
+      // crawlLinks follows every <a href>, including the flyer flipper's link to the
+      // raw image itself (used for "open full size"). Without this filter it tries to
+      // prerender that image as if it were an HTML page, and writes back a corrupted
+      // (UTF-8-mangled) copy over the real binary asset — silently breaking the image.
+      // Only real routes should ever be prerendered, so skip anything under /assets/.
+      filter: ({ path }) => !path.startsWith("/assets/"),
     },
   },
 });
