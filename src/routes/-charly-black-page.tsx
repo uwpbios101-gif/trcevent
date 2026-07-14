@@ -2,7 +2,7 @@
 // site is currently this one event page, rendered at both "/" and "/charly-black" (no
 // runtime redirect, since the static-exported build has no server to redirect at request
 // time). The "-" prefix excludes this file from route generation (TanStack Router convention).
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   CalendarDays,
   Clock,
@@ -11,6 +11,8 @@ import {
   Phone,
   UtensilsCrossed,
   Music,
+  Mail,
+  CheckCircle2,
   Instagram,
   Facebook,
   Twitter,
@@ -18,36 +20,31 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { SOCIAL_LINKS } from "@/lib/social";
+import { supabase } from "@/lib/supabase";
 import heroImg from "@/assets/charly-black-2.jpg";
 import portraitImg from "@/assets/charly-black-1.jpg";
 import galleryImg from "@/assets/charly-black-3.jpg";
-import flyerImgSellout from "@/assets/charly-black-flyer-4-sellout.jpg";
-import flyerImgBikeBack from "@/assets/charly-black-flyer-bikeback.jpg";
-import flyerImgGirlfriend from "@/assets/charly-black-flyer-girlfriend.jpg";
 import flyerImgHoist from "@/assets/charly-black-flyer-hoist.jpg";
-import flyerImgPa from "@/assets/charly-black-flyer-pa.jpg";
 import flyerImgPartyAnimal from "@/assets/charly-black-flyer-partyanimal.jpg";
-import flyerImgWk from "@/assets/charly-black-flyer-wk.jpg";
 import flyerImgBuddyB from "@/assets/charly-black-flyer-buddyb.jpg";
 import heroVideo from "@/assets/charly-black-hero.mp4";
 import heroPoster from "@/assets/charly-black-hero-poster.jpg";
 
 const GALLERY_IMAGES = [portraitImg, heroImg, galleryImg];
 
-// Sellout messaging leads the rotation — it's the most important flyer for the
-// marketing plan (limited capacity / urgency), so it's what visitors see first.
-const FLYERS = [
-  flyerImgSellout,
-  flyerImgBikeBack,
-  flyerImgGirlfriend,
-  flyerImgHoist,
-  flyerImgPa,
-  flyerImgPartyAnimal,
-  flyerImgWk,
-  flyerImgBuddyB,
-];
+// Only the 3 designs confirmed correct for the Aug 28 date (2026-07-13) — the
+// rest (bikeback, girlfriend, pa, wk, the old sellout) were dropped because
+// they either still showed the old Aug 16 date or had no updated version at
+// all. A new sellout-style flyer (with ticket tiers baked in) is expected but
+// not yet saved anywhere — add it back in and restore it to the front of this
+// array once it exists (it's the highest-priority design for the marketing
+// plan). All 3 current designs also still show the old 8PM/9PM doors/showtime
+// rather than the corrected 9PM/10PM — kept anyway per Stephen's call, since a
+// stale time on a flyer beats no rotation at all.
+const FLYERS = [flyerImgBuddyB, flyerImgHoist, flyerImgPartyAnimal];
 const FLYER_DISPLAY_MS = 5000;
 const FLYER_FLIP_MS = 700;
 
@@ -66,8 +63,18 @@ const TICKET_TIERS = [
   { tier: "Door", price: "$40" },
 ];
 
+// Matches the event_series row in the shared Supabase project (see
+// project_trc-charly-black memory / selassiefest repo's schema.sql).
+// event_notify_signups is a reusable table across any TRC/SelassieFest
+// event's "notify me when tickets go live" signup, not specific to this
+// page — event_slug/event_name/brand tell the shared notify-submission
+// Edge Function which event and sender name to use.
+const EVENT_SLUG = "charly-black-good-times";
+const EVENT_FULL_NAME = "Charly Black — Good Times";
+const EVENT_BRAND = "trc";
+
 export function charlyBlackHead() {
-  const imageUrl = `${SITE_URL}${flyerImgSellout}`;
+  const imageUrl = `${SITE_URL}${flyerImgBuddyB}`;
   return {
     meta: [
       { title: "Charly Black — Good Times | TRC Events" },
@@ -239,6 +246,74 @@ function Gallery() {
   );
 }
 
+// "Notify me when tickets go live" — inserts directly into Supabase (this is a
+// fully static site with no server, so the client talks to Supabase itself).
+// A trigger on event_notify_signups calls the shared notify-submission Edge
+// Function, which emails staff and sends the signup a confirmation via Resend.
+// 23505 (unique violation on event_slug+email) means they already signed up —
+// treated as success, not an error, so a repeat visit still feels like it worked.
+function NotifySignup() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed) return;
+
+    setStatus("submitting");
+    // No .select() chained — this table is intentionally write-only (no SELECT
+    // policy), and requesting the row back would fail the RLS check on the
+    // read side even though the insert itself is permitted.
+    const { error } = await supabase.from("event_notify_signups").insert({
+      event_slug: EVENT_SLUG,
+      event_name: EVENT_FULL_NAME,
+      brand: EVENT_BRAND,
+      email: trimmed,
+    });
+
+    if (error && error.code !== "23505") {
+      setStatus("error");
+      return;
+    }
+    setStatus("success");
+  }
+
+  if (status === "success") {
+    return (
+      <div className="flex items-center justify-center gap-2 rounded-xl border border-gold/30 bg-card px-5 py-4 text-sm text-foreground">
+        <CheckCircle2 className="size-4 shrink-0 text-gold" />
+        You're on the list — we'll email you the moment tickets go live.
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
+      <div className="relative flex-1">
+        <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="email"
+          required
+          placeholder="you@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="pl-9"
+          aria-label="Email address"
+        />
+      </div>
+      <Button type="submit" variant="gold" disabled={status === "submitting"}>
+        {status === "submitting" ? "Signing up…" : "Notify Me"}
+      </Button>
+      {status === "error" && (
+        <p className="text-xs text-destructive sm:absolute sm:mt-9">
+          Something went wrong — try again, or call/text 414-909-3279.
+        </p>
+      )}
+    </form>
+  );
+}
+
 export function CharlyBlackPage() {
   const mapsSrc = `https://www.google.com/maps?q=${encodeURIComponent(VENUE_ADDRESS)}&output=embed`;
 
@@ -249,7 +324,7 @@ export function CharlyBlackPage() {
     startDate: "2026-08-28T21:00:00-05:00",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    image: [`${SITE_URL}${flyerImgSellout}`],
+    image: [`${SITE_URL}${flyerImgBuddyB}`],
     location: {
       "@type": "Place",
       name: VENUE_NAME,
@@ -482,10 +557,18 @@ export function CharlyBlackPage() {
             ))}
           </div>
 
-          <p className="mt-6 text-sm text-muted-foreground">
-            Tickets will be available soon across all three outlets below.
-          </p>
-          <div className="mt-3 grid gap-4 sm:grid-cols-3">
+          <div className="mt-8 rounded-xl border border-gold/30 bg-card p-5">
+            <p className="font-display text-lg font-bold">Get notified the moment tickets go live</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Links for all three outlets below are coming soon. Leave your email and we'll tell you
+              first — before the price rises.
+            </p>
+            <div className="mt-4">
+              <NotifySignup />
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {TICKET_OUTLETS.map((outlet) => (
               <div
                 key={outlet}
