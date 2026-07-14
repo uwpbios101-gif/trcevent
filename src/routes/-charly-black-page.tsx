@@ -51,6 +51,7 @@ const FLYERS = [
 const FLYER_DISPLAY_MS = 5000;
 const FLYER_FLIP_MS = 700;
 
+const SITE_URL = "https://trcevent.com";
 const VENUE_NAME = "Bombay Banquet Hall";
 const VENUE_ADDRESS = "2448 W. Devon Ave., Chicago, IL 60659";
 // Doors 9 PM CDT — parsed as local time like the rest of the app's date helpers.
@@ -66,24 +67,32 @@ const TICKET_TIERS = [
 ];
 
 export function charlyBlackHead() {
+  const imageUrl = `${SITE_URL}${flyerImgSellout}`;
   return {
     meta: [
       { title: "Charly Black — Good Times | TRC Events" },
       {
         name: "description",
         content:
-          "Charly Black's first-ever Chicago performance. Historic Chicago Night, presented by TRC Events — Friday, Aug 28, 2026 at Bombay Banquet Hall.",
+          "Charly Black live in Chicago, one night only. Historic Chicago Night, presented by TRC Events — Friday, Aug 28, 2026 at Bombay Banquet Hall. Tickets from $20.",
       },
       { property: "og:title", content: "Charly Black — Good Times | TRC Events" },
       {
         property: "og:description",
-        content: "First-ever Chicago performance. Historic Chicago Night, presented by TRC Events.",
+        content: "One night only. Historic Chicago Night, presented by TRC Events. Tickets from $20.",
       },
       { property: "og:type", content: "article" },
-      { property: "og:image", content: flyerImgSellout },
+      { property: "og:image", content: imageUrl },
+      { property: "og:url", content: `${SITE_URL}/` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: flyerImgSellout },
+      { name: "twitter:title", content: "Charly Black — Good Times | TRC Events" },
+      {
+        name: "twitter:description",
+        content: "One night only. Historic Chicago Night, presented by TRC Events. Tickets from $20.",
+      },
+      { name: "twitter:image", content: imageUrl },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
   };
 }
 
@@ -240,6 +249,7 @@ export function CharlyBlackPage() {
     startDate: "2026-08-28T21:00:00-05:00",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    image: [`${SITE_URL}${flyerImgSellout}`],
     location: {
       "@type": "Place",
       name: VENUE_NAME,
@@ -252,7 +262,16 @@ export function CharlyBlackPage() {
     organizer: {
       "@type": "Organization",
       name: "TRC Events",
-      url: "https://trcevent.com",
+      url: SITE_URL,
+    },
+    offers: {
+      "@type": "AggregateOffer",
+      url: `${SITE_URL}/charly-black#tickets`,
+      priceCurrency: "USD",
+      lowPrice: "20",
+      highPrice: "40",
+      offerCount: "3",
+      availability: "https://schema.org/InStock",
     },
   };
 
