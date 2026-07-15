@@ -7,8 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 TRC Events ("The Right Connection. The Reggae Connection.") — trcevent.com, the marketing arm of
 Ras Tafari Inc (a 501(c)(3) nonprofit that also runs SelassieFest / selassiefest.com). Built with
 TanStack Start (file-based router + SSR) on React 19, styled with Tailwind v4 + shadcn/ui
-("new-york" style). This is a **Lovable-connected project**: it was exported from Lovable and the
-branch stays linked back to the Lovable editor.
+("new-york" style). Originally exported from Lovable; as of 2026-07-15 this repo is **disconnected
+from the Lovable editor** (no more push-to-sync, no more manual Publish step there) — deploys now
+happen via `.github/workflows/deploy.yml` (see Deployment below). The `@lovable.dev/vite-tanstack-config`
+build-tooling dependency is unrelated to that editor connection and is still in use; leave it.
 
 Lovable's export scaffolded a generic demo directory (fake DJs/venues/events, dashboards, a
 booking-system vision — see the original spec if you need it) — that placeholder content and its
@@ -17,10 +19,18 @@ TRC Events content** — don't resurrect the mock DJ/venue/event directory patte
 build against real data (hardcoded event details, or the shared Supabase project once a feature
 needs it) instead.
 
-- Do not force-push, rebase, or amend/squash already-pushed commits — this rewrites history on
-  Lovable's side and can destroy the user's project history there.
-- Commits pushed to the connected branch sync back into the Lovable editor, so keep the branch in
-  a working state.
+## Deployment
+
+**This repo is the source, not the live site.** trcevent.com's DNS points at GitHub Pages on a
+different repo/account — `trcevents/events` — which has no build step of its own, just committed
+static HTML (legacy branch-based Pages serving). `.github/workflows/deploy.yml` builds this repo's
+static export (`bun run build` → `dist/client`) and pushes it to `trcevents/events` on every push to
+`main`, via `peaceiris/actions-gh-pages` with `keep_files: true` (so it never deletes that repo's
+unrelated content, e.g. `supabase/`, `COMP_TICKETS_SETUP.md`). That workflow needs a repo secret,
+`EVENTS_DEPLOY_TOKEN` — a PAT with write access to `trcevents/events` — since the default
+`GITHUB_TOKEN` can't reach across repos. Before this workflow existed (before 2026-07-15), deploys
+to `trcevents/events` were done by hand, copying `dist/client` over manually — don't fall back to
+that now that CI does it.
 
 ## Commands
 

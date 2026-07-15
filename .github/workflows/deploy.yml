@@ -1,0 +1,50 @@
+name: Deploy to trcevent.com
+
+# This repo (uwpbios101-gif/trcevent) is the source. The live site at
+# trcevent.com is served by GitHub Pages from a different repo/account —
+# trcevents/events — which has no build step of its own, just committed
+# static HTML. This workflow builds the static export here and pushes it
+# over to that repo on every push to main, so no one has to do that copy
+# by hand again.
+#
+# Requires a repo secret EVENTS_DEPLOY_TOKEN: a GitHub personal access
+# token with write access to trcevents/events (Contents: read and write
+# is enough on a fine-grained token scoped to just that repo). The
+# default GITHUB_TOKEN only has permissions within this repo, not
+# trcevents/events, so it can't be used here.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build static export
+        run: bun run build
+
+      - name: Deploy to trcevents/events
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.EVENTS_DEPLOY_TOKEN }}
+          external_repository: trcevents/events
+          publish_branch: main
+          publish_dir: ./dist/client
+          # Don't wipe the target repo clean — it also hosts unrelated
+          # content (supabase/, COMP_TICKETS_SETUP.md) that this build
+          # doesn't produce and must not delete.
+          keep_files: true
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_message: "Deploy from trcevent@${{ github.sha }}"
