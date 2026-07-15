@@ -2,9 +2,12 @@
 // file from route generation (TanStack Router convention) — see
 // src/routes/README.md.
 //
-// This event was previously marketed under two names ("Bad Like 90's" and
-// "St. Catherine Link-Up") which caused branding confusion — per Stephen
-// (2026-07-15), St. Catherine Link-Up is now the one canonical name.
+// Branding note (2026-07-15): the two names circulating for this event
+// ("Bad Like Di 90's" and "St. Catherine Link-Up") aren't competing options —
+// the official flyer settles it by using both together: "Bad Like Di 90's"
+// is the party name, "St. Catherine Link-Up" is the community tagline under
+// it. Keep that hierarchy (headline + tagline) everywhere this event is
+// referenced, rather than picking one and dropping the other.
 import { useEffect, useState } from "react";
 import {
   CalendarDays,
@@ -15,6 +18,9 @@ import {
   Instagram,
   Facebook,
   Twitter,
+  UtensilsCrossed,
+  Music,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,35 +28,45 @@ import { SOCIAL_LINKS } from "@/lib/social";
 import flyerImg from "@/assets/st-catherine-linkup-flyer.jpg";
 
 const SITE_URL = "https://trcevent.com";
-const VENUE_NAME = "14421 Greenwood Rd";
+const VENUE_NAME = "ILU Club of Chicago";
 const VENUE_ADDRESS = "14421 Greenwood Rd, Dolton, IL";
 // Free noon–midnight, $20 after midnight, per the flyer. Countdown targets
 // the noon start.
 const EVENT_START = new Date("2026-08-22T12:00:00");
+const HEADLINER = "Suge — Don Dadda";
+const SOUND_SYSTEMS = [
+  "City Rock",
+  "Mighty Prestige Sound",
+  "Stylez International",
+  "Stone Jam Sound System",
+];
+const DJS = ["DJ Poyo"];
 
 export function stCatherineLinkupHead() {
   const imageUrl = `${SITE_URL}${flyerImg}`;
   return {
     meta: [
-      { title: "St. Catherine Link-Up | TRC Events" },
+      { title: "Bad Like Di 90's — St. Catherine Link-Up | TRC Events" },
       {
         name: "description",
         content:
-          "St. Catherine Link-Up: Three Areas. One Link. One Vibe! Linstead, Spanish Town & Portmore unite — Saturday, Aug 22, 2026 in Dolton, IL. Free noon–midnight.",
+          "Bad Like Di 90's — St. Catherine Link-Up. One Parish, One Link, One Community. Featuring Suge (Don Dadda), City Rock, Mighty Prestige Sound & more — Saturday, Aug 22, 2026 at ILU Club of Chicago, Dolton, IL. Free noon–midnight.",
       },
-      { property: "og:title", content: "St. Catherine Link-Up | TRC Events" },
+      { property: "og:title", content: "Bad Like Di 90's — St. Catherine Link-Up | TRC Events" },
       {
         property: "og:description",
-        content: "Three Areas. One Link. One Vibe! Aug 22, 2026 — Dolton, IL. Free noon–midnight.",
+        content:
+          "One Parish, One Link, One Community. Aug 22, 2026 — Dolton, IL. Free noon–midnight.",
       },
       { property: "og:type", content: "article" },
       { property: "og:image", content: imageUrl },
       { property: "og:url", content: `${SITE_URL}/st-catherine-linkup` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "St. Catherine Link-Up | TRC Events" },
+      { name: "twitter:title", content: "Bad Like Di 90's — St. Catherine Link-Up | TRC Events" },
       {
         name: "twitter:description",
-        content: "Three Areas. One Link. One Vibe! Aug 22, 2026 — Dolton, IL. Free noon–midnight.",
+        content:
+          "One Parish, One Link, One Community. Aug 22, 2026 — Dolton, IL. Free noon–midnight.",
       },
       { name: "twitter:image", content: imageUrl },
     ],
@@ -113,7 +129,7 @@ export function StCatherineLinkupPage() {
   const eventSchema = {
     "@context": "https://schema.org",
     "@type": "Event",
-    name: "St. Catherine Link-Up",
+    name: "Bad Like Di 90's — St. Catherine Link-Up",
     startDate: "2026-08-22T12:00:00-05:00",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
@@ -151,7 +167,7 @@ export function StCatherineLinkupPage() {
         <div className="mx-auto max-w-4xl px-4 py-12 text-center sm:px-6 sm:py-16">
           <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
             <Badge className="bg-gold text-gold-foreground hover:bg-gold">
-              One Parish. One Link.
+              Celebrating Prestige Finest: Suge
             </Badge>
             <Badge variant="outline" className="border-gold/40 text-gold">
               Free Before Midnight
@@ -159,10 +175,13 @@ export function StCatherineLinkupPage() {
           </div>
           <p className="eyebrow mb-2">Presented by TRC Events</p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-7xl">
-            St. Catherine Link-Up
+            Bad Like Di 90's
           </h1>
           <p className="mt-1 font-display text-2xl italic text-gradient-gold sm:text-3xl">
-            Three Areas. One Link. One Vibe!
+            St. Catherine Link-Up
+          </p>
+          <p className="mt-1 text-sm uppercase tracking-wide text-muted-foreground">
+            One Parish · One Link · One Community
           </p>
 
           <div className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
@@ -207,20 +226,48 @@ export function StCatherineLinkupPage() {
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
               St. Catherine Link-Up brings together Chicagoland's community from three of St.
-              Catherine parish's proudest areas — Linstead, Spanish Town, and Portmore — for one day
-              of unity. One parish, one link, one community, stronger together.
+              Catherine parish's proudest areas — Linstead, Spanish Town, and Portmore — for a full
+              day of 90s dancehall nostalgia, headlined by{" "}
+              <strong className="text-foreground">{HEADLINER}</strong>. One parish, one link, one
+              community, stronger together.
             </p>
             <p className="mt-4 leading-relaxed text-muted-foreground">
               Free entry from noon until midnight, with a $20 cover after midnight for those keeping
               the vibe going late.
             </p>
+            <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
+              <UtensilsCrossed className="size-4 text-gold" />
+              Pre-ordered food available on-site — Jerky Jerk &amp; Tropical Jerk
+            </div>
             <p className="mt-4 text-sm font-medium text-gold">#StCatherineLinkUp</p>
           </div>
           <img
             src={flyerImg}
-            alt="St. Catherine Link-Up flyer — Three Areas, One Link, One Vibe"
+            alt="Bad Like Di 90's — St. Catherine Link-Up flyer, featuring Suge (Don Dadda)"
             className="mx-auto w-full max-w-[320px] rounded-2xl border border-gold/30 object-cover"
           />
+        </section>
+
+        {/* Lineup */}
+        <section>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">Full Lineup</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border-2 border-gold bg-gold/10 p-5">
+              <h3 className="eyebrow mb-3">Headliner</h3>
+              <p className="font-display text-xl font-semibold">{HEADLINER}</p>
+              <p className="text-sm text-muted-foreground">Celebrating Prestige Finest</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="eyebrow mb-3 flex items-center gap-1.5">
+                <Music className="size-3.5 text-gold" /> Sound Systems &amp; DJs
+              </h3>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                {[...SOUND_SYSTEMS, ...DJS].map((name) => (
+                  <li key={name}>{name}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </section>
 
         {/* Areas */}
@@ -260,6 +307,12 @@ export function StCatherineLinkupPage() {
                 <Clock className="mt-0.5 size-5 shrink-0 text-gold" />
                 <p className="text-sm">Free noon–midnight · $20 after midnight</p>
               </div>
+              <div className="flex items-start gap-3">
+                <Phone className="mt-0.5 size-5 shrink-0 text-gold" />
+                <a href="tel:+14149093279" className="text-sm hover:text-gold">
+                  414-909-3279
+                </a>
+              </div>
             </div>
             <div className="overflow-hidden rounded-xl border border-border">
               <iframe
@@ -298,7 +351,7 @@ export function StCatherineLinkupPage() {
         {/* Share */}
         <section className="rounded-xl border border-border bg-card p-6 text-center">
           <h3 className="eyebrow mb-4 flex items-center justify-center gap-1.5">
-            <Share2 className="size-3.5" /> Share the Link-Up
+            <Share2 className="size-3.5" /> Share Bad Like Di 90's
           </h3>
           <div className="mx-auto flex max-w-xs gap-2">
             {[
