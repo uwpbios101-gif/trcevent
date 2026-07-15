@@ -9,9 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
+import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
 
+const StCatherineLinkupRoute = StCatherineLinkupRouteImport.update({
+  id: '/st-catherine-linkup',
+  path: '/st-catherine-linkup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Jamaica64Route = Jamaica64RouteImport.update({
+  id: '/jamaica64',
+  path: '/jamaica64',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CharlyBlackRoute = CharlyBlackRouteImport.update({
   id: '/charly-black',
   path: '/charly-black',
@@ -26,31 +38,53 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/jamaica64': typeof Jamaica64Route
+  '/st-catherine-linkup': typeof StCatherineLinkupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/jamaica64': typeof Jamaica64Route
+  '/st-catherine-linkup': typeof StCatherineLinkupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/jamaica64': typeof Jamaica64Route
+  '/st-catherine-linkup': typeof StCatherineLinkupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/charly-black'
+  fullPaths: '/' | '/charly-black' | '/jamaica64' | '/st-catherine-linkup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/charly-black'
-  id: '__root__' | '/' | '/charly-black'
+  to: '/' | '/charly-black' | '/jamaica64' | '/st-catherine-linkup'
+  id: '__root__' | '/' | '/charly-black' | '/jamaica64' | '/st-catherine-linkup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CharlyBlackRoute: typeof CharlyBlackRoute
+  Jamaica64Route: typeof Jamaica64Route
+  StCatherineLinkupRoute: typeof StCatherineLinkupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/st-catherine-linkup': {
+      id: '/st-catherine-linkup'
+      path: '/st-catherine-linkup'
+      fullPath: '/st-catherine-linkup'
+      preLoaderRoute: typeof StCatherineLinkupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jamaica64': {
+      id: '/jamaica64'
+      path: '/jamaica64'
+      fullPath: '/jamaica64'
+      preLoaderRoute: typeof Jamaica64RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/charly-black': {
       id: '/charly-black'
       path: '/charly-black'
@@ -71,6 +105,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CharlyBlackRoute: CharlyBlackRoute,
+  Jamaica64Route: Jamaica64Route,
+  StCatherineLinkupRoute: StCatherineLinkupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
