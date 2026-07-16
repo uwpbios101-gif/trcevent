@@ -82,7 +82,6 @@ type InviteInfo = {
   radiusClauseEnabled: boolean;
   radiusMiles: number | null;
   radiusDays: number | null;
-  guestListAllowance: number;
 };
 
 function formatDate(dateStr: string | null) {
@@ -127,8 +126,8 @@ function contractSections(invite: InviteInfo) {
       body: "Talent agrees to arrive prepared and on time, to perform professionally, and to comply with venue rules and reasonable instructions from Presenter's event staff. Talent agrees to conduct themselves, and to ensure anyone accompanying them conducts themselves, in a professional and lawful manner while at the Event, including compliance with the venue's policies on alcohol, controlled substances, and safety.",
     },
     {
-      heading: "6. Additional People & Guests",
-      body: `Presenter grants Talent a guest list allowance of ${invite.guestListAllowance} guest(s) for this Event. The number of people accompanying Talent and any guest names are collected below.`,
+      heading: "6. Additional People",
+      body: "The number of people accompanying Talent is collected below. Any guest or ticket access for Talent or their party is arranged through TRC Events' ticketing process, not through this Agreement.",
     },
     {
       heading: "7. No-Show / Late Arrival",
@@ -206,14 +205,47 @@ const signFormSchema = z.object({
   taxFormAcknowledged: z.boolean(),
   additionalPeopleCount: z.coerce.number().int().min(0).default(0),
   additionalPeopleNotes: z.string().trim().optional(),
-  guestListNames: z.string().trim().optional(),
   signatureTypedName: z.string().trim().min(2, "Type your name to sign."),
   agreedTerms: z.literal(true, { message: "You must agree to the terms above to sign." }),
 });
 type SignFormValues = z.infer<typeof signFormSchema>;
 
+// The tailored ticket-request step after signing -- same underlying flow as
+// the public /charly-black/comp/ form, but name/email/phone are pulled from
+// the just-signed contract server-side rather than asked again here.
+const ticketFormSchema = z
+  .object({
+    wantsFree: z.boolean(),
+    freeTicketsRequested: z.coerce.number().int().min(0).max(2),
+    wantsToSell: z.boolean(),
+    sellTicketsRequested: z.coerce.number().int().min(0).max(10),
+    socialInstagram: z.string().trim().optional(),
+    socialTiktok: z.string().trim().optional(),
+    socialOther: z.string().trim().optional(),
+    notes: z.string().trim().optional(),
+  })
+  .refine((v) => v.wantsFree || v.wantsToSell, {
+    message: "Request free tickets, tickets to sell, or both.",
+    path: ["wantsToSell"],
+  })
+  .refine((v) => !v.wantsFree || v.freeTicketsRequested >= 1, {
+    message: "Enter how many free tickets (1-2).",
+    path: ["freeTicketsRequested"],
+  })
+  .refine((v) => !v.wantsToSell || v.sellTicketsRequested >= 1, {
+    message: "Enter how many tickets to sell (1-10).",
+    path: ["sellTicketsRequested"],
+  })
+  .refine((v) => v.socialInstagram || v.socialTiktok || v.socialOther, {
+    message: "Add at least one social media handle.",
+    path: ["socialInstagram"],
+  });
+type TicketFormValues = z.infer<typeof ticketFormSchema>;
+
 export function ContractPage() {
-  const [step, setStep] = useState<"code" | "email" | "verify" | "sign" | "done">("code");
+  const [step, setStep] = useState<"code" | "email" | "verify" | "sign" | "tickets" | "done">(
+    "code",
+  );
   const [busy, setBusy] = useState(false);
 
   const [accessCode, setAccessCode] = useState("");
@@ -236,9 +268,22 @@ export function ContractPage() {
       taxFormAcknowledged: false,
       additionalPeopleCount: 0,
       additionalPeopleNotes: "",
-      guestListNames: "",
       signatureTypedName: "",
       agreedTerms: false as unknown as true,
+    },
+  });
+
+  const ticketForm = useForm<TicketFormValues>({
+    resolver: zodResolver(ticketFormSchema),
+    defaultValues: {
+      wantsFree: false,
+      freeTicketsRequested: 0,
+      wantsToSell: false,
+      sellTicketsRequested: 0,
+      socialInstagram: "",
+      socialTiktok: "",
+      socialOther: "",
+      notes: "",
     },
   });
 
@@ -327,6 +372,39 @@ export function ContractPage() {
         toast.error(data?.error ?? "Couldn't submit your contract. Try again.");
         return;
       }
+      setStep("tickets");
+    } catch {
+      toast.error("Something went wrong. Check your connection and try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleSubmitTickets(values: TicketFormValues) {
+    setBusy(true);
+    try {
+      const socialMedia = [
+        values.socialInstagram && { platform: "Instagram", handle: values.socialInstagram },
+        values.socialTiktok && { platform: "TikTok", handle: values.socialTiktok },
+        values.socialOther && { platform: "Other", handle: values.socialOther },
+      ].filter(Boolean);
+
+      const { data, error } = await supabase.functions.invoke("submit-performer-ticket-request", {
+        body: {
+          accessCode: accessCode.trim(),
+          wantsFree: values.wantsFree,
+          freeTicketsRequested: values.freeTicketsRequested,
+          wantsToSell: values.wantsToSell,
+          sellTicketsRequested: values.sellTicketsRequested,
+          socialMedia,
+          notes: values.notes,
+        },
+      });
+      if (error || !data?.ok) {
+        toast.error(data?.error ?? "Couldn't submit your ticket request. Try again.");
+        return;
+      }
+      toast.success("Ticket request submitted.");
       setStep("done");
     } catch {
       toast.error("Something went wrong. Check your connection and try again.");
@@ -643,7 +721,7 @@ export function ContractPage() {
               </div>
 
               <div className="space-y-4 border-t border-border pt-5">
-                <p className="eyebrow">Guests</p>
+                <p className="eyebrow">Additional People</p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
@@ -672,19 +750,9 @@ export function ContractPage() {
                     )}
                   />
                 </div>
-                <FormField
-                  control={form.control}
-                  name="guestListNames"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Guest list names (up to {invite.guestListAllowance})</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={2} placeholder="One name per line" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <p className="text-xs text-muted-foreground">
+                  Guest and ticket access is handled separately, right after you sign — not here.
+                </p>
               </div>
 
               <div className="space-y-4 border-t border-border pt-5">
@@ -737,13 +805,167 @@ export function ContractPage() {
         </div>
       )}
 
+      {step === "tickets" && invite && (
+        <div className="space-y-6">
+          <div className="rounded-lg border border-gold/30 bg-gold/5 px-4 py-3 text-sm">
+            <p className="mb-1 font-semibold text-foreground">Contract signed ✓</p>
+            <p className="text-muted-foreground">
+              Now let's get your ticket allocation — same as everyone else, just without re-asking
+              for your name, email, or phone.
+            </p>
+          </div>
+
+          <Form {...ticketForm}>
+            <form
+              onSubmit={ticketForm.handleSubmit(handleSubmitTickets)}
+              className="space-y-5 rounded-xl border border-border bg-card p-6"
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-3 rounded-lg border border-border p-4">
+                  <FormField
+                    control={ticketForm.control}
+                    name="wantsFree"
+                    render={({ field }) => (
+                      <FormItem className="flex items-start gap-2 space-y-0">
+                        <FormControl>
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        </FormControl>
+                        <FormLabel className="font-normal">I'd like free tickets</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  {ticketForm.watch("wantsFree") && (
+                    <FormField
+                      control={ticketForm.control}
+                      name="freeTicketsRequested"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>How many (1–2)</FormLabel>
+                          <FormControl>
+                            <Input type="number" min={1} max={2} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+                <div className="space-y-3 rounded-lg border border-border p-4">
+                  <FormField
+                    control={ticketForm.control}
+                    name="wantsToSell"
+                    render={({ field }) => (
+                      <FormItem className="flex items-start gap-2 space-y-0">
+                        <FormControl>
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        </FormControl>
+                        <FormLabel className="font-normal">I'd like tickets to sell</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  {ticketForm.watch("wantsToSell") && (
+                    <FormField
+                      control={ticketForm.control}
+                      name="sellTicketsRequested"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>How many (1–10)</FormLabel>
+                          <FormControl>
+                            <Input type="number" min={1} max={10} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              </div>
+              {invite.role === "Opening Act" && (
+                <p className="text-xs text-muted-foreground">
+                  As an opening act, your compensation is based on tickets you sell — this is where
+                  that starts.
+                </p>
+              )}
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  control={ticketForm.control}
+                  name="socialInstagram"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Instagram</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="@handle" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={ticketForm.control}
+                  name="socialTiktok"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>TikTok</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="@handle" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={ticketForm.control}
+                name="socialOther"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Other social</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={ticketForm.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notes (optional)</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} rows={2} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" variant="gold" size="xl" className="w-full" disabled={busy}>
+                {busy ? <Loader2 className="size-4 animate-spin" /> : null}
+                Submit ticket request
+              </Button>
+              <button
+                type="button"
+                className="w-full text-center text-xs text-muted-foreground hover:text-gold"
+                onClick={() => setStep("done")}
+                disabled={busy}
+              >
+                Skip for now — I'll request tickets later
+              </button>
+            </form>
+          </Form>
+        </div>
+      )}
+
       {step === "done" && (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-gold/40 bg-gold/10 p-10 text-center">
           <CheckCircle2 className="size-10 text-gold" />
-          <h2 className="font-display text-xl font-bold">Contract signed</h2>
+          <h2 className="font-display text-xl font-bold">All set</h2>
           <p className="text-sm text-muted-foreground">
-            Thanks — your signed contract has been submitted. If TRC Events also asked for a tech
-            rider, use the same access code at{" "}
+            Thanks — your signed contract is in. If TRC Events also asked for a tech rider, use the
+            same access code at{" "}
             <a href="/tech-rider" className="text-gold hover:underline">
               trcevent.com/tech-rider
             </a>

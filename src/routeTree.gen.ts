@@ -9,11 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TechRiderRouteImport } from './routes/tech-rider'
 import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
+import { Route as ContractRouteImport } from './routes/contract'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TechRiderRoute = TechRiderRouteImport.update({
+  id: '/tech-rider',
+  path: '/tech-rider',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StCatherineLinkupRoute = StCatherineLinkupRouteImport.update({
   id: '/st-catherine-linkup',
   path: '/st-catherine-linkup',
@@ -22,6 +29,11 @@ const StCatherineLinkupRoute = StCatherineLinkupRouteImport.update({
 const Jamaica64Route = Jamaica64RouteImport.update({
   id: '/jamaica64',
   path: '/jamaica64',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContractRoute = ContractRouteImport.update({
+  id: '/contract',
+  path: '/contract',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CharlyBlackRoute = CharlyBlackRouteImport.update({
@@ -38,39 +50,73 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/contract': typeof ContractRoute
   '/jamaica64': typeof Jamaica64Route
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
+  '/tech-rider': typeof TechRiderRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/contract': typeof ContractRoute
   '/jamaica64': typeof Jamaica64Route
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
+  '/tech-rider': typeof TechRiderRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/contract': typeof ContractRoute
   '/jamaica64': typeof Jamaica64Route
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
+  '/tech-rider': typeof TechRiderRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/charly-black' | '/jamaica64' | '/st-catherine-linkup'
+  fullPaths:
+    | '/'
+    | '/charly-black'
+    | '/contract'
+    | '/jamaica64'
+    | '/st-catherine-linkup'
+    | '/tech-rider'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/charly-black' | '/jamaica64' | '/st-catherine-linkup'
-  id: '__root__' | '/' | '/charly-black' | '/jamaica64' | '/st-catherine-linkup'
+  to:
+    | '/'
+    | '/charly-black'
+    | '/contract'
+    | '/jamaica64'
+    | '/st-catherine-linkup'
+    | '/tech-rider'
+  id:
+    | '__root__'
+    | '/'
+    | '/charly-black'
+    | '/contract'
+    | '/jamaica64'
+    | '/st-catherine-linkup'
+    | '/tech-rider'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CharlyBlackRoute: typeof CharlyBlackRoute
+  ContractRoute: typeof ContractRoute
   Jamaica64Route: typeof Jamaica64Route
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
+  TechRiderRoute: typeof TechRiderRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tech-rider': {
+      id: '/tech-rider'
+      path: '/tech-rider'
+      fullPath: '/tech-rider'
+      preLoaderRoute: typeof TechRiderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/st-catherine-linkup': {
       id: '/st-catherine-linkup'
       path: '/st-catherine-linkup'
@@ -83,6 +129,13 @@ declare module '@tanstack/react-router' {
       path: '/jamaica64'
       fullPath: '/jamaica64'
       preLoaderRoute: typeof Jamaica64RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contract': {
+      id: '/contract'
+      path: '/contract'
+      fullPath: '/contract'
+      preLoaderRoute: typeof ContractRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/charly-black': {
@@ -105,8 +158,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CharlyBlackRoute: CharlyBlackRoute,
+  ContractRoute: ContractRoute,
   Jamaica64Route: Jamaica64Route,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
+  TechRiderRoute: TechRiderRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
