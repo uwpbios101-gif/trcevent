@@ -199,7 +199,7 @@ const signFormSchema = z.object({
   emergencyContactName: z.string().trim().min(2, "Enter an emergency contact name."),
   emergencyContactPhone: z.string().trim().min(7, "Enter an emergency contact phone number."),
   governmentIdName: z.string().trim().min(2, "Enter the name on your government ID."),
-  paymentMethod: z.enum(PAYMENT_METHODS, { message: "Choose a payment method." }),
+  paymentMethods: z.array(z.enum(PAYMENT_METHODS)).min(1, "Choose at least one payment method."),
   payeeEntity: z.enum(PAYEE_ENTITIES, { message: "Choose who gets paid." }),
   payeeDetails: z.string().trim().optional(),
   taxFormAcknowledged: z.boolean(),
@@ -264,6 +264,7 @@ export function ContractPage() {
       emergencyContactName: "",
       emergencyContactPhone: "",
       governmentIdName: "",
+      paymentMethods: [],
       payeeDetails: "",
       taxFormAcknowledged: false,
       additionalPeopleCount: 0,
@@ -636,24 +637,30 @@ export function ContractPage() {
                 <p className="eyebrow">Payment</p>
                 <FormField
                   control={form.control}
-                  name="paymentMethod"
+                  name="paymentMethods"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Payment method</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Choose a payment method" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {PAYMENT_METHODS.map((m) => (
-                            <SelectItem key={m} value={m}>
-                              {m}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>
+                        Payment method (how do you prefer to get paid — choose all that work for
+                        you)
+                      </FormLabel>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {PAYMENT_METHODS.map((m) => (
+                          <label key={m} className="flex items-center gap-2 text-sm">
+                            <Checkbox
+                              checked={field.value.includes(m)}
+                              onCheckedChange={(checked) =>
+                                field.onChange(
+                                  checked
+                                    ? [...field.value, m]
+                                    : field.value.filter((v) => v !== m),
+                                )
+                              }
+                            />
+                            {m}
+                          </label>
+                        ))}
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
