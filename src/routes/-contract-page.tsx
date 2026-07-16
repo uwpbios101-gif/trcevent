@@ -964,8 +964,8 @@ export function ContractPage() {
           <CheckCircle2 className="size-10 text-gold" />
           <h2 className="font-display text-xl font-bold">All set</h2>
           <p className="text-sm text-muted-foreground">
-            Thanks — your signed contract is in. If TRC Events also asked for a tech rider, use the
-            same access code at{" "}
+            Thanks — your signed contract is in, and a copy has been emailed to you for your
+            records. If TRC Events also asked for a tech rider, use the same access code at{" "}
             <a href="/tech-rider" className="text-gold hover:underline">
               trcevent.com/tech-rider
             </a>
