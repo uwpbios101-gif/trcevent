@@ -2,7 +2,7 @@
 // site is currently this one event page, rendered at both "/" and "/charly-black" (no
 // runtime redirect, since the static-exported build has no server to redirect at request
 // time). The "-" prefix excludes this file from route generation (TanStack Router convention).
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import {
   CalendarDays,
   Clock,
@@ -11,8 +11,6 @@ import {
   Phone,
   UtensilsCrossed,
   Music,
-  Mail,
-  CheckCircle2,
   Instagram,
   Facebook,
   Twitter,
@@ -20,10 +18,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { SOCIAL_LINKS } from "@/lib/social";
-import { supabase } from "@/lib/supabase";
 import heroImg from "@/assets/charly-black-2.jpg";
 import portraitImg from "@/assets/charly-black-1.jpg";
 import galleryImg from "@/assets/charly-black-3.jpg";
@@ -32,6 +28,20 @@ import flyerImgPartyAnimal from "@/assets/charly-black-flyer-partyanimal.jpg";
 import flyerImgBuddyB from "@/assets/charly-black-flyer-buddyb.jpg";
 import heroVideo from "@/assets/charly-black-hero.mp4";
 import heroPoster from "@/assets/charly-black-hero-poster.jpg";
+import krabbitImg from "@/assets/opening-act-krabbit.jpg";
+import honeztyImg from "@/assets/opening-act-honezty.jpg";
+import jayReblImg from "@/assets/opening-act-jayrebl.jpg";
+import negoHeightsImg from "@/assets/opening-act-nego-heights.jpg";
+
+// Solid Chain has no promo flyer yet -- img: null renders a "coming soon"
+// placeholder card instead of dropping them from the lineup entirely.
+const OPENING_ACTS = [
+  { name: "Krabbit", img: krabbitImg },
+  { name: "Honezty", img: honeztyImg },
+  { name: "Jay Rebl", img: jayReblImg },
+  { name: "Nego Heights", img: negoHeightsImg },
+  { name: "Solid Chain", img: null },
+];
 
 const GALLERY_IMAGES = [portraitImg, heroImg, galleryImg];
 
@@ -54,24 +64,24 @@ const VENUE_ADDRESS = "2448 W. Devon Ave., Chicago, IL 60659";
 // Doors 9 PM CDT — parsed as local time like the rest of the app's date helpers.
 const EVENT_DATE = new Date("2026-08-28T21:00:00");
 
-// No real listings exist yet for any of the 3 outlets — these are intentionally
-// unlinked until Stephen provides the live URLs.
-const TICKET_OUTLETS = ["Eventbrite", "Ticket Tailor", "Humanitix"];
-const TICKET_TIERS = [
-  { tier: "Early Bird", price: "$20" },
-  { tier: "Regular", price: "$30" },
-  { tier: "Door", price: "$40" },
+// Ticket Tailor and Eventbrite are live as of 2026-07-14; Humanitix is still
+// intentionally unlinked until Stephen provides that live URL.
+const TICKET_OUTLETS = [
+  {
+    name: "Eventbrite",
+    href: "https://www.eventbrite.com/e/charly-black-live-in-concert-tickets-1993889106993?aff=oddtdtcreator",
+  },
+  { name: "Ticket Tailor", href: "https://www.tickettailor.com/events/rastafariinc/2311433" },
+  { name: "Humanitix", href: null },
 ];
-
-// Matches the event_series row in the shared Supabase project (see
-// project_trc-charly-black memory / selassiefest repo's schema.sql).
-// event_notify_signups is a reusable table across any TRC/SelassieFest
-// event's "notify me when tickets go live" signup, not specific to this
-// page — event_slug/event_name/brand tell the shared notify-submission
-// Edge Function which event and sender name to use.
-const EVENT_SLUG = "charly-black-good-times";
-const EVENT_FULL_NAME = "Charly Black — Good Times";
-const EVENT_BRAND = "trc";
+// `active` marks whichever tier is currently on sale — move it forward (and
+// flip the previous tier to false) once Early Bird sells out and Regular
+// becomes the live price.
+const TICKET_TIERS = [
+  { tier: "Early Bird", price: "$20", active: true },
+  { tier: "Regular", price: "$30", active: false },
+  { tier: "Door", price: "$40", active: false },
+];
 
 export function charlyBlackHead() {
   const imageUrl = `${SITE_URL}${flyerImgBuddyB}`;
@@ -86,7 +96,8 @@ export function charlyBlackHead() {
       { property: "og:title", content: "Charly Black — Good Times | TRC Events" },
       {
         property: "og:description",
-        content: "One night only. Historic Chicago Night, presented by TRC Events. Tickets from $20.",
+        content:
+          "One night only. Historic Chicago Night, presented by TRC Events. Tickets from $20.",
       },
       { property: "og:type", content: "article" },
       { property: "og:image", content: imageUrl },
@@ -95,7 +106,8 @@ export function charlyBlackHead() {
       { name: "twitter:title", content: "Charly Black — Good Times | TRC Events" },
       {
         name: "twitter:description",
-        content: "One night only. Historic Chicago Night, presented by TRC Events. Tickets from $20.",
+        content:
+          "One night only. Historic Chicago Night, presented by TRC Events. Tickets from $20.",
       },
       { name: "twitter:image", content: imageUrl },
     ],
@@ -122,7 +134,10 @@ function CountdownStrip() {
 
   const units = [
     { label: "Days", value: totalSeconds == null ? null : Math.floor(totalSeconds / 86400) },
-    { label: "Hours", value: totalSeconds == null ? null : Math.floor((totalSeconds % 86400) / 3600) },
+    {
+      label: "Hours",
+      value: totalSeconds == null ? null : Math.floor((totalSeconds % 86400) / 3600),
+    },
     { label: "Min", value: totalSeconds == null ? null : Math.floor((totalSeconds % 3600) / 60) },
     { label: "Sec", value: totalSeconds == null ? null : totalSeconds % 60 },
   ];
@@ -246,71 +261,53 @@ function Gallery() {
   );
 }
 
-// "Notify me when tickets go live" — inserts directly into Supabase (this is a
-// fully static site with no server, so the client talks to Supabase itself).
-// A trigger on event_notify_signups calls the shared notify-submission Edge
-// Function, which emails staff and sends the signup a confirmation via Resend.
-// 23505 (unique violation on event_slug+email) means they already signed up —
-// treated as success, not an error, so a repeat visit still feels like it worked.
-function NotifySignup() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    const trimmed = email.trim();
-    if (!trimmed) return;
-
-    setStatus("submitting");
-    // No .select() chained — this table is intentionally write-only (no SELECT
-    // policy), and requesting the row back would fail the RLS check on the
-    // read side even though the insert itself is permitted.
-    const { error } = await supabase.from("event_notify_signups").insert({
-      event_slug: EVENT_SLUG,
-      event_name: EVENT_FULL_NAME,
-      brand: EVENT_BRAND,
-      email: trimmed,
-    });
-
-    if (error && error.code !== "23505") {
-      setStatus("error");
-      return;
-    }
-    setStatus("success");
-  }
-
-  if (status === "success") {
-    return (
-      <div className="flex items-center justify-center gap-2 rounded-xl border border-gold/30 bg-card px-5 py-4 text-sm text-foreground">
-        <CheckCircle2 className="size-4 shrink-0 text-gold" />
-        You're on the list — we'll email you the moment tickets go live.
-      </div>
-    );
-  }
+// Own lightbox state, same pattern as Gallery above but separate -- these
+// are promo flyers to browse, not photos to page through together.
+function OpeningActs() {
+  const [lightbox, setLightbox] = useState(null);
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
-      <div className="relative flex-1">
-        <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          type="email"
-          required
-          placeholder="you@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="pl-9"
-          aria-label="Email address"
-        />
+    <>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {OPENING_ACTS.map((act) => (
+          <button
+            key={act.name}
+            type="button"
+            onClick={() => act.img && setLightbox(act.img)}
+            disabled={!act.img}
+            className="group overflow-hidden rounded-xl border border-border bg-card text-left transition-colors hover:border-gold/50 disabled:cursor-default disabled:hover:border-border"
+          >
+            <div className="aspect-[4/5] w-full overflow-hidden bg-muted">
+              {act.img ? (
+                <img
+                  src={act.img}
+                  alt={`${act.name} — Charly Black opening act flyer`}
+                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center px-3 text-center text-xs text-muted-foreground">
+                  Flyer coming soon
+                </div>
+              )}
+            </div>
+            <p className="p-2 text-center text-sm font-medium">{act.name}</p>
+          </button>
+        ))}
       </div>
-      <Button type="submit" variant="gold" disabled={status === "submitting"}>
-        {status === "submitting" ? "Signing up…" : "Notify Me"}
-      </Button>
-      {status === "error" && (
-        <p className="text-xs text-destructive sm:absolute sm:mt-9">
-          Something went wrong — try again, or call/text 414-909-3279.
-        </p>
-      )}
-    </form>
+
+      <Dialog open={lightbox !== null} onOpenChange={(open) => !open && setLightbox(null)}>
+        <DialogContent className="max-w-2xl border-gold/30 bg-background p-2">
+          <DialogTitle className="sr-only">Opening act flyer</DialogTitle>
+          {lightbox && (
+            <img
+              src={lightbox}
+              alt="Opening act flyer"
+              className="max-h-[80vh] w-full rounded-lg object-contain"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -373,7 +370,9 @@ export function CharlyBlackPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
         <div className="relative mx-auto max-w-4xl px-4 py-12 text-center sm:px-6 sm:py-16">
           <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
-            <Badge className="bg-gold text-gold-foreground hover:bg-gold">Historic Chicago Night</Badge>
+            <Badge className="bg-gold text-gold-foreground hover:bg-gold">
+              Historic Chicago Night
+            </Badge>
             <Badge variant="outline" className="border-gold/40 text-gold">
               One Night Only
             </Badge>
@@ -482,6 +481,8 @@ export function CharlyBlackPage() {
                 <li>Solid Chain</li>
                 <li>Nego Heights</li>
                 <li>Krabbit</li>
+                <li>Honezty</li>
+                <li>Jay Rebl</li>
               </ul>
             </div>
             <div className="rounded-xl border border-border bg-card p-5">
@@ -490,6 +491,14 @@ export function CharlyBlackPage() {
                 Production by <span className="font-medium text-foreground">Q-Ality</span>
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* Opening Acts */}
+        <section>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">Opening Acts</h2>
+          <div className="mt-6">
+            <OpeningActs />
           </div>
         </section>
 
@@ -549,36 +558,60 @@ export function CharlyBlackPage() {
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {TICKET_TIERS.map(({ tier, price }) => (
-              <div key={tier} className="rounded-xl border border-gold/30 bg-card p-5 text-center">
+            {TICKET_TIERS.map(({ tier, price, active }) => (
+              <div
+                key={tier}
+                className={
+                  active
+                    ? "relative rounded-xl border-2 border-gold bg-gold/10 p-5 text-center shadow-lg shadow-gold/20"
+                    : "rounded-xl border border-gold/30 bg-card p-5 text-center"
+                }
+              >
+                {active && (
+                  <span className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-gold px-3 py-1 text-xs font-bold uppercase tracking-wide text-gold-foreground">
+                    <span className="relative flex size-2">
+                      <span className="absolute inline-flex size-full animate-ping rounded-full bg-gold-foreground/60" />
+                      <span className="relative inline-flex size-2 rounded-full bg-gold-foreground" />
+                    </span>
+                    On Sale Now
+                  </span>
+                )}
                 <p className="eyebrow mb-1">{tier}</p>
                 <p className="font-display text-3xl font-extrabold text-gold">{price}</p>
+                {active && (
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">
+                    Lowest price — grab it before it's gone
+                  </p>
+                )}
               </div>
             ))}
           </div>
 
-          <div className="mt-8 rounded-xl border border-gold/30 bg-card p-5">
-            <p className="font-display text-lg font-bold">Get notified the moment tickets go live</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Links for all three outlets below are coming soon. Leave your email and we'll tell you
-              first — before the price rises.
-            </p>
-            <div className="mt-4">
-              <NotifySignup />
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {TICKET_OUTLETS.map((outlet) => (
-              <div
-                key={outlet}
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gold/30 bg-card px-6 py-6 text-center"
-              >
-                <Ticket className="size-5 text-gold" />
-                <span className="font-display font-semibold">{outlet}</span>
-                <span className="text-xs text-muted-foreground">Link coming soon</span>
-              </div>
-            ))}
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            {TICKET_OUTLETS.map(({ name, href }) =>
+              href ? (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex flex-col items-center justify-center gap-2 rounded-xl border border-gold/40 bg-card px-6 py-6 text-center transition-colors hover:border-gold hover:bg-gold/5"
+                >
+                  <Ticket className="size-5 text-gold" />
+                  <span className="font-display font-semibold">{name}</span>
+                  <span className="text-xs font-medium text-gold">Buy Tickets →</span>
+                </a>
+              ) : (
+                <div
+                  key={name}
+                  className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gold/30 bg-card px-6 py-6 text-center"
+                >
+                  <Ticket className="size-5 text-gold" />
+                  <span className="font-display font-semibold">{name}</span>
+                  <span className="text-xs text-muted-foreground">Link coming soon</span>
+                </div>
+              ),
+            )}
           </div>
           <p className="mt-6 text-sm text-muted-foreground">
             Questions in the meantime?{" "}
