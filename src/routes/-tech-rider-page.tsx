@@ -135,14 +135,19 @@ export function TechRiderPage() {
   }
 
   async function onSubmit(values: FormValues) {
+    const socialMedia = [
+      values.socialInstagram && { platform: "Instagram", handle: values.socialInstagram },
+      values.socialTiktok && { platform: "TikTok", handle: values.socialTiktok },
+      values.socialOther && { platform: "Other", handle: values.socialOther },
+    ].filter(Boolean);
+
+    if (socialMedia.length < 2) {
+      toast.error("Add at least 2 social media handles.");
+      return;
+    }
+
     setBusy(true);
     try {
-      const socialMedia = [
-        values.socialInstagram && { platform: "Instagram", handle: values.socialInstagram },
-        values.socialTiktok && { platform: "TikTok", handle: values.socialTiktok },
-        values.socialOther && { platform: "Other", handle: values.socialOther },
-      ].filter(Boolean);
-
       const body: Record<string, unknown> = {
         accessCode: accessCode.trim(),
         socialMedia,
@@ -354,6 +359,7 @@ export function TechRiderPage() {
 
           <div className="space-y-4 rounded-xl border border-border bg-card p-6">
             <p className="eyebrow">Promo</p>
+            <p className="text-xs text-muted-foreground">Add at least 2 social media handles.</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <Label>Instagram</Label>
@@ -382,7 +388,8 @@ export function TechRiderPage() {
             </div>
             <label className="flex items-start gap-2 text-sm">
               <Checkbox {...checkboxProps(register, "promoCommitmentAck")} />
-              I'll post about this event and tag TRC Events' pages as requested.
+              I'll post about this event and tag TRC Events' pages as requested. I understand TRC
+              Events will check that promotional material was actually posted.
             </label>
           </div>
 
