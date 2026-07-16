@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TechRiderRouteImport } from './routes/tech-rider'
 import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
+import { Route as RunOfShowRouteImport } from './routes/run-of-show'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as ContractRouteImport } from './routes/contract'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
@@ -24,6 +25,11 @@ const TechRiderRoute = TechRiderRouteImport.update({
 const StCatherineLinkupRoute = StCatherineLinkupRouteImport.update({
   id: '/st-catherine-linkup',
   path: '/st-catherine-linkup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RunOfShowRoute = RunOfShowRouteImport.update({
+  id: '/run-of-show',
+  path: '/run-of-show',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Jamaica64Route = Jamaica64RouteImport.update({
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
   '/jamaica64': typeof Jamaica64Route
+  '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
   '/jamaica64': typeof Jamaica64Route
+  '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
   '/jamaica64': typeof Jamaica64Route
+  '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/charly-black'
     | '/contract'
     | '/jamaica64'
+    | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/charly-black'
     | '/contract'
     | '/jamaica64'
+    | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/charly-black'
     | '/contract'
     | '/jamaica64'
+    | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   CharlyBlackRoute: typeof CharlyBlackRoute
   ContractRoute: typeof ContractRoute
   Jamaica64Route: typeof Jamaica64Route
+  RunOfShowRoute: typeof RunOfShowRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
   TechRiderRoute: typeof TechRiderRoute
 }
@@ -122,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/st-catherine-linkup'
       fullPath: '/st-catherine-linkup'
       preLoaderRoute: typeof StCatherineLinkupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/run-of-show': {
+      id: '/run-of-show'
+      path: '/run-of-show'
+      fullPath: '/run-of-show'
+      preLoaderRoute: typeof RunOfShowRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jamaica64': {
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   CharlyBlackRoute: CharlyBlackRoute,
   ContractRoute: ContractRoute,
   Jamaica64Route: Jamaica64Route,
+  RunOfShowRoute: RunOfShowRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
   TechRiderRoute: TechRiderRoute,
 }
