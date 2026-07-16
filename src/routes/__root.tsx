@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navbar } from "../components/site/Navbar";
 import { Footer } from "../components/site/Footer";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -86,7 +87,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "TRC Events — Chicago's platform connecting reggae DJs, promoters, venues, and community. Find the right night, the right selector, the right room.",
       },
       { name: "author", content: "TRC Events" },
-      { property: "og:title", content: "TRC Events — The Right Connection. The Reggae Connection." },
+      {
+        property: "og:title",
+        content: "TRC Events — The Right Connection. The Reggae Connection.",
+      },
       {
         property: "og:description",
         content: "Chicago's home for reggae DJs, promoters, venues, and the community.",
@@ -94,12 +98,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@TRCEvents" },
-      { name: "twitter:title", content: "TRC Events — The Right Connection. The Reggae Connection." },
+      {
+        name: "twitter:title",
+        content: "TRC Events — The Right Connection. The Reggae Connection.",
+      },
       { name: "description", content: "Chicago Reggae" },
       { property: "og:description", content: "Chicago Reggae" },
       { name: "twitter:description", content: "Chicago Reggae" },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/45644b61-e63a-49f7-9898-d988463ee7d5" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/45644b61-e63a-49f7-9898-d988463ee7d5" },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/45644b61-e63a-49f7-9898-d988463ee7d5",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/45644b61-e63a-49f7-9898-d988463ee7d5",
+      },
     ],
     links: [
       {
@@ -147,6 +162,7 @@ function RootComponent() {
         </main>
         <Footer />
       </div>
+      <Toaster />
     </QueryClientProvider>
   );
 }
