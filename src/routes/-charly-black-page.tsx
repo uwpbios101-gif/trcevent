@@ -38,6 +38,9 @@ import jayReblImg from "@/assets/opening-act-jayrebl.jpg";
 import negoHeightsImg from "@/assets/opening-act-nego-heights.jpg";
 import solidShaneImg from "@/assets/opening-act-solid-shane.jpg";
 import allStarImg from "@/assets/all-star-opening-acts.jpg";
+import badChargieImg from "@/assets/dj-bad-chargie.jpg";
+import ghettoStoryImg from "@/assets/dj-ghetto-story.jpg";
+import djPoyoImg from "@/assets/dj-poyo.jpg";
 
 // Only add a `social` entry once a link is actually confirmed -- acts
 // without one yet (Krabbit, Solid Shane) just show no icon row at all.
@@ -78,6 +81,12 @@ const OPENING_ACTS = [
   },
   { name: "Solid Shane", img: solidShaneImg, social: [] },
   { name: "All Star Opening Acts", img: allStarImg, social: [] },
+  { name: "Bad Chargie", img: badChargieImg, social: [] },
+  { name: "Ghetto Story", img: ghettoStoryImg, social: [] },
+  { name: "DJ Poyo", img: djPoyoImg, social: [] },
+  // Matches DJs for all 5 opening acts (see /run-of-show) but has no
+  // promo flyer yet -- "coming soon" placeholder rather than omitting him.
+  { name: "Matches", img: null, social: [] },
 ];
 
 const GALLERY_IMAGES = [portraitImg, heroImg, galleryImg];
@@ -321,7 +330,7 @@ function OpeningActs() {
                 {act.img ? (
                   <img
                     src={act.img}
-                    alt={`${act.name} — Charly Black opening act flyer`}
+                    alt={`${act.name} — Charly Black lineup flyer`}
                     className="h-full w-full object-cover transition-transform group-hover:scale-105"
                   />
                 ) : (
@@ -555,7 +564,7 @@ export function CharlyBlackPage() {
 
         {/* Opening Acts */}
         <section>
-          <h2 className="font-display text-2xl font-bold sm:text-3xl">Opening Acts</h2>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">DJs &amp; Opening Acts</h2>
           <div className="mt-6">
             <OpeningActs />
           </div>
