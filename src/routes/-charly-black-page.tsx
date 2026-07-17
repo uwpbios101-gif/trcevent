@@ -77,6 +77,7 @@ const OPENING_ACTS = [
     ],
   },
   { name: "Solid Shane", img: solidShaneImg, social: [] },
+  { name: "All Star Opening Acts", img: allStarImg, social: [] },
 ];
 
 const GALLERY_IMAGES = [portraitImg, heroImg, galleryImg];
@@ -555,11 +556,6 @@ export function CharlyBlackPage() {
         {/* Opening Acts */}
         <section>
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Opening Acts</h2>
-          <img
-            src={allStarImg}
-            alt="All Star Opening Acts — Nego Hights, Jay Rebl, Krabbit, Bad Chargie, Solid Shane"
-            className="mx-auto mt-6 w-full max-w-sm rounded-2xl border border-gold/30 object-cover"
-          />
           <div className="mt-6">
             <OpeningActs />
           </div>
