@@ -123,6 +123,9 @@ function StatementSlide({ slide }: { slide: Slide }) {
     <SlideShell>
       <Kicker>{slide.kicker}</Kicker>
       <h2 className="font-display text-2xl font-bold sm:text-4xl">{slide.heading}</h2>
+      {slide.subheading && (
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base">{slide.subheading}</p>
+      )}
       {points.length > 0 && (
         <ul className="mt-8 space-y-4">
           {points.map((point, i) => (
@@ -154,6 +157,98 @@ function PointsSlide({ slide }: { slide: Slide }) {
           </div>
         ))}
       </div>
+    </SlideShell>
+  );
+}
+
+function ProseSlide({ slide }: { slide: Slide }) {
+  const paragraphs = (slide.body.paragraphs as string[]) ?? [];
+  return (
+    <SlideShell>
+      <Kicker>{slide.kicker}</Kicker>
+      <h2 className="font-display text-2xl font-bold sm:text-4xl">{slide.heading}</h2>
+      <div className="mt-6 space-y-4">
+        {paragraphs.map((p, i) => (
+          <p key={i} className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {p}
+          </p>
+        ))}
+      </div>
+    </SlideShell>
+  );
+}
+
+function TableSlide({ slide }: { slide: Slide }) {
+  const columns = (slide.body.columns as string[]) ?? [];
+  const rows = (slide.body.rows as string[][]) ?? [];
+  const note = (slide.body.note as string[]) ?? [];
+  return (
+    <SlideShell>
+      <Kicker>{slide.kicker}</Kicker>
+      <h2 className="font-display text-2xl font-bold sm:text-4xl">{slide.heading}</h2>
+      {slide.subheading && (
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base">{slide.subheading}</p>
+      )}
+      <div className="mt-6 overflow-x-auto rounded-xl border border-border">
+        <table className="w-full min-w-[560px] text-sm">
+          <thead>
+            <tr className="border-b border-border bg-card text-left">
+              {columns.map((col, i) => (
+                <th key={i} className="p-3 font-medium text-gold">
+                  {col}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={i} className="border-b border-border last:border-0">
+                {row.map((cell, j) => (
+                  <td key={j} className="p-3 align-top text-muted-foreground">
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {note.length > 0 && (
+        <div className="mt-4 space-y-2">
+          {note.map((n, i) => (
+            <p key={i} className="text-xs italic text-muted-foreground">
+              {n}
+            </p>
+          ))}
+        </div>
+      )}
+    </SlideShell>
+  );
+}
+
+function FactsSlide({ slide }: { slide: Slide }) {
+  const facts = (slide.body.facts as { label: string; value: string }[]) ?? [];
+  const tagline = (slide.body.tagline as string) ?? "";
+  const social = (slide.body.social as string) ?? "";
+  return (
+    <SlideShell>
+      <Kicker>{slide.kicker}</Kicker>
+      <h2 className="font-display text-2xl font-bold sm:text-4xl">{slide.heading}</h2>
+      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+        {facts.map((f, i) => (
+          <div
+            key={i}
+            className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
+          >
+            <span className="text-xs uppercase tracking-wide text-gold/80">{f.label}</span>
+            <span className="text-sm font-medium">{f.value}</span>
+          </div>
+        ))}
+      </div>
+      {tagline && (
+        <p className="font-display mt-6 text-center text-lg italic text-gold">{tagline}</p>
+      )}
+      {social && <p className="mt-2 text-center text-xs text-muted-foreground">{social}</p>}
     </SlideShell>
   );
 }
@@ -374,6 +469,12 @@ function SlideContent({ pitch, slide }: { pitch: Pitch; slide: Slide }) {
       return <StatementSlide slide={slide} />;
     case "points":
       return <PointsSlide slide={slide} />;
+    case "prose":
+      return <ProseSlide slide={slide} />;
+    case "table":
+      return <TableSlide slide={slide} />;
+    case "facts":
+      return <FactsSlide slide={slide} />;
     case "crowd":
       return <CrowdSlide slide={slide} />;
     case "timeline":
