@@ -11,14 +11,18 @@ import {
   Phone,
   UtensilsCrossed,
   Music,
+  Music2,
   Instagram,
   Facebook,
   Twitter,
+  Youtube,
+  Globe,
   Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { TikTokIcon } from "@/components/site/BrandIcons";
 import { SOCIAL_LINKS } from "@/lib/social";
 import heroImg from "@/assets/charly-black-2.jpg";
 import portraitImg from "@/assets/charly-black-1.jpg";
@@ -34,12 +38,44 @@ import jayReblImg from "@/assets/opening-act-jayrebl.jpg";
 import negoHeightsImg from "@/assets/opening-act-nego-heights.jpg";
 import solidShaneImg from "@/assets/opening-act-solid-shane.jpg";
 
+// Only add a `social` entry once a link is actually confirmed -- acts
+// without one yet (Krabbit, Solid Shane) just show no icon row at all.
 const OPENING_ACTS = [
-  { name: "Krabbit", img: krabbitImg },
-  { name: "Honezty", img: honeztyImg },
-  { name: "Jay Rebl", img: jayReblImg },
-  { name: "Nego Heights", img: negoHeightsImg },
-  { name: "Solid Shane", img: solidShaneImg },
+  { name: "Krabbit", img: krabbitImg, social: [] },
+  {
+    name: "Honezty",
+    img: honeztyImg,
+    social: [
+      { platform: "TikTok", icon: TikTokIcon, href: "https://www.tiktok.com/@officialhonezty" },
+      { platform: "YouTube", icon: Youtube, href: "https://www.youtube.com/@mbhonesty" },
+      {
+        platform: "Spotify",
+        icon: Music2,
+        href: "https://open.spotify.com/album/0oHSlmXvnRdz6llLyDIShj",
+      },
+    ],
+  },
+  {
+    name: "Jay Rebl",
+    img: jayReblImg,
+    social: [
+      { platform: "TikTok", icon: TikTokIcon, href: "https://www.tiktok.com/@jayrebl" },
+      { platform: "SoundCloud", icon: Music2, href: "https://soundcloud.com/m-f-c-muzic" },
+      { platform: "Instagram", icon: Instagram, href: "https://www.instagram.com/jayreblmusic" },
+    ],
+  },
+  {
+    name: "Nego Heights",
+    img: negoHeightsImg,
+    social: [
+      { platform: "TikTok", icon: TikTokIcon, href: "https://www.tiktok.com/@negohights" },
+      { platform: "YouTube", icon: Youtube, href: "https://youtube.com/@negohights" },
+      { platform: "Instagram", icon: Instagram, href: "https://www.instagram.com/negohights" },
+      { platform: "Facebook", icon: Facebook, href: "https://www.facebook.com/share/1EPrrZEyBE/" },
+      { platform: "Website", icon: Globe, href: "https://www.negohightsmusic.com/" },
+    ],
+  },
+  { name: "Solid Shane", img: solidShaneImg, social: [] },
 ];
 
 const GALLERY_IMAGES = [portraitImg, heroImg, galleryImg];
@@ -269,28 +305,50 @@ function OpeningActs() {
     <>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {OPENING_ACTS.map((act) => (
-          <button
+          <div
             key={act.name}
-            type="button"
-            onClick={() => act.img && setLightbox(act.img)}
-            disabled={!act.img}
-            className="group overflow-hidden rounded-xl border border-border bg-card text-left transition-colors hover:border-gold/50 disabled:cursor-default disabled:hover:border-border"
+            className="overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-gold/50"
           >
-            <div className="aspect-[4/5] w-full overflow-hidden bg-muted">
-              {act.img ? (
-                <img
-                  src={act.img}
-                  alt={`${act.name} — Charly Black opening act flyer`}
-                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center px-3 text-center text-xs text-muted-foreground">
-                  Flyer coming soon
+            <button
+              type="button"
+              onClick={() => act.img && setLightbox(act.img)}
+              disabled={!act.img}
+              className="group block w-full text-left disabled:cursor-default"
+            >
+              <div className="aspect-[4/5] w-full overflow-hidden bg-muted">
+                {act.img ? (
+                  <img
+                    src={act.img}
+                    alt={`${act.name} — Charly Black opening act flyer`}
+                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center px-3 text-center text-xs text-muted-foreground">
+                    Flyer coming soon
+                  </div>
+                )}
+              </div>
+            </button>
+            <div className="p-2 text-center">
+              <p className="text-sm font-medium">{act.name}</p>
+              {act.social.length > 0 && (
+                <div className="mt-1.5 flex items-center justify-center gap-2">
+                  {act.social.map(({ platform, icon: Icon, href }) => (
+                    <a
+                      key={platform}
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`${act.name} on ${platform}`}
+                      className="text-muted-foreground transition-colors hover:text-gold"
+                    >
+                      <Icon className="size-3.5" />
+                    </a>
+                  ))}
                 </div>
               )}
             </div>
-            <p className="p-2 text-center text-sm font-medium">{act.name}</p>
-          </button>
+          </div>
         ))}
       </div>
 

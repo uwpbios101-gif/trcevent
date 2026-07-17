@@ -1,11 +1,13 @@
 // Shared by src/routes/contract.tsx. The "-" prefix excludes this file from
 // route generation (TanStack Router convention) — see src/routes/README.md.
 //
-// Flow: access code -> email verification (6-digit code, not a link -- see
-// supabase/functions/request-contract-verification for why) -> read the
-// contract + fill in details + typed signature -> submit. All validation
-// is re-checked server-side in submit-talent-contract; the client-side
-// step gating here is purely UX, not the security boundary.
+// Flow: access code -> read the contract + fill in details + typed
+// signature -> submit. There's no separate email-verification step here --
+// per Stephen (2026-07-17), that's redundant with /get-started, which
+// already only ever emails a code to a real address, so anyone who can
+// produce the code has already proven they received it by email once.
+// All validation is re-checked server-side in submit-talent-contract; the
+// client-side step gating here is purely UX, not the security boundary.
 //
 // DRAFT CONTRACT LANGUAGE: contractSections() below is a standard-form
 // starting point, not reviewed by a lawyer -- keep in sync with
@@ -19,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { CheckCircle2, FileSignature, KeyRound, Loader2, Mail, ShieldCheck } from "lucide-react";
+import { CheckCircle2, FileSignature, KeyRound, Loader2 } from "lucide-react";
 
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
@@ -42,7 +44,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const SITE_URL = "https://trcevent.com";
 const PAYMENT_METHODS = ["Zelle", "Cash App", "Check", "Cash", "Bank Transfer", "Other"] as const;
@@ -194,6 +195,7 @@ function contractSections(invite: InviteInfo) {
 const signFormSchema = z.object({
   signerFullLegalName: z.string().trim().min(2, "Enter your full legal name."),
   signerBusinessName: z.string().trim().optional(),
+  signerEmail: z.string().trim().email("Enter a valid email."),
   signerAddress: z.string().trim().min(5, "Enter your mailing address."),
   signerPhone: z.string().trim().min(7, "Enter a phone number."),
   emergencyContactName: z.string().trim().min(2, "Enter an emergency contact name."),
@@ -243,22 +245,18 @@ const ticketFormSchema = z
 type TicketFormValues = z.infer<typeof ticketFormSchema>;
 
 export function ContractPage() {
-  const [step, setStep] = useState<"code" | "email" | "verify" | "sign" | "tickets" | "done">(
-    "code",
-  );
+  const [step, setStep] = useState<"code" | "sign" | "tickets" | "done">("code");
   const [busy, setBusy] = useState(false);
 
   const [accessCode, setAccessCode] = useState("");
   const [invite, setInvite] = useState<InviteInfo | null>(null);
-
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
 
   const form = useForm<SignFormValues>({
     resolver: zodResolver(signFormSchema),
     defaultValues: {
       signerFullLegalName: "",
       signerBusinessName: "",
+      signerEmail: "",
       signerAddress: "",
       signerPhone: "",
       emergencyContactName: "",
@@ -305,48 +303,6 @@ export function ContractPage() {
         return;
       }
       setInvite(data as InviteInfo);
-      setStep("email");
-    } catch {
-      toast.error("Something went wrong. Check your connection and try again.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function handleRequestCode(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email.trim()) return;
-    setBusy(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("request-contract-verification", {
-        body: { email: email.trim() },
-      });
-      if (error || data?.error) {
-        toast.error(data?.error ?? "Couldn't send a verification code. Try again.");
-        return;
-      }
-      toast.success("Check your email for a 6-digit code.");
-      setStep("verify");
-    } catch {
-      toast.error("Something went wrong. Check your connection and try again.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function handleVerifyCode(e: React.FormEvent) {
-    e.preventDefault();
-    if (otp.length !== 6) return;
-    setBusy(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("verify-contract-code", {
-        body: { email: email.trim(), code: otp },
-      });
-      if (error || !data?.valid) {
-        toast.error(data?.error ?? "That code didn't work. Try again.");
-        return;
-      }
-      toast.success("Email verified.");
       setStep("sign");
     } catch {
       toast.error("Something went wrong. Check your connection and try again.");
@@ -365,7 +321,6 @@ export function ContractPage() {
       const { data, error } = await supabase.functions.invoke("submit-talent-contract", {
         body: {
           accessCode: accessCode.trim(),
-          signerEmail: email.trim(),
           ...values,
         },
       });
@@ -448,70 +403,6 @@ export function ContractPage() {
         </form>
       )}
 
-      {step === "email" && invite && (
-        <div className="space-y-4 rounded-xl border border-border bg-card p-6">
-          <InviteSummary invite={invite} />
-          <form onSubmit={handleRequestCode} className="space-y-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Mail className="size-4 text-gold" />
-              We'll email you a 6-digit code to confirm it's really you.
-            </div>
-            <div>
-              <Label htmlFor="email">Your email</Label>
-              <Input
-                id="email"
-                type="email"
-                autoFocus
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="mt-1.5"
-              />
-            </div>
-            <Button type="submit" variant="gold" className="w-full" disabled={busy}>
-              {busy ? <Loader2 className="size-4 animate-spin" /> : null}
-              Send code
-            </Button>
-          </form>
-        </div>
-      )}
-
-      {step === "verify" && invite && (
-        <div className="space-y-4 rounded-xl border border-border bg-card p-6">
-          <InviteSummary invite={invite} />
-          <form onSubmit={handleVerifyCode} className="space-y-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <ShieldCheck className="size-4 text-gold" />
-              Enter the code we sent to {email}.
-            </div>
-            <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-              <InputOTPGroup>
-                {[0, 1, 2, 3, 4, 5].map((i) => (
-                  <InputOTPSlot key={i} index={i} />
-                ))}
-              </InputOTPGroup>
-            </InputOTP>
-            <Button
-              type="submit"
-              variant="gold"
-              className="w-full"
-              disabled={busy || otp.length !== 6}
-            >
-              {busy ? <Loader2 className="size-4 animate-spin" /> : null}
-              Verify
-            </Button>
-            <button
-              type="button"
-              className="w-full text-center text-xs text-muted-foreground hover:text-gold"
-              onClick={handleRequestCode}
-              disabled={busy}
-            >
-              Didn't get it? Resend code
-            </button>
-          </form>
-        </div>
-      )}
-
       {step === "sign" && invite && (
         <div className="space-y-6">
           <InviteSummary invite={invite} />
@@ -586,10 +477,19 @@ export function ContractPage() {
                     </FormItem>
                   )}
                 />
-                <div>
-                  <Label>Email</Label>
-                  <Input value={email} disabled className="mt-1.5 opacity-70" />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="signerEmail"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="signerPhone"
