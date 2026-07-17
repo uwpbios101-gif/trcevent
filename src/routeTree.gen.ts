@@ -17,6 +17,7 @@ import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as ContractRouteImport } from './routes/contract'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PitchSlugRouteImport } from './routes/pitch.$slug'
 
 const TechRiderRoute = TechRiderRouteImport.update({
   id: '/tech-rider',
@@ -58,6 +59,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PitchSlugRoute = PitchSlugRouteImport.update({
+  id: '/pitch/$slug',
+  path: '/pitch/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
+  '/pitch/$slug': typeof PitchSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
+  '/pitch/$slug': typeof PitchSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
+  '/pitch/$slug': typeof PitchSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
+    | '/pitch/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
+    | '/pitch/$slug'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
+    | '/pitch/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   RunOfShowRoute: typeof RunOfShowRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
   TechRiderRoute: typeof TechRiderRoute
+  PitchSlugRoute: typeof PitchSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pitch/$slug': {
+      id: '/pitch/$slug'
+      path: '/pitch/$slug'
+      fullPath: '/pitch/$slug'
+      preLoaderRoute: typeof PitchSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   RunOfShowRoute: RunOfShowRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
   TechRiderRoute: TechRiderRoute,
+  PitchSlugRoute: PitchSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

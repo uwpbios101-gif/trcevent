@@ -34,6 +34,17 @@ jobs:
       - name: Build static export
         run: bun run build
 
+      - name: SPA fallback for dynamic routes (e.g. /pitch/:slug)
+        # GitHub Pages serves 404.html for any path with no matching file.
+        # Routes like /pitch/mega-force-lounge are added purely via a
+        # Supabase DB row (no rebuild), so no dist/client/pitch/... folder
+        # ever exists for them. Copying the built shell to 404.html means
+        # GitHub Pages falls through to the SPA for those paths instead of
+        # a hard 404 -- the client-side router then matches $slug and
+        # fetches that pitch's content at runtime. Every route shares the
+        # same JS bundle, so any prerendered page works as the fallback shell.
+        run: cp dist/client/index.html dist/client/404.html
+
       - name: Deploy to trcevents/events
         uses: peaceiris/actions-gh-pages@v4
         with:
