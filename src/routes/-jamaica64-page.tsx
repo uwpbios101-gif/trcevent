@@ -26,13 +26,16 @@ export function jamaica64Head() {
   const imageUrl = `${SITE_URL}${flyerImg}`;
   return {
     meta: [
-      { title: "Jamaica64 — Chicagoland Celebrates Jamaica | TRC Events" },
+      { title: "Jamaica64 — Chicagoland Celebrates Jamaica | One Love Music Festival" },
       {
         name: "description",
         content:
-          "Jamaica64: United in Celebrating Resilience. Sunday, Aug 2, 2026, 10AM–10PM at Stiner Pavilion on the beach, Waukegan, IL. Presented by TRC Events & Ras Tafari Inc.",
+          "Jamaica64: United in Celebrating Resilience. Sunday, Aug 2, 2026, 10AM–10PM at Stiner Pavilion on the beach, Waukegan, IL. Presented by One Love Music Festival.",
       },
-      { property: "og:title", content: "Jamaica64 — Chicagoland Celebrates Jamaica | TRC Events" },
+      {
+        property: "og:title",
+        content: "Jamaica64 — Chicagoland Celebrates Jamaica | One Love Music Festival",
+      },
       {
         property: "og:description",
         content:
@@ -42,7 +45,10 @@ export function jamaica64Head() {
       { property: "og:image", content: imageUrl },
       { property: "og:url", content: `${SITE_URL}/jamaica64` },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Jamaica64 — Chicagoland Celebrates Jamaica | TRC Events" },
+      {
+        name: "twitter:title",
+        content: "Jamaica64 — Chicagoland Celebrates Jamaica | One Love Music Festival",
+      },
       {
         name: "twitter:description",
         content:
@@ -116,7 +122,7 @@ export function Jamaica64Page() {
     },
     organizer: {
       "@type": "Organization",
-      name: "TRC Events",
+      name: "One Love Music Festival",
       url: SITE_URL,
     },
   };
@@ -138,7 +144,7 @@ export function Jamaica64Page() {
               Free Community Event
             </Badge>
           </div>
-          <p className="eyebrow mb-2">Presented by TRC Events &amp; Ras Tafari Inc</p>
+          <p className="eyebrow mb-2">Presented by One Love Music Festival</p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-7xl">
             Jamaica64
           </h1>
@@ -188,9 +194,8 @@ export function Jamaica64Page() {
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
               Jamaica64 marks 64 years of independence with a full day of community, culture, and
-              resilience on the beach in Waukegan. Presented by TRC Events in partnership with Ras
-              Tafari Inc, this is a gathering for the whole Chicagoland Jamaican diaspora — from
-              sunrise to sundown.
+              resilience on the beach in Waukegan. Presented by One Love Music Festival, this is a
+              gathering for the whole Chicagoland Jamaican diaspora — from sunrise to sundown.
             </p>
             <p className="mt-4 leading-relaxed text-muted-foreground">
               Wear your colors and bring your Jamaican vibes. Bring your chairs, your crew, and your
