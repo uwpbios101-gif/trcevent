@@ -37,6 +37,7 @@ import honeztyImg from "@/assets/opening-act-honezty.jpg";
 import jayReblImg from "@/assets/opening-act-jayrebl.jpg";
 import negoHeightsImg from "@/assets/opening-act-nego-heights.jpg";
 import solidShaneImg from "@/assets/opening-act-solid-shane.jpg";
+import allStarImg from "@/assets/all-star-opening-acts.jpg";
 
 // Only add a `social` entry once a link is actually confirmed -- acts
 // without one yet (Krabbit, Solid Shane) just show no icon row at all.
@@ -554,6 +555,11 @@ export function CharlyBlackPage() {
         {/* Opening Acts */}
         <section>
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Opening Acts</h2>
+          <img
+            src={allStarImg}
+            alt="All Star Opening Acts — Nego Hights, Jay Rebl, Krabbit, Bad Chargie, Solid Shane"
+            className="mx-auto mt-6 w-full max-w-sm rounded-2xl border border-gold/30 object-cover"
+          />
           <div className="mt-6">
             <OpeningActs />
           </div>
