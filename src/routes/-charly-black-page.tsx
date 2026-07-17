@@ -32,15 +32,14 @@ import krabbitImg from "@/assets/opening-act-krabbit.jpg";
 import honeztyImg from "@/assets/opening-act-honezty.jpg";
 import jayReblImg from "@/assets/opening-act-jayrebl.jpg";
 import negoHeightsImg from "@/assets/opening-act-nego-heights.jpg";
+import solidShaneImg from "@/assets/opening-act-solid-shane.jpg";
 
-// Solid Chain has no promo flyer yet -- img: null renders a "coming soon"
-// placeholder card instead of dropping them from the lineup entirely.
 const OPENING_ACTS = [
   { name: "Krabbit", img: krabbitImg },
   { name: "Honezty", img: honeztyImg },
   { name: "Jay Rebl", img: jayReblImg },
   { name: "Nego Heights", img: negoHeightsImg },
-  { name: "Solid Chain", img: null },
+  { name: "Solid Shane", img: solidShaneImg },
 ];
 
 const GALLERY_IMAGES = [portraitImg, heroImg, galleryImg];
@@ -478,7 +477,7 @@ export function CharlyBlackPage() {
             <div className="rounded-xl border border-border bg-card p-5">
               <h3 className="eyebrow mb-3">Chicago Support</h3>
               <ul className="space-y-1.5 text-sm text-muted-foreground">
-                <li>Solid Chain</li>
+                <li>Solid Shane</li>
                 <li>Nego Heights</li>
                 <li>Krabbit</li>
                 <li>Honezty</li>
