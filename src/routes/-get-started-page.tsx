@@ -52,7 +52,7 @@ const ACTS = [
   { slug: "krabbit", name: "Krabbit", img: krabbitImg },
   { slug: "honezty", name: "Honezty", img: honeztyImg },
   { slug: "solid-shane", name: "Solid Shane", img: solidShaneImg },
-  { slug: "nego-heights", name: "Nego Heights", img: negoHeightsImg },
+  { slug: "nego-hights", name: "Nego Hights", img: negoHeightsImg },
 ];
 
 type TileState =

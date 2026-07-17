@@ -65,7 +65,7 @@ const OPENING_ACTS = [
     ],
   },
   {
-    name: "Nego Heights",
+    name: "Nego Hights",
     img: negoHeightsImg,
     social: [
       { platform: "TikTok", icon: TikTokIcon, href: "https://www.tiktok.com/@negohights" },
@@ -536,7 +536,7 @@ export function CharlyBlackPage() {
               <h3 className="eyebrow mb-3">Chicago Support</h3>
               <ul className="space-y-1.5 text-sm text-muted-foreground">
                 <li>Solid Shane</li>
-                <li>Nego Heights</li>
+                <li>Nego Hights</li>
                 <li>Krabbit</li>
                 <li>Honezty</li>
                 <li>Jay Rebl</li>
