@@ -10,11 +10,47 @@ import {
   Instagram,
   Facebook,
   Twitter,
+  Music,
+  Play,
+  Pause,
+  Rewind,
+  FastForward,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
 import { SOCIAL_LINKS } from "@/lib/social";
 import flyerImg from "@/assets/jamaica64-flyer.jpg";
+import djDeeImg from "@/assets/jamaica64-dj-dee.jpg";
+import ghettoStoryImg from "@/assets/jamaica64-dj-ghetto-story.jpg";
+import jayRebelImg from "@/assets/jamaica64-jay-rebl.jpg";
+import montanaImg from "@/assets/jamaica64-dj-montana.jpg";
+import niceItUpImg from "@/assets/jamaica64-dj-nice-it-up.jpg";
+import oneStrandImg from "@/assets/jamaica64-one-strand.jpg";
+import qAlityImg from "@/assets/jamaica64-q-ality.jpg";
+import rasLionImg from "@/assets/jamaica64-dj-ras-lion.jpg";
+
+const PERFORMERS = [
+  { name: "DJ Ras Lion", role: "Performing Live", img: rasLionImg },
+  { name: "DJ Dee", role: "Performing Artist", img: djDeeImg },
+  { name: "Jay Rebel", role: "Performing Artist", img: jayRebelImg },
+  { name: "DJ Ghetto Story", role: "From Chicago", img: ghettoStoryImg },
+  { name: "One Strand", role: "Performing Artist", img: oneStrandImg },
+  { name: "DJ Montana", role: "Tana1", img: montanaImg },
+  { name: "DJ Nice It Up", role: "Featuring DJ", img: niceItUpImg },
+  { name: "Q-Ality Sound", role: "Sound Production", img: qAlityImg },
+];
+
+// Autoplay tick at 1x -- bumping the on-screen speed badge (2x/3x) shortens
+// this interval instead of changing embla's own scroll animation duration.
+const CAROUSEL_AUTOPLAY_MS = 3200;
 
 const SITE_URL = "https://trcevent.com";
 const VENUE_NAME = "Stiner Pavilion, On the Beach";
@@ -103,6 +139,151 @@ function CountdownStrip() {
   );
 }
 
+// Auto-rotating lineup carousel. Play/pause, reverse, and fast-forward are all
+// one control: tapping an arrow sets that scroll direction and starts an
+// interval driving embla's scrollNext/scrollPrev; tapping the *same* arrow
+// again cycles the speed (1x -> 2x -> 3x -> 1x) instead of stacking timers.
+function PerformerCarousel() {
+  const [api, setApi] = useState<CarouselApi>();
+  const [selected, setSelected] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [speed, setSpeed] = useState(1);
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!api) return;
+    const onSelect = () => setSelected(api.selectedScrollSnap());
+    onSelect();
+    api.on("select", onSelect);
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api]);
+
+  useEffect(() => {
+    if (!api || !isPlaying || lightbox) return;
+    const id = setInterval(
+      () => (direction === 1 ? api.scrollNext() : api.scrollPrev()),
+      CAROUSEL_AUTOPLAY_MS / speed,
+    );
+    return () => clearInterval(id);
+  }, [api, isPlaying, direction, speed, lightbox]);
+
+  const bump = (dir: 1 | -1) => {
+    setIsPlaying(true);
+    if (direction === dir) {
+      setSpeed((s) => (s >= 3 ? 1 : s + 1));
+    } else {
+      setDirection(dir);
+      setSpeed(1);
+    }
+  };
+
+  return (
+    <div>
+      <Carousel setApi={setApi} opts={{ loop: true, align: "center" }}>
+        <CarouselContent>
+          {PERFORMERS.map((p, i) => (
+            <CarouselItem key={p.name} className="basis-[78%] sm:basis-1/2 lg:basis-1/3">
+              <button
+                type="button"
+                onClick={() => setLightbox(p.img)}
+                className={cn(
+                  "group relative block w-full overflow-hidden rounded-2xl border bg-card transition-all duration-300",
+                  selected === i
+                    ? "border-gold shadow-[0_0_30px_-8px_var(--color-gold)]"
+                    : "border-border opacity-60",
+                )}
+              >
+                <img
+                  src={p.img}
+                  alt={`${p.name} — Jamaica64 lineup flyer`}
+                  className="aspect-[2/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 pt-12">
+                  <p className="font-display text-lg font-bold text-white">{p.name}</p>
+                  <p className="text-xs uppercase tracking-wider text-gold">{p.role}</p>
+                </div>
+                {selected === i && (
+                  <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gold">
+                    <span
+                      className={cn("size-1.5 rounded-full bg-gold", isPlaying && "animate-pulse")}
+                    />
+                    {isPlaying ? "Live" : "Paused"}
+                  </span>
+                )}
+              </button>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
+      <div className="mt-7 flex items-center justify-center gap-4">
+        <Button
+          variant="goldOutline"
+          size="icon"
+          className="rounded-full"
+          onClick={() => bump(-1)}
+          aria-label="Reverse lineup"
+        >
+          <Rewind className="size-4" />
+        </Button>
+        <Button
+          variant="gold"
+          size="icon"
+          className="size-12 rounded-full"
+          onClick={() => setIsPlaying((p) => !p)}
+          aria-label={isPlaying ? "Pause lineup" : "Play lineup"}
+        >
+          {isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
+        </Button>
+        <Button
+          variant="goldOutline"
+          size="icon"
+          className="rounded-full"
+          onClick={() => bump(1)}
+          aria-label="Fast-forward lineup"
+        >
+          <FastForward className="size-4" />
+        </Button>
+        <span className="w-8 text-sm font-semibold text-gold">{speed > 1 ? `${speed}x` : ""}</span>
+      </div>
+
+      <div className="mt-4 flex justify-center gap-1.5">
+        {PERFORMERS.map((p, i) => (
+          <button
+            key={p.name}
+            type="button"
+            onClick={() => {
+              setIsPlaying(false);
+              api?.scrollTo(i);
+            }}
+            aria-label={`Jump to ${p.name}`}
+            className={cn(
+              "h-1.5 rounded-full transition-all",
+              selected === i ? "w-6 bg-gold" : "w-1.5 bg-border hover:bg-gold/50",
+            )}
+          />
+        ))}
+      </div>
+
+      <Dialog open={lightbox !== null} onOpenChange={(open) => !open && setLightbox(null)}>
+        <DialogContent className="max-w-2xl border-gold/30 bg-background p-2">
+          <DialogTitle className="sr-only">Jamaica64 lineup flyer</DialogTitle>
+          {lightbox && (
+            <img
+              src={lightbox}
+              alt="Jamaica64 lineup flyer"
+              className="max-h-[80vh] w-full rounded-lg object-contain"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
 export function Jamaica64Page() {
   const mapsSrc = `https://www.google.com/maps?q=${encodeURIComponent(VENUE_ADDRESS)}&output=embed`;
 
@@ -125,6 +306,7 @@ export function Jamaica64Page() {
       name: "One Love Music Festival",
       url: SITE_URL,
     },
+    performer: PERFORMERS.map((p) => ({ "@type": "PerformingGroup", name: p.name })),
   };
 
   return (
@@ -207,6 +389,21 @@ export function Jamaica64Page() {
             alt="Jamaica64 — Chicagoland Celebrates Jamaica flyer"
             className="mx-auto w-full max-w-[280px] rounded-2xl border border-gold/30 object-cover"
           />
+        </section>
+
+        {/* DJs & Performers */}
+        <section>
+          <p className="eyebrow mb-2 flex items-center gap-1.5">
+            <Music className="size-3.5 text-gold" /> Sounds By Various DJ's
+          </p>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">DJs &amp; Performers</h2>
+          <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+            One love, one riddim. Tap an arrow to spin the lineup forward or back, or hit play and
+            let it roll.
+          </p>
+          <div className="mt-6">
+            <PerformerCarousel />
+          </div>
         </section>
 
         {/* Venue */}
