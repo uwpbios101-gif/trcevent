@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const EVENT_LINKS = [
   { to: "/jamaica64", label: "Jamaica64" },
+  { to: "/jamaicaday", label: "Jamaica Independence Celebration" },
   { to: "/st-catherine-linkup", label: "St. Catherine Link-Up" },
 ];
 

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TechRiderRouteImport } from './routes/tech-rider'
 import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
 import { Route as RunOfShowRouteImport } from './routes/run-of-show'
+import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as ContractRouteImport } from './routes/contract'
@@ -32,6 +33,11 @@ const StCatherineLinkupRoute = StCatherineLinkupRouteImport.update({
 const RunOfShowRoute = RunOfShowRouteImport.update({
   id: '/run-of-show',
   path: '/run-of-show',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JamaicadayRoute = JamaicadayRouteImport.update({
+  id: '/jamaicaday',
+  path: '/jamaicaday',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Jamaica64Route = Jamaica64RouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/contract': typeof ContractRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
+  '/jamaicaday': typeof JamaicadayRoute
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/contract': typeof ContractRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
+  '/jamaicaday': typeof JamaicadayRoute
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/contract': typeof ContractRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
+  '/jamaicaday': typeof JamaicadayRoute
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/contract'
     | '/get-started'
     | '/jamaica64'
+    | '/jamaicaday'
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/contract'
     | '/get-started'
     | '/jamaica64'
+    | '/jamaicaday'
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/contract'
     | '/get-started'
     | '/jamaica64'
+    | '/jamaicaday'
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   ContractRoute: typeof ContractRoute
   GetStartedRoute: typeof GetStartedRoute
   Jamaica64Route: typeof Jamaica64Route
+  JamaicadayRoute: typeof JamaicadayRoute
   RunOfShowRoute: typeof RunOfShowRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
   TechRiderRoute: typeof TechRiderRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/run-of-show'
       fullPath: '/run-of-show'
       preLoaderRoute: typeof RunOfShowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jamaicaday': {
+      id: '/jamaicaday'
+      path: '/jamaicaday'
+      fullPath: '/jamaicaday'
+      preLoaderRoute: typeof JamaicadayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jamaica64': {
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContractRoute: ContractRoute,
   GetStartedRoute: GetStartedRoute,
   Jamaica64Route: Jamaica64Route,
+  JamaicadayRoute: JamaicadayRoute,
   RunOfShowRoute: RunOfShowRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
   TechRiderRoute: TechRiderRoute,
