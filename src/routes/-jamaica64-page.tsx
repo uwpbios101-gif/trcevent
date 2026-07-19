@@ -28,6 +28,7 @@ import {
 import { cn } from "@/lib/utils";
 import { SOCIAL_LINKS } from "@/lib/social";
 import flyerImg from "@/assets/jamaica64-flyer.jpg";
+import djDeangeloKingImg from "@/assets/jamaica64-dj-deangelo-king.jpg";
 import djDeeImg from "@/assets/jamaica64-dj-dee.jpg";
 import ghettoStoryImg from "@/assets/jamaica64-dj-ghetto-story.jpg";
 import jayRebelImg from "@/assets/jamaica64-jay-rebl.jpg";
@@ -38,6 +39,7 @@ import qAlityImg from "@/assets/jamaica64-q-ality.jpg";
 import rasLionImg from "@/assets/jamaica64-dj-ras-lion.jpg";
 
 const PERFORMERS = [
+  { name: "DJ De'Angelo King", role: "Host / DJ", img: djDeangeloKingImg },
   { name: "DJ Ras Lion", role: "Performing Live", img: rasLionImg },
   { name: "DJ Dee", role: "Performing Artist", img: djDeeImg },
   { name: "Jay Rebel", role: "Performing Artist", img: jayRebelImg },
