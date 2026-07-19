@@ -261,29 +261,41 @@ export function CompPage() {
     }
   }
 
+  async function callVerifyCode(trimmedEmail: string, trimmedCode: string) {
+    const { data, error } = await supabase.functions.invoke("verify-comp-code", {
+      body: { email: trimmedEmail, code: trimmedCode },
+    });
+    if (data?.valid) return { valid: true as const };
+    const message = data?.error ?? (error ? await extractFunctionErrorMessage(error) : null);
+    return { valid: false as const, message };
+  }
+
   async function handleConfirmCode() {
     const trimmed = email.trim();
-    if (!code.trim()) {
+    const trimmedCode = code.trim();
+    if (!trimmedCode) {
       setVerifyMsg({ text: "Enter the code from your email.", ok: false });
       return;
     }
     setVerifyingCode(true);
     try {
-      const { data, error } = await supabase.functions.invoke("verify-comp-code", {
-        body: { email: trimmed, code: code.trim() },
-      });
-      if (data?.valid) {
+      let result = await callVerifyCode(trimmed, trimmedCode);
+      // A failure with no specific reason usually means a transient hiccup
+      // (e.g. a cold-start blip) rather than an actually-wrong code -- the
+      // function is otherwise very consistent about explaining itself, so
+      // one silent retry smooths that over instead of showing a confusing
+      // generic error for something that would've worked a second later.
+      if (!result.valid && !result.message) {
+        result = await callVerifyCode(trimmed, trimmedCode);
+      }
+      if (result.valid) {
         setEmailVerified(true);
         setVerifiedEmail(trimmed.toLowerCase());
         setVerifyMsg({ text: "✓ Email verified", ok: true });
         setCodeSent(false);
         return;
       }
-      const message =
-        data?.error ??
-        (error ? await extractFunctionErrorMessage(error) : null) ??
-        "That code didn't work.";
-      setVerifyMsg({ text: message, ok: false });
+      setVerifyMsg({ text: result.message ?? "That code didn't work.", ok: false });
     } catch {
       setVerifyMsg({ text: "Something went wrong checking that code. Try again.", ok: false });
     } finally {
@@ -398,7 +410,7 @@ export function CompPage() {
                     inputMode="numeric"
                     maxLength={6}
                     value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                     className="flex-1"
                   />
                   <Button
