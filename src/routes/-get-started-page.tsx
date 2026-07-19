@@ -22,6 +22,7 @@ import badChargieImg from "@/assets/dj-bad-chargie.jpg";
 import djPoyoImg from "@/assets/dj-poyo.jpg";
 import ghettoStoryImg from "@/assets/dj-ghetto-story.jpg";
 import jayReblImg from "@/assets/opening-act-jayrebl.jpg";
+import dainjahRusImg from "@/assets/opening-act-dainjah-rus.jpg";
 import krabbitImg from "@/assets/opening-act-krabbit.jpg";
 import honeztyImg from "@/assets/opening-act-honezty.jpg";
 import solidShaneImg from "@/assets/opening-act-solid-shane.jpg";
@@ -49,6 +50,7 @@ const ACTS = [
   { slug: "dj-poyo", name: "DJ Poyo", img: djPoyoImg },
   { slug: "ghetto-story", name: "Ghetto Story", img: ghettoStoryImg },
   { slug: "jay-rebl", name: "Jay Rebl", img: jayReblImg },
+  { slug: "dainjah-rus", name: "Dainjah Rus", img: dainjahRusImg },
   { slug: "krabbit", name: "Krabbit", img: krabbitImg },
   { slug: "honezty", name: "Honezty", img: honeztyImg },
   { slug: "solid-shane", name: "Solid Shane", img: solidShaneImg },

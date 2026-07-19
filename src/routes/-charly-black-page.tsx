@@ -33,6 +33,7 @@ import flyerImgBuddyB from "@/assets/charly-black-flyer-buddyb.jpg";
 import heroVideo from "@/assets/charly-black-hero.mp4";
 import heroPoster from "@/assets/charly-black-hero-poster.jpg";
 import krabbitImg from "@/assets/opening-act-krabbit.jpg";
+import dainjahRusImg from "@/assets/opening-act-dainjah-rus.jpg";
 import honeztyImg from "@/assets/opening-act-honezty.jpg";
 import jayReblImg from "@/assets/opening-act-jayrebl.jpg";
 import negoHeightsImg from "@/assets/opening-act-nego-heights.jpg";
@@ -45,6 +46,7 @@ import djPoyoImg from "@/assets/dj-poyo.jpg";
 // Only add a `social` entry once a link is actually confirmed -- acts
 // without one yet (Krabbit, Solid Shane) just show no icon row at all.
 const OPENING_ACTS = [
+  { name: "Dainjah Rus", img: dainjahRusImg, social: [] },
   { name: "Krabbit", img: krabbitImg, social: [] },
   {
     name: "Honezty",
@@ -546,6 +548,7 @@ export function CharlyBlackPage() {
             <div className="rounded-xl border border-border bg-card p-5">
               <h3 className="eyebrow mb-3">Chicago Support</h3>
               <ul className="space-y-1.5 text-sm text-muted-foreground">
+                <li>Dainjah Rus</li>
                 <li>Solid Shane</li>
                 <li>Nego Hights</li>
                 <li>Krabbit</li>
