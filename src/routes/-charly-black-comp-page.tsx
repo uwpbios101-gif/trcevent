@@ -60,6 +60,26 @@ function payoutFor(n: number) {
   return tier1 * TICKET_PRICE * 0.7 + tier2 * TICKET_PRICE * 0.5;
 }
 
+// supabase.functions.invoke() routes a non-2xx response into `error` rather
+// than `data`, even when the function's JSON body has a perfectly good
+// `.error` message (FunctionsHttpError carries the raw Response on
+// `.context`). Without this, a non-2xx failure shows a generic fallback
+// instead of the real reason.
+async function extractFunctionErrorMessage(error: unknown): Promise<string | null> {
+  if (!error || typeof error !== "object") return null;
+  const context = (error as { context?: Response }).context;
+  if (context && typeof context.json === "function") {
+    try {
+      const body = await context.json();
+      if (body && typeof body.error === "string") return body.error;
+    } catch {
+      // context body wasn't JSON -- fall through to error.message
+    }
+  }
+  const message = (error as { message?: string }).message;
+  return typeof message === "string" ? message : null;
+}
+
 const SOCIAL_PLATFORMS = [
   { name: "Instagram", field: "handleInstagram", placeholder: "@handle" },
   { name: "TikTok", field: "handleTiktok", placeholder: "@handle" },
@@ -228,7 +248,8 @@ export function CompPage() {
         body: { email: trimmed },
       });
       if (error || data?.error) {
-        setVerifyMsg({ text: `Couldn't send a code: ${data?.error ?? "try again"}`, ok: false });
+        const message = data?.error ?? (await extractFunctionErrorMessage(error)) ?? "try again";
+        setVerifyMsg({ text: `Couldn't send a code: ${message}`, ok: false });
         return;
       }
       setCodeSent(true);
@@ -248,7 +269,7 @@ export function CompPage() {
     }
     setVerifyingCode(true);
     try {
-      const { data } = await supabase.functions.invoke("verify-comp-code", {
+      const { data, error } = await supabase.functions.invoke("verify-comp-code", {
         body: { email: trimmed, code: code.trim() },
       });
       if (data?.valid) {
@@ -256,9 +277,13 @@ export function CompPage() {
         setVerifiedEmail(trimmed.toLowerCase());
         setVerifyMsg({ text: "✓ Email verified", ok: true });
         setCodeSent(false);
-      } else {
-        setVerifyMsg({ text: data?.error ?? "That code didn't work.", ok: false });
+        return;
       }
+      const message =
+        data?.error ??
+        (error ? await extractFunctionErrorMessage(error) : null) ??
+        "That code didn't work.";
+      setVerifyMsg({ text: message, ok: false });
     } catch {
       setVerifyMsg({ text: "Something went wrong checking that code. Try again.", ok: false });
     } finally {

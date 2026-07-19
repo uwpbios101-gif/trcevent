@@ -56,6 +56,26 @@ function payoutFor(n: number) {
   return tier1 * TICKET_PRICE * 0.7 + tier2 * TICKET_PRICE * 0.5;
 }
 
+// supabase.functions.invoke() routes a non-2xx response into `error` rather
+// than `data`, even when the function's JSON body has a perfectly good
+// `.error` message (FunctionsHttpError carries the raw Response on
+// `.context`). Without this, a non-2xx failure shows a generic fallback
+// instead of the real reason.
+async function extractFunctionErrorMessage(error: unknown): Promise<string | null> {
+  if (!error || typeof error !== "object") return null;
+  const context = (error as { context?: Response }).context;
+  if (context && typeof context.json === "function") {
+    try {
+      const body = await context.json();
+      if (body && typeof body.error === "string") return body.error;
+    } catch {
+      // context body wasn't JSON -- fall through to error.message
+    }
+  }
+  const message = (error as { message?: string }).message;
+  return typeof message === "string" ? message : null;
+}
+
 const SOCIAL_PLATFORMS = [
   { name: "Instagram", field: "handleInstagram", placeholder: "@handle" },
   { name: "TikTok", field: "handleTiktok", placeholder: "@handle" },
@@ -215,11 +235,15 @@ function GuideAndSignIn({ onSignedIn }: { onSignedIn: () => void }) {
     setBusy(true);
     setFpMsg("");
     try {
-      const { data } = await supabase.functions.invoke("request-admin-password-reset", {
+      const { data, error } = await supabase.functions.invoke("request-admin-password-reset", {
         body: { email: fpEmail.trim() },
       });
-      if (data?.error) {
-        setFpMsg(data.error);
+      if (error || data?.error) {
+        setFpMsg(
+          data?.error ??
+            (await extractFunctionErrorMessage(error)) ??
+            "Something went wrong. Try again.",
+        );
       } else {
         setFpMsg("If that email is registered, a code was sent.");
         setFpSent(true);
@@ -239,11 +263,15 @@ function GuideAndSignIn({ onSignedIn }: { onSignedIn: () => void }) {
     setBusy(true);
     setFpResetMsg("");
     try {
-      const { data } = await supabase.functions.invoke("reset-admin-password", {
+      const { data, error } = await supabase.functions.invoke("reset-admin-password", {
         body: { email: fpEmail.trim(), code: fpCode.trim(), newPassword: fpNewPassword },
       });
       if (!data?.ok) {
-        setFpResetMsg(data?.error ?? "That didn't work. Try again.");
+        setFpResetMsg(
+          data?.error ??
+            (error ? await extractFunctionErrorMessage(error) : null) ??
+            "That didn't work. Try again.",
+        );
         return;
       }
       setFpResetMsg("Password set! Sign in with it now.");
@@ -271,34 +299,34 @@ function GuideAndSignIn({ onSignedIn }: { onSignedIn: () => void }) {
 
       <ol className="mt-6 space-y-4 pl-5 text-sm">
         <li className="list-decimal leading-relaxed">
-          <strong className="block">1. Sign in and grab your link.</strong>
+          <strong className="block">Sign in and grab your link.</strong>
           Once you're signed in, you'll see a box called "Your Referral Link." That link is yours —
           it already knows your name, so whoever fills it out doesn't have to guess who sent them.
         </li>
         <li className="list-decimal leading-relaxed">
-          <strong className="block">2. Someone asks you for tickets? Send them your link.</strong>
+          <strong className="block">Someone asks you for tickets? Send them your link.</strong>
           They fill out their own name, email, and phone — you don't have to do it for them.
         </li>
         <li className="list-decimal leading-relaxed">
-          <strong className="block">3. They choose free, sell, or both.</strong>
+          <strong className="block">They choose free, sell, or both.</strong>
           Up to 2 free tickets to keep, and up to 10 tickets to sell to start (they can always ask
           for more once they're moving them). The form shows them what selling is worth.
         </li>
         <li className="list-decimal leading-relaxed">
           <strong className="block">
-            4. You and Stephen both get an email the moment they submit.
+            You and Stephen both get an email the moment they submit.
           </strong>
           Nothing to do here — it's automatic. That's your heads-up that a request is waiting.
         </li>
         <li className="list-decimal leading-relaxed">
           <strong className="block">
-            5. Stephen reviews it and sets up their access in Ticket Tailor.
+            Stephen reviews it and sets up their access in Ticket Tailor.
           </strong>
           He builds their allocation and sends them a code by email — that's what lets them actually
           claim free tickets or sell.
         </li>
         <li className="list-decimal leading-relaxed">
-          <strong className="block">6. They're live.</strong>
+          <strong className="block">They're live.</strong>
           Free tickets are theirs to give away. Sold tickets earn them real money — and you helped
           make that happen.
         </li>
@@ -849,7 +877,9 @@ function RequestCard({
       await supabase.from("comp_requests").update({ tt_access_info: ttCode.trim() }).eq("id", r.id);
       const { error } = await supabase.functions.invoke("send-access-info", { body: { id: r.id } });
       if (error) {
-        toast.error(`Failed to send: ${error.message}`);
+        toast.error(
+          `Failed to send: ${(await extractFunctionErrorMessage(error)) ?? error.message}`,
+        );
       } else {
         onChanged();
       }
@@ -1062,7 +1092,8 @@ function ManageTeamPanel() {
         body: { name: name.trim(), email: email.trim(), asAdmin, asApprover },
       });
       if (error || data?.ok === false) {
-        setMsg(`Error: ${error ? error.message : data.error}`);
+        const message = error ? await extractFunctionErrorMessage(error) : data?.error;
+        setMsg(`Error: ${message ?? "Something went wrong. Try again."}`);
         return;
       }
       setMsg(`Added${asAdmin ? " -- they'll get a welcome email to set their password." : "."}`);
