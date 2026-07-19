@@ -15,6 +15,7 @@ import { Route as RunOfShowRouteImport } from './routes/run-of-show'
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as GetStartedRouteImport } from './routes/get-started'
+import { Route as DancehallFridaysRouteImport } from './routes/dancehall-fridays'
 import { Route as ContractRouteImport } from './routes/contract'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
@@ -50,6 +51,11 @@ const GetStartedRoute = GetStartedRouteImport.update({
   path: '/get-started',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DancehallFridaysRoute = DancehallFridaysRouteImport.update({
+  id: '/dancehall-fridays',
+  path: '/dancehall-fridays',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContractRoute = ContractRouteImport.update({
   id: '/contract',
   path: '/contract',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
+  '/dancehall-fridays': typeof DancehallFridaysRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
+  '/dancehall-fridays': typeof DancehallFridaysRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
+  '/dancehall-fridays': typeof DancehallFridaysRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/charly-black'
     | '/contract'
+    | '/dancehall-fridays'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/charly-black'
     | '/contract'
+    | '/dancehall-fridays'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/charly-black'
     | '/contract'
+    | '/dancehall-fridays'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CharlyBlackRoute: typeof CharlyBlackRoute
   ContractRoute: typeof ContractRoute
+  DancehallFridaysRoute: typeof DancehallFridaysRoute
   GetStartedRoute: typeof GetStartedRoute
   Jamaica64Route: typeof Jamaica64Route
   JamaicadayRoute: typeof JamaicadayRoute
@@ -204,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GetStartedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dancehall-fridays': {
+      id: '/dancehall-fridays'
+      path: '/dancehall-fridays'
+      fullPath: '/dancehall-fridays'
+      preLoaderRoute: typeof DancehallFridaysRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contract': {
       id: '/contract'
       path: '/contract'
@@ -239,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CharlyBlackRoute: CharlyBlackRoute,
   ContractRoute: ContractRoute,
+  DancehallFridaysRoute: DancehallFridaysRoute,
   GetStartedRoute: GetStartedRoute,
   Jamaica64Route: Jamaica64Route,
   JamaicadayRoute: JamaicadayRoute,
