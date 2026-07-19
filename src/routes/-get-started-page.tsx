@@ -27,6 +27,7 @@ import krabbitImg from "@/assets/opening-act-krabbit.jpg";
 import honeztyImg from "@/assets/opening-act-honezty.jpg";
 import solidShaneImg from "@/assets/opening-act-solid-shane.jpg";
 import negoHeightsImg from "@/assets/opening-act-nego-heights.jpg";
+import matchesImg from "@/assets/opening-act-matches.jpg";
 
 const SITE_URL = "https://trcevent.com";
 
@@ -51,6 +52,7 @@ const ACTS = [
   { slug: "ghetto-story", name: "Ghetto Story", img: ghettoStoryImg },
   { slug: "jay-rebl", name: "Jay Rebl", img: jayReblImg },
   { slug: "dainjah-rus", name: "Dainjah Rus", img: dainjahRusImg },
+  { slug: "matches", name: "Matches", img: matchesImg },
   { slug: "krabbit", name: "Krabbit", img: krabbitImg },
   { slug: "honezty", name: "Honezty", img: honeztyImg },
   { slug: "solid-shane", name: "Solid Shane", img: solidShaneImg },

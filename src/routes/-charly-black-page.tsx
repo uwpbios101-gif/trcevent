@@ -42,6 +42,7 @@ import allStarImg from "@/assets/all-star-opening-acts.jpg";
 import badChargieImg from "@/assets/dj-bad-chargie.jpg";
 import ghettoStoryImg from "@/assets/dj-ghetto-story.jpg";
 import djPoyoImg from "@/assets/dj-poyo.jpg";
+import matchesImg from "@/assets/opening-act-matches.jpg";
 
 // Only add a `social` entry once a link is actually confirmed -- acts
 // without one yet (Krabbit, Solid Shane) just show no icon row at all.
@@ -86,9 +87,7 @@ const OPENING_ACTS = [
   { name: "Bad Chargie", img: badChargieImg, social: [] },
   { name: "Ghetto Story", img: ghettoStoryImg, social: [] },
   { name: "DJ Poyo", img: djPoyoImg, social: [] },
-  // Matches DJs for all 5 opening acts (see /run-of-show) but has no
-  // promo flyer yet -- "coming soon" placeholder rather than omitting him.
-  { name: "Matches", img: null, social: [] },
+  { name: "Matches", img: matchesImg, social: [] },
 ];
 
 const GALLERY_IMAGES = [portraitImg, heroImg, galleryImg];
