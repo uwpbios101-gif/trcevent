@@ -152,6 +152,7 @@ export function RunOfShowPage() {
         return;
       }
       setActs((prev) => prev.map((a) => (a.id === act.id ? { ...a, [field]: value || null } : a)));
+      toast.success(`${field === "phone" ? "Phone" : "Email"} saved for ${act.act_name}.`);
     } catch {
       toast.error("Something went wrong. Check your connection and try again.");
     }
