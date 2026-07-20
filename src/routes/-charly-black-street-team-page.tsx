@@ -312,6 +312,13 @@ export function StreetTeamPage() {
         sell as many more as you want — you keep <strong className="text-foreground">50%</strong> of
         every ticket you sell. Verify your email below to lock it in.
       </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Run into any issues? Call or text{" "}
+        <a href="tel:+14149093279" className="text-gold hover:underline">
+          414-909-3279
+        </a>
+        .
+      </p>
 
       <div className="mt-8 rounded-xl border border-border bg-card p-6">
         <div className="space-y-2">
