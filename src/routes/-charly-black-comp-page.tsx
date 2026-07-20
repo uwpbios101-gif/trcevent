@@ -267,7 +267,20 @@ export function CompPage() {
     });
     if (data?.valid) return { valid: true as const };
     const message = data?.error ?? (error ? await extractFunctionErrorMessage(error) : null);
-    return { valid: false as const, message };
+    // TEMPORARY diagnostic: real users are hitting a message-less failure that
+    // can't be reproduced via direct curl testing of this same function.
+    // Surfacing the raw response makes the next failure self-explanatory
+    // instead of another round of screenshots and guessing. Remove once the
+    // root cause is confirmed.
+    const debug = `data=${JSON.stringify(data)} error=${
+      error
+        ? JSON.stringify({
+            name: (error as { name?: string }).name,
+            message: (error as { message?: string }).message,
+          })
+        : "null"
+    }`;
+    return { valid: false as const, message, debug };
   }
 
   async function handleConfirmCode() {
@@ -295,9 +308,15 @@ export function CompPage() {
         setCodeSent(false);
         return;
       }
-      setVerifyMsg({ text: result.message ?? "That code didn't work.", ok: false });
-    } catch {
-      setVerifyMsg({ text: "Something went wrong checking that code. Try again.", ok: false });
+      setVerifyMsg({
+        text: result.message ? result.message : `That code didn't work. (debug: ${result.debug})`,
+        ok: false,
+      });
+    } catch (e) {
+      setVerifyMsg({
+        text: `Something went wrong checking that code. Try again. (debug: ${e instanceof Error ? e.message : String(e)})`,
+        ok: false,
+      });
     } finally {
       setVerifyingCode(false);
     }
