@@ -115,6 +115,7 @@ type CompRequest = {
   tt_access_info: string | null;
   access_sent_at: string | null;
   created_at: string;
+  program: "referred" | "street";
 };
 
 type CompAdminRow = {
@@ -913,9 +914,12 @@ function RequestCard({
     onChanged();
   }
 
-  const approverLine = r.approver_listed
-    ? r.approver_name
-    : `${r.approver_name} (typed in — verify)`;
+  const approverLine =
+    r.program === "street"
+      ? "Street team (walk-up, auto-approved)"
+      : r.approver_listed
+        ? r.approver_name
+        : `${r.approver_name} (typed in — verify)`;
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
@@ -924,18 +928,21 @@ function RequestCard({
           {r.full_name}
           {r.crew_or_org ? ` — ${r.crew_or_org}` : ""}
         </h3>
-        <Badge
-          className={
-            r.status === "approved"
-              ? "bg-gold text-gold-foreground"
-              : r.status === "rejected"
-                ? "bg-destructive text-destructive-foreground"
-                : ""
-          }
-          variant={r.status === "pending" ? "outline" : "default"}
-        >
-          {r.status}
-        </Badge>
+        <div className="flex items-center gap-1.5">
+          {r.program === "street" && <Badge variant="outline">Street team</Badge>}
+          <Badge
+            className={
+              r.status === "approved"
+                ? "bg-gold text-gold-foreground"
+                : r.status === "rejected"
+                  ? "bg-destructive text-destructive-foreground"
+                  : ""
+            }
+            variant={r.status === "pending" ? "outline" : "default"}
+          >
+            {r.status}
+          </Badge>
+        </div>
       </div>
       <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
         <div>

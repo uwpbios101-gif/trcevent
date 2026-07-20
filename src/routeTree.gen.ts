@@ -20,6 +20,7 @@ import { Route as ContractRouteImport } from './routes/contract'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PitchSlugRouteImport } from './routes/pitch.$slug'
+import { Route as CharlyBlackStreetTeamRouteImport } from './routes/charly-black_.street-team'
 import { Route as CharlyBlackCompAdminRouteImport } from './routes/charly-black_.comp-admin'
 import { Route as CharlyBlackCompRouteImport } from './routes/charly-black_.comp'
 
@@ -78,6 +79,11 @@ const PitchSlugRoute = PitchSlugRouteImport.update({
   path: '/pitch/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CharlyBlackStreetTeamRoute = CharlyBlackStreetTeamRouteImport.update({
+  id: '/charly-black_/street-team',
+  path: '/charly-black/street-team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CharlyBlackCompAdminRoute = CharlyBlackCompAdminRouteImport.update({
   id: '/charly-black_/comp-admin',
   path: '/charly-black/comp-admin',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/tech-rider': typeof TechRiderRoute
   '/charly-black/comp': typeof CharlyBlackCompRoute
   '/charly-black/comp-admin': typeof CharlyBlackCompAdminRoute
+  '/charly-black/street-team': typeof CharlyBlackStreetTeamRoute
   '/pitch/$slug': typeof PitchSlugRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/tech-rider': typeof TechRiderRoute
   '/charly-black/comp': typeof CharlyBlackCompRoute
   '/charly-black/comp-admin': typeof CharlyBlackCompAdminRoute
+  '/charly-black/street-team': typeof CharlyBlackStreetTeamRoute
   '/pitch/$slug': typeof PitchSlugRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/tech-rider': typeof TechRiderRoute
   '/charly-black_/comp': typeof CharlyBlackCompRoute
   '/charly-black_/comp-admin': typeof CharlyBlackCompAdminRoute
+  '/charly-black_/street-team': typeof CharlyBlackStreetTeamRoute
   '/pitch/$slug': typeof PitchSlugRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/tech-rider'
     | '/charly-black/comp'
     | '/charly-black/comp-admin'
+    | '/charly-black/street-team'
     | '/pitch/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/tech-rider'
     | '/charly-black/comp'
     | '/charly-black/comp-admin'
+    | '/charly-black/street-team'
     | '/pitch/$slug'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/tech-rider'
     | '/charly-black_/comp'
     | '/charly-black_/comp-admin'
+    | '/charly-black_/street-team'
     | '/pitch/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   TechRiderRoute: typeof TechRiderRoute
   CharlyBlackCompRoute: typeof CharlyBlackCompRoute
   CharlyBlackCompAdminRoute: typeof CharlyBlackCompAdminRoute
+  CharlyBlackStreetTeamRoute: typeof CharlyBlackStreetTeamRoute
   PitchSlugRoute: typeof PitchSlugRoute
 }
 
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PitchSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/charly-black_/street-team': {
+      id: '/charly-black_/street-team'
+      path: '/charly-black/street-team'
+      fullPath: '/charly-black/street-team'
+      preLoaderRoute: typeof CharlyBlackStreetTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/charly-black_/comp-admin': {
       id: '/charly-black_/comp-admin'
       path: '/charly-black/comp-admin'
@@ -308,6 +328,7 @@ const rootRouteChildren: RootRouteChildren = {
   TechRiderRoute: TechRiderRoute,
   CharlyBlackCompRoute: CharlyBlackCompRoute,
   CharlyBlackCompAdminRoute: CharlyBlackCompAdminRoute,
+  CharlyBlackStreetTeamRoute: CharlyBlackStreetTeamRoute,
   PitchSlugRoute: PitchSlugRoute,
 }
 export const routeTree = rootRouteImport
