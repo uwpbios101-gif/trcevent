@@ -50,6 +50,8 @@ type ScheduleAct = {
   position: number;
   time_slot: string;
   act_name: string;
+  phone: string | null;
+  email: string | null;
   online_promo: boolean;
   social_media_received: boolean;
   contract_signed: boolean;
@@ -135,6 +137,26 @@ export function RunOfShowPage() {
     }
   }
 
+  async function saveActContact(act: ScheduleAct, field: "phone" | "email", value: string) {
+    // The input is uncontrolled (defaultValue) so typing doesn't re-render
+    // the table on every keystroke -- that also means there's no visible
+    // "revert" to do on failure the way toggleActStatus can flip a checkbox
+    // back. A failed save just leaves whatever's typed on screen and tells
+    // the editor to retry (blur the field again after fixing the password).
+    try {
+      const { data, error } = await supabase.functions.invoke("update-schedule-act", {
+        body: { password: teamPassword, id: act.id, field, value },
+      });
+      if (error || !data?.ok) {
+        toast.error(data?.error ?? "Couldn't save -- check the team password and try again.");
+        return;
+      }
+      setActs((prev) => prev.map((a) => (a.id === act.id ? { ...a, [field]: value || null } : a)));
+    } catch {
+      toast.error("Something went wrong. Check your connection and try again.");
+    }
+  }
+
   async function toggleActStatus(act: ScheduleAct, field: keyof ScheduleAct, value: boolean) {
     // Optimistic -- flip it in the UI immediately, then confirm with the
     // server. A wrong password or network hiccup reverts it back.
@@ -186,11 +208,13 @@ export function RunOfShowPage() {
             <section>
               <h2 className="font-display mb-4 text-xl font-bold">Show &amp; Artist Sets</h2>
               <div className="overflow-x-auto rounded-xl border border-border">
-                <table className="w-full min-w-[720px] text-sm">
+                <table className="w-full min-w-[980px] text-sm">
                   <thead>
                     <tr className="border-b border-border bg-card text-left">
                       <th className="p-3 font-medium">Time</th>
                       <th className="p-3 font-medium">Act</th>
+                      <th className="p-3 font-medium">Phone</th>
+                      <th className="p-3 font-medium">Email</th>
                       {STATUS_COLUMNS.map((col) => (
                         <th key={col.field} className="p-3 text-center font-medium">
                           {col.label}
@@ -203,6 +227,34 @@ export function RunOfShowPage() {
                       <tr key={act.id} className="border-b border-border last:border-0">
                         <td className="p-3 tabular-nums text-muted-foreground">{act.time_slot}</td>
                         <td className="p-3 font-medium">{act.act_name}</td>
+                        <td className="p-2">
+                          <Input
+                            type="tel"
+                            defaultValue={act.phone ?? ""}
+                            onBlur={(e) => {
+                              if (e.target.value !== (act.phone ?? "")) {
+                                saveActContact(act, "phone", e.target.value);
+                              }
+                            }}
+                            placeholder="—"
+                            className="min-w-[130px]"
+                            aria-label={`Phone — ${act.act_name}`}
+                          />
+                        </td>
+                        <td className="p-2">
+                          <Input
+                            type="email"
+                            defaultValue={act.email ?? ""}
+                            onBlur={(e) => {
+                              if (e.target.value !== (act.email ?? "")) {
+                                saveActContact(act, "email", e.target.value);
+                              }
+                            }}
+                            placeholder="—"
+                            className="min-w-[160px]"
+                            aria-label={`Email — ${act.act_name}`}
+                          />
+                        </td>
                         {STATUS_COLUMNS.map((col) => (
                           <td key={col.field} className="p-3 text-center">
                             <Checkbox
