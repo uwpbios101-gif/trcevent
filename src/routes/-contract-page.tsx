@@ -49,6 +49,12 @@ const SITE_URL = "https://trcevent.com";
 const PAYMENT_METHODS = ["Zelle", "Cash App", "Check", "Cash", "Bank Transfer", "Other"] as const;
 const PAYEE_ENTITIES = ["Artist directly", "Manager", "Company/LLC"] as const;
 
+// Mirrors TICKET_PRICE / payoutFor() in -charly-black-comp-page.tsx -- keep the
+// dollar figures below in sync with that file if the ticket price changes.
+const TICKET_PRICE = 20;
+const FIRST_TIER_PAYOUT = 10 * TICKET_PRICE * 0.7;
+const FULL_50_PAYOUT = FIRST_TIER_PAYOUT + 40 * TICKET_PRICE * 0.5;
+
 export function contractHead() {
   return {
     meta: [
@@ -113,41 +119,49 @@ function contractSections(invite: InviteInfo) {
       body: `${invite.compensationTerms} Your payment method and payee details are collected below and included in the final signed copy.`,
     },
     {
-      heading: "3. Tax Documentation",
+      heading: "3. Ticket Allocation & Sales Incentive",
+      body: `In addition to the compensation above, Talent may request up to two (2) complimentary tickets for personal use, and up to ten (10) tickets to sell on TRC Events' behalf to start (more available on request, up to 50 total). Talent keeps 70% of the ticket price for each of the first 10 tickets Talent sells, and 50% of the ticket price for each additional ticket sold beyond that, up to 50 tickets total. At the current ticket price of $${TICKET_PRICE}, selling the first 10 could put $${FIRST_TIER_PAYOUT.toFixed(0)} in Talent's pocket, and selling all the way to the 50-ticket cap could put $${FULL_50_PAYOUT.toFixed(0)} in Talent's pocket. Ticket price and payout percentages may change and will be confirmed in the ticket request step after signing.`,
+    },
+    {
+      heading: "4. Social Media Verification",
+      body: "Within twenty-four (24) hours of agreeing to this Agreement, Talent must supply Presenter with links or handles for Talent's active social media accounts (e.g. Instagram, TikTok, Facebook, X/Twitter, Snapchat, YouTube). Presenter will verify these accounts before issuing Talent's final countersigned contract copy. Talent's engagement is not confirmed, and no tickets or payment will be issued, until this verification is complete.",
+    },
+    {
+      heading: "5. Tax Documentation",
       body: invite.taxFormRequired
         ? "Talent agrees to provide Presenter a completed IRS Form W-9 before payment is issued. This form does not collect a Social Security Number or Employer Identification Number -- the W-9 is provided separately and securely."
         : "No W-9 is required for this engagement.",
     },
     {
-      heading: "4. Independent Contractor",
+      heading: "6. Independent Contractor",
       body: "Talent is an independent contractor, not an employee, agent, or partner of Presenter. Talent is solely responsible for Talent's own taxes, equipment, transportation, and insurance unless otherwise agreed in writing.",
     },
     {
-      heading: "5. Talent Responsibilities & Conduct",
+      heading: "7. Talent Responsibilities & Conduct",
       body: "Talent agrees to arrive prepared and on time, to perform professionally, and to comply with venue rules and reasonable instructions from Presenter's event staff. Talent agrees to conduct themselves, and to ensure anyone accompanying them conducts themselves, in a professional and lawful manner while at the Event, including compliance with the venue's policies on alcohol, controlled substances, and safety.",
     },
     {
-      heading: "6. Additional People",
+      heading: "8. Additional People",
       body: "The number of people accompanying Talent is collected below. Any guest or ticket access for Talent or their party is arranged through TRC Events' ticketing process, not through this Agreement.",
     },
     {
-      heading: "7. No-Show / Late Arrival",
+      heading: "9. No-Show / Late Arrival",
       body: "If Talent fails to arrive within thirty (30) minutes of the confirmed arrival/call time without prior notice to Presenter, Presenter may treat this as a no-show and cancel Talent's engagement for the Event. In that case, no deposit and no guaranteed compensation is owed to Talent for the Event. Talent keeps any proceeds already earned from tickets Talent personally sold through TRC Events' ticketing process prior to the no-show.",
     },
     {
-      heading: "8. Cancellation",
+      heading: "10. Cancellation",
       body: `Either party may cancel this engagement by providing written notice at least ${invite.cancellationNoticeDays} days before the Event. Cancellation with less notice may forfeit any deposit paid, except where the cancelling party is prevented from performing by a Force Majeure event (see below).`,
     },
     {
-      heading: "9. Force Majeure",
+      heading: "11. Force Majeure",
       body: "Neither party is liable for failure to perform due to causes beyond their reasonable control, including but not limited to acts of God, severe weather, government order, venue closure, illness, or other emergency. The affected party will notify the other as soon as reasonably possible.",
     },
     {
-      heading: "10. Media & Promotion",
+      heading: "12. Media & Promotion",
       body: "Talent grants Presenter a non-exclusive, royalty-free license to record, photograph, and use Talent's name, likeness, and performance footage or photography from the Event for promotional purposes related to the Event and Presenter's mission, unless Talent and Presenter agree otherwise in writing in advance.",
     },
     {
-      heading: "11. Merchandise",
+      heading: "13. Merchandise",
       body: invite.merchRightsAllowed
         ? "Talent may sell official merchandise at the Event, subject to Presenter's standard venue table/fee policies as communicated in advance."
         : "Talent may not sell merchandise at the Event unless Presenter agrees otherwise in writing in advance.",
@@ -156,12 +170,12 @@ function contractSections(invite: InviteInfo) {
 
   if (invite.radiusClauseEnabled) {
     sections.push({
-      heading: "12. Exclusivity (Radius Clause)",
+      heading: "14. Exclusivity (Radius Clause)",
       body: `Talent agrees not to perform${invite.radiusMiles ? ` within ${invite.radiusMiles} miles of the Event's venue` : " at another engagement in the same market"}${invite.radiusDays ? ` during the ${invite.radiusDays} days before and after the Event` : ""}, without Presenter's prior written consent.`,
     });
   }
 
-  const n = invite.radiusClauseEnabled ? 13 : 12;
+  const n = invite.radiusClauseEnabled ? 15 : 14;
   sections.push(
     {
       heading: `${n}. Replacement / Substitution`,
