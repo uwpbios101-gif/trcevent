@@ -72,6 +72,16 @@ type BeverageItem = {
   item: string;
   quantity: string;
   total_cost: number;
+  units: number;
+  sell_price: number;
+  trip: string;
+  notes: string;
+  sort_order: number;
+};
+
+type ShoppingTrip = {
+  id: string;
+  trip_date: string;
   notes: string;
   sort_order: number;
 };
@@ -113,6 +123,10 @@ function costPerUnit(ing: Ingredient) {
 
 function extendedCost(ing: Ingredient) {
   return ing.qty_used_per_plate * costPerUnit(ing);
+}
+
+function beverageProfit(row: BeverageItem) {
+  return row.units * row.sell_price - row.total_cost;
 }
 
 function NumberCell({
@@ -166,6 +180,24 @@ function TextCell({
       onChange={(e) => setText(e.target.value)}
       onBlur={() => onCommit(text)}
       className={`${FIELD_CLASS} ${className ?? "h-10"}`}
+    />
+  );
+}
+
+function DateCell({ value, onCommit }: { value: string; onCommit: (next: string) => void }) {
+  const [text, setText] = useState(value);
+
+  useEffect(() => {
+    setText(value);
+  }, [value]);
+
+  return (
+    <Input
+      type="date"
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={() => onCommit(text)}
+      className={`${FIELD_CLASS} h-10 w-44`}
     />
   );
 }
@@ -493,6 +525,141 @@ function DishWorksheet({ dishKey }: { dishKey: DishKey }) {
   );
 }
 
+function ShoppingTripsSection() {
+  const [trips, setTrips] = useState<ShoppingTrip[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("plate_cost_shopping_trips")
+      .select("*")
+      .order("trip_date");
+    if (error) toast.error("Couldn't load the shopping trip schedule.");
+    setTrips(data ?? []);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  function updateLocal(id: string, field: keyof ShoppingTrip, value: string) {
+    setTrips((prev) => prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)));
+  }
+
+  async function commit(id: string, field: keyof ShoppingTrip, value: string) {
+    updateLocal(id, field, value);
+    const { error } = await supabase
+      .from("plate_cost_shopping_trips")
+      .update({ [field]: value })
+      .eq("id", id);
+    if (error) toast.error("Couldn't save that change.");
+  }
+
+  async function addTrip() {
+    const { data, error } = await supabase
+      .from("plate_cost_shopping_trips")
+      .insert({
+        trip_date: new Date().toISOString().slice(0, 10),
+        notes: "",
+        sort_order: Date.now(),
+      })
+      .select()
+      .single();
+    if (error || !data) {
+      toast.error("Couldn't add a new trip.");
+      return;
+    }
+    setTrips((prev) => [...prev, data]);
+  }
+
+  async function removeTrip(id: string) {
+    setTrips((prev) => prev.filter((row) => row.id !== id));
+    const { error } = await supabase.from("plate_cost_shopping_trips").delete().eq("id", id);
+    if (error) {
+      toast.error("Couldn't remove that trip.");
+      load();
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h3 className="font-display text-lg font-bold text-black">Shopping Trip Schedule</h3>
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-gray-400 bg-white text-base text-black hover:bg-gray-100"
+          onClick={load}
+        >
+          <RefreshCw className="size-4" /> Refresh
+        </Button>
+      </div>
+      {loading ? (
+        <div className="flex items-center gap-2 py-6 text-base text-gray-700">
+          <Loader2 className="size-4 animate-spin" /> Loading…
+        </div>
+      ) : (
+        <>
+          <div className="mt-2 rounded-lg border border-gray-300">
+            <Table className="text-base">
+              <TableHeader>
+                <TableRow className="border-gray-200 hover:bg-transparent">
+                  <TableHead className="text-base font-semibold text-black">Date</TableHead>
+                  <TableHead className="min-w-[320px] text-base font-semibold text-black">
+                    What to buy
+                  </TableHead>
+                  <TableHead />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {trips.map((trip) => (
+                  <TableRow key={trip.id} className="border-gray-200 hover:bg-gray-50">
+                    <TableCell>
+                      <DateCell
+                        value={trip.trip_date}
+                        onCommit={(v) => commit(trip.id, "trip_date", v)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextCell
+                        value={trip.notes}
+                        placeholder="What to buy this trip"
+                        onCommit={(v) => commit(trip.id, "notes", v)}
+                        className="h-10 min-w-[300px]"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-gray-100"
+                        onClick={() => removeTrip(trip.id)}
+                        aria-label="Remove trip"
+                      >
+                        <Trash2 className="size-4 text-gray-600" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-2 border-gray-400 bg-white text-base text-black hover:bg-gray-100"
+            onClick={addTrip}
+          >
+            <Plus className="size-4" /> Add trip
+          </Button>
+        </>
+      )}
+    </div>
+  );
+}
+
 function BeverageWorksheet() {
   const [items, setItems] = useState<BeverageItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -528,7 +695,16 @@ function BeverageWorksheet() {
   async function addRow() {
     const { data, error } = await supabase
       .from("plate_cost_beverage_items")
-      .insert({ item: "", quantity: "", total_cost: 0, notes: "", sort_order: Date.now() })
+      .insert({
+        item: "",
+        quantity: "",
+        total_cost: 0,
+        units: 0,
+        sell_price: 0,
+        trip: "",
+        notes: "",
+        sort_order: Date.now(),
+      })
       .select()
       .single();
     if (error || !data) {
@@ -556,10 +732,17 @@ function BeverageWorksheet() {
   }
 
   const grandTotal = items.reduce((sum, row) => sum + row.total_cost, 0);
+  const totalProfit = items
+    .filter((row) => row.sell_price > 0)
+    .reduce((sum, row) => sum + beverageProfit(row), 0);
+  const hasAnyProfitRow = items.some((row) => row.sell_price > 0);
 
   return (
     <div>
-      <div className="flex justify-end">
+      <ShoppingTripsSection />
+
+      <div className="mt-8 flex items-center justify-between">
+        <h3 className="font-display text-lg font-bold text-black">Beverage Items</h3>
         <Button
           variant="outline"
           size="sm"
@@ -570,16 +753,22 @@ function BeverageWorksheet() {
         </Button>
       </div>
 
-      <div className="mt-4 rounded-lg border border-gray-300">
+      <div className="mt-2 rounded-lg border border-gray-300">
         <Table className="text-base">
           <TableHeader>
             <TableRow className="border-gray-200 hover:bg-transparent">
               <TableHead className="min-w-[220px] text-base font-semibold text-black">
                 Item
               </TableHead>
+              <TableHead className="text-base font-semibold text-black">Trip</TableHead>
               <TableHead className="text-base font-semibold text-black">Quantity</TableHead>
               <TableHead className="text-base font-semibold text-black">Cost ($)</TableHead>
-              <TableHead className="min-w-[260px] text-base font-semibold text-black">
+              <TableHead className="text-base font-semibold text-black">Units</TableHead>
+              <TableHead className="text-base font-semibold text-black">
+                Sell Price ($/unit)
+              </TableHead>
+              <TableHead className="text-base font-semibold text-black">Profit ($)</TableHead>
+              <TableHead className="min-w-[220px] text-base font-semibold text-black">
                 Notes
               </TableHead>
               <TableHead />
@@ -598,6 +787,14 @@ function BeverageWorksheet() {
                 </TableCell>
                 <TableCell>
                   <TextCell
+                    value={row.trip}
+                    placeholder="e.g. Trip 1"
+                    onCommit={(v) => commit(row.id, "trip", v)}
+                    className="h-10 w-24"
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextCell
                     value={row.quantity}
                     placeholder="e.g. 10 cases"
                     onCommit={(v) => commit(row.id, "quantity", v)}
@@ -611,11 +808,27 @@ function BeverageWorksheet() {
                   />
                 </TableCell>
                 <TableCell>
+                  <NumberCell
+                    value={row.units}
+                    onCommit={(v) => commit(row.id, "units", v)}
+                    step="1"
+                  />
+                </TableCell>
+                <TableCell>
+                  <NumberCell
+                    value={row.sell_price}
+                    onCommit={(v) => commit(row.id, "sell_price", v)}
+                  />
+                </TableCell>
+                <TableCell className="font-medium text-black">
+                  {row.sell_price > 0 ? money(beverageProfit(row)) : "—"}
+                </TableCell>
+                <TableCell>
                   <TextCell
                     value={row.notes}
                     placeholder="Brands, source, estimate needed…"
                     onCommit={(v) => commit(row.id, "notes", v)}
-                    className="h-10 min-w-[240px]"
+                    className="h-10 min-w-[200px]"
                   />
                 </TableCell>
                 <TableCell>
@@ -647,10 +860,14 @@ function BeverageWorksheet() {
         <CardHeader>
           <CardTitle className="font-display text-black">Total Beverage Budget</CardTitle>
         </CardHeader>
-        <CardContent className="text-base">
+        <CardContent className="space-y-1 text-base">
           <div className="flex justify-between border-t border-gray-300 pt-2 text-lg font-bold text-black">
-            <span>Total</span>
+            <span>Total cost</span>
             <span>{money(grandTotal)}</span>
+          </div>
+          <div className="flex justify-between text-lg font-bold text-black">
+            <span>Total profit (items with a sell price set)</span>
+            <span>{hasAnyProfitRow ? money(totalProfit) : "—"}</span>
           </div>
         </CardContent>
       </Card>
