@@ -20,7 +20,6 @@ import {
   Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { TikTokIcon } from "@/components/site/BrandIcons";
 import { SOCIAL_LINKS } from "@/lib/social";
@@ -32,6 +31,7 @@ import flyerImgPartyAnimal from "@/assets/charly-black-flyer-partyanimal.jpg";
 import flyerImgBuddyB from "@/assets/charly-black-flyer-buddyb.jpg";
 import heroVideo from "@/assets/charly-black-hero.mp4";
 import heroPoster from "@/assets/charly-black-hero-poster.jpg";
+import marlonTrcLogo from "@/assets/marlontrc-logo.png";
 import krabbitImg from "@/assets/opening-act-krabbit.jpg";
 import dainjahRusImg from "@/assets/opening-act-dainjah-rus.jpg";
 import honeztyImg from "@/assets/opening-act-honezty.jpg";
@@ -438,16 +438,11 @@ export function CharlyBlackPage() {
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
         <div className="relative mx-auto max-w-4xl px-4 py-12 text-center sm:px-6 sm:py-16">
-          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
-            <Badge className="bg-gold text-gold-foreground hover:bg-gold">
-              Historic Chicago Night
-            </Badge>
-            <Badge variant="outline" className="border-gold/40 text-gold">
-              One Night Only
-            </Badge>
-            <Badge variant="destructive">Tickets From $20 · Price Rises With Demand</Badge>
-          </div>
-          <p className="eyebrow mb-2">Presented by TRC Events</p>
+          <img
+            src={marlonTrcLogo}
+            alt="Marlon TRC — The Reggae Connection"
+            className="mx-auto mb-2 h-16 w-auto object-contain sm:h-20"
+          />
           <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-7xl">
             Charly Black
           </h1>
