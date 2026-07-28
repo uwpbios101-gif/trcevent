@@ -11,6 +11,10 @@
 // spreadsheet. The unlisted URL is the only gate; RLS on
 // plate_cost_ingredients/plate_cost_settings allows anon full CRUD on just
 // those two tables (see supabase/sql/plate_cost_schema.sql).
+//
+// Styling is intentionally hardcoded to black-on-white with a 16px+ floor,
+// overriding the site's dark-first theme tokens -- this page is a working
+// document read by a caterer at a glance, not a branded marketing page.
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, Plus, RefreshCw, Trash2 } from "lucide-react";
@@ -72,6 +76,9 @@ const DISHES: Array<{ key: DishKey; label: string }> = [
 
 const CATEGORIES: Category[] = ["Recipe", "Service", "Energy"];
 
+const FIELD_CLASS =
+  "border-gray-400 bg-white text-base text-black placeholder:text-gray-500 focus-visible:ring-gray-400 md:text-base";
+
 function toNum(value: string): number {
   const n = parseFloat(value);
   return Number.isFinite(n) ? n : 0;
@@ -111,7 +118,7 @@ function NumberCell({
       value={text}
       onChange={(e) => setText(e.target.value)}
       onBlur={() => onCommit(toNum(text))}
-      className="h-8 w-24"
+      className={`${FIELD_CLASS} h-10 w-24`}
     />
   );
 }
@@ -139,7 +146,7 @@ function TextCell({
       placeholder={placeholder}
       onChange={(e) => setText(e.target.value)}
       onBlur={() => onCommit(text)}
-      className={className ?? "h-8"}
+      className={`${FIELD_CLASS} ${className ?? "h-10"}`}
     />
   );
 }
@@ -162,35 +169,43 @@ function CategorySection({
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between">
-        <h3 className="font-display text-lg font-bold">{category}</h3>
-        <span className="text-sm text-muted-foreground">
-          {category} subtotal: <strong className="text-foreground">{money(subtotal)}</strong>
+        <h3 className="font-display text-lg font-bold text-black">{category}</h3>
+        <span className="text-base text-gray-700">
+          {category} subtotal: <strong className="text-black">{money(subtotal)}</strong>
         </span>
       </div>
-      <div className="mt-2 rounded-lg border border-border">
-        <Table>
+      <div className="mt-2 rounded-lg border border-gray-300">
+        <Table className="text-base">
           <TableHeader>
-            <TableRow>
-              <TableHead className="min-w-[220px]">Item</TableHead>
-              <TableHead>Case Cost ($)</TableHead>
-              <TableHead>Units / Case</TableHead>
-              <TableHead>Portion Unit</TableHead>
-              <TableHead>Cost / Portion Unit ($)</TableHead>
-              <TableHead>Qty Used / Plate</TableHead>
-              <TableHead>Extended Cost ($)</TableHead>
-              <TableHead className="min-w-[200px]">Notes / Source</TableHead>
+            <TableRow className="border-gray-200 hover:bg-transparent">
+              <TableHead className="min-w-[220px] text-base font-semibold text-black">
+                Item
+              </TableHead>
+              <TableHead className="text-base font-semibold text-black">Case Cost ($)</TableHead>
+              <TableHead className="text-base font-semibold text-black">Units / Case</TableHead>
+              <TableHead className="text-base font-semibold text-black">Portion Unit</TableHead>
+              <TableHead className="text-base font-semibold text-black">
+                Cost / Portion Unit ($)
+              </TableHead>
+              <TableHead className="text-base font-semibold text-black">Qty Used / Plate</TableHead>
+              <TableHead className="text-base font-semibold text-black">
+                Extended Cost ($)
+              </TableHead>
+              <TableHead className="min-w-[200px] text-base font-semibold text-black">
+                Notes / Source
+              </TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.id}>
+              <TableRow key={row.id} className="border-gray-200 hover:bg-gray-50">
                 <TableCell>
                   <TextCell
                     value={row.item}
                     placeholder="Ingredient or item name"
                     onCommit={(v) => onUpdate(row.id, "item", v)}
-                    className="h-8 min-w-[200px]"
+                    className="h-10 min-w-[200px]"
                   />
                 </TableCell>
                 <TableCell>
@@ -211,35 +226,34 @@ function CategorySection({
                     value={row.portion_unit}
                     placeholder="lb, oz, each…"
                     onCommit={(v) => onUpdate(row.id, "portion_unit", v)}
-                    className="h-8 w-28"
+                    className="h-10 w-28"
                   />
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {money(costPerUnit(row))}
-                </TableCell>
+                <TableCell className="text-base text-gray-700">{money(costPerUnit(row))}</TableCell>
                 <TableCell>
                   <NumberCell
                     value={row.qty_used_per_plate}
                     onCommit={(v) => onUpdate(row.id, "qty_used_per_plate", v)}
                   />
                 </TableCell>
-                <TableCell className="font-medium">{money(extendedCost(row))}</TableCell>
+                <TableCell className="font-medium text-black">{money(extendedCost(row))}</TableCell>
                 <TableCell>
                   <TextCell
                     value={row.notes}
                     placeholder="Supplier, case size, allocation…"
                     onCommit={(v) => onUpdate(row.id, "notes", v)}
-                    className="h-8 min-w-[180px]"
+                    className="h-10 min-w-[180px]"
                   />
                 </TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
                     size="icon"
+                    className="hover:bg-gray-100"
                     onClick={() => onRemove(row.id)}
                     aria-label="Remove row"
                   >
-                    <Trash2 className="size-4 text-muted-foreground" />
+                    <Trash2 className="size-4 text-gray-600" />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -247,7 +261,12 @@ function CategorySection({
           </TableBody>
         </Table>
       </div>
-      <Button variant="outline" size="sm" className="mt-2" onClick={() => onAdd(category)}>
+      <Button
+        variant="outline"
+        size="sm"
+        className="mt-2 border-gray-400 bg-white text-base text-black hover:bg-gray-100"
+        onClick={() => onAdd(category)}
+      >
         <Plus className="size-4" /> Add {category.toLowerCase()} item
       </Button>
     </div>
@@ -344,7 +363,7 @@ function DishWorksheet({ dishKey }: { dishKey: DishKey }) {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 py-12 text-sm text-muted-foreground">
+      <div className="flex items-center gap-2 py-12 text-base text-gray-700">
         <Loader2 className="size-4 animate-spin" /> Loading…
       </div>
     );
@@ -369,7 +388,12 @@ function DishWorksheet({ dishKey }: { dishKey: DishKey }) {
   return (
     <div>
       <div className="flex justify-end">
-        <Button variant="outline" size="sm" onClick={load}>
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-gray-400 bg-white text-base text-black hover:bg-gray-100"
+          onClick={load}
+        >
           <RefreshCw className="size-4" /> Refresh
         </Button>
       </div>
@@ -385,35 +409,35 @@ function DishWorksheet({ dishKey }: { dishKey: DishKey }) {
         />
       ))}
 
-      <Card className="mt-6">
+      <Card className="mt-6 border-gray-300 bg-white text-black">
         <CardHeader>
-          <CardTitle className="font-display">Total Cost Per Plate</CardTitle>
+          <CardTitle className="font-display text-black">Total Cost Per Plate</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-1 text-sm">
+        <CardContent className="space-y-1 text-base">
           {CATEGORIES.map((category) => (
-            <div key={category} className="flex justify-between text-muted-foreground">
+            <div key={category} className="flex justify-between text-gray-700">
               <span>{category} subtotal</span>
               <span>{money(subtotals[category])}</span>
             </div>
           ))}
-          <div className="mt-2 flex justify-between border-t border-border pt-2 text-base font-bold">
+          <div className="mt-2 flex justify-between border-t border-gray-300 pt-2 text-lg font-bold text-black">
             <span>Total cost per plate (all-in)</span>
-            <span className="text-gold">{money(total)}</span>
+            <span>{money(total)}</span>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="mt-6">
+      <Card className="mt-6 border-gray-300 bg-white text-black">
         <CardHeader>
-          <CardTitle className="font-display">Menu Pricing Calculator</CardTitle>
+          <CardTitle className="font-display text-black">Menu Pricing Calculator</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm">
+        <CardContent className="space-y-3 text-base">
           <div className="flex items-center justify-between gap-4">
-            <span>Target food cost % (industry norm 28–35%)</span>
+            <span className="text-black">Target food cost % (industry norm 28–35%)</span>
             <Input
               type="number"
               step="1"
-              className="h-8 w-24"
+              className={`${FIELD_CLASS} h-10 w-24`}
               value={Math.round(targetPct * 100)}
               onChange={(e) =>
                 updateSettingsLocal("target_food_cost_pct", toNum(e.target.value) / 100)
@@ -421,26 +445,26 @@ function DishWorksheet({ dishKey }: { dishKey: DishKey }) {
               onBlur={() => commitSettings("target_food_cost_pct", targetPct)}
             />
           </div>
-          <div className="flex justify-between text-muted-foreground">
+          <div className="flex justify-between text-gray-700">
             <span>Suggested menu price at target food cost %</span>
             <span>{money(suggestedPrice)}</span>
           </div>
           <div className="flex items-center justify-between gap-4">
-            <span>Actual menu price you plan to charge</span>
+            <span className="text-black">Actual menu price you plan to charge</span>
             <Input
               type="number"
               step="0.01"
-              className="h-8 w-24"
+              className={`${FIELD_CLASS} h-10 w-24`}
               value={actualPrice}
               onChange={(e) => updateSettingsLocal("actual_menu_price", toNum(e.target.value))}
               onBlur={() => commitSettings("actual_menu_price", actualPrice)}
             />
           </div>
-          <div className="flex justify-between text-muted-foreground">
+          <div className="flex justify-between text-gray-700">
             <span>Resulting food cost % at that price</span>
             <span>{actualPrice > 0 ? `${(resultingPct * 100).toFixed(1)}%` : "—"}</span>
           </div>
-          <div className="flex justify-between font-medium">
+          <div className="flex justify-between font-medium text-black">
             <span>Gross profit per plate at that price</span>
             <span>{actualPrice > 0 ? money(grossProfit) : "—"}</span>
           </div>
@@ -454,32 +478,38 @@ export function PlateCostPage() {
   const [dish, setDish] = useState<DishKey>(DISHES[0].key);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <h1 className="font-display text-2xl font-bold">
-        Jerky Jerk × Charly Black Plate Cost Worksheet
-      </h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Shared, live worksheet for pricing one plate each of Jerk Chicken, Curry Chicken, Escovitch
-        Fish, and Mannish Water. Add or remove ingredient rows as needed — case cost, units per
-        case, and quantity used per plate are the only fields to fill in; everything else calculates
-        automatically. Changes save as soon as you leave a field, so anyone with this link
-        (including Jerky Jerk) is editing the same live sheet.
-      </p>
+    <div className="min-h-screen bg-white text-black [color-scheme:light]">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <h1 className="font-display text-2xl font-bold text-black">
+          Jerky Jerk × Charly Black Plate Cost Worksheet
+        </h1>
+        <p className="mt-1 text-base text-gray-700">
+          Shared, live worksheet for pricing one plate each of Jerk Chicken, Curry Chicken,
+          Escovitch Fish, and Mannish Water. Add or remove ingredient rows as needed — case cost,
+          units per case, and quantity used per plate are the only fields to fill in; everything
+          else calculates automatically. Changes save as soon as you leave a field, so anyone with
+          this link (including Jerky Jerk) is editing the same live sheet.
+        </p>
 
-      <Tabs value={dish} onValueChange={(v) => setDish(v as DishKey)} className="mt-6">
-        <TabsList className="flex-wrap">
+        <Tabs value={dish} onValueChange={(v) => setDish(v as DishKey)} className="mt-6">
+          <TabsList className="flex-wrap bg-gray-100 text-gray-700">
+            {DISHES.map((d) => (
+              <TabsTrigger
+                key={d.key}
+                value={d.key}
+                className="text-base data-[state=active]:bg-white data-[state=active]:text-black"
+              >
+                {d.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
           {DISHES.map((d) => (
-            <TabsTrigger key={d.key} value={d.key}>
-              {d.label}
-            </TabsTrigger>
+            <TabsContent key={d.key} value={d.key}>
+              <DishWorksheet dishKey={d.key} />
+            </TabsContent>
           ))}
-        </TabsList>
-        {DISHES.map((d) => (
-          <TabsContent key={d.key} value={d.key}>
-            <DishWorksheet dishKey={d.key} />
-          </TabsContent>
-        ))}
-      </Tabs>
+        </Tabs>
+      </div>
     </div>
   );
 }
