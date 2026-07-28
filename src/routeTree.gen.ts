@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TechRiderRouteImport } from './routes/tech-rider'
 import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
 import { Route as RunOfShowRouteImport } from './routes/run-of-show'
+import { Route as PlateCostRouteImport } from './routes/plate-cost'
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as GetStartedRouteImport } from './routes/get-started'
@@ -38,6 +39,11 @@ const StCatherineLinkupRoute = StCatherineLinkupRouteImport.update({
 const RunOfShowRoute = RunOfShowRouteImport.update({
   id: '/run-of-show',
   path: '/run-of-show',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlateCostRoute = PlateCostRouteImport.update({
+  id: '/plate-cost',
+  path: '/plate-cost',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JamaicadayRoute = JamaicadayRouteImport.update({
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/plate-cost'
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/plate-cost'
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/plate-cost'
     | '/run-of-show'
     | '/st-catherine-linkup'
     | '/tech-rider'
@@ -216,6 +228,7 @@ export interface RootRouteChildren {
   GetStartedRoute: typeof GetStartedRoute
   Jamaica64Route: typeof Jamaica64Route
   JamaicadayRoute: typeof JamaicadayRoute
+  PlateCostRoute: typeof PlateCostRoute
   RunOfShowRoute: typeof RunOfShowRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
   TechRiderRoute: typeof TechRiderRoute
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/run-of-show'
       fullPath: '/run-of-show'
       preLoaderRoute: typeof RunOfShowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plate-cost': {
+      id: '/plate-cost'
+      path: '/plate-cost'
+      fullPath: '/plate-cost'
+      preLoaderRoute: typeof PlateCostRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jamaicaday': {
@@ -344,6 +364,7 @@ const rootRouteChildren: RootRouteChildren = {
   GetStartedRoute: GetStartedRoute,
   Jamaica64Route: Jamaica64Route,
   JamaicadayRoute: JamaicadayRoute,
+  PlateCostRoute: PlateCostRoute,
   RunOfShowRoute: RunOfShowRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
   TechRiderRoute: TechRiderRoute,
