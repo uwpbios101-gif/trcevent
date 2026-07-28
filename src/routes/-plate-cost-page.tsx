@@ -67,11 +67,27 @@ type Settings = {
   actual_menu_price: number;
 };
 
+type BeverageItem = {
+  id: string;
+  item: string;
+  quantity: string;
+  total_cost: number;
+  notes: string;
+  sort_order: number;
+};
+
+type TabKey = DishKey | "beverages";
+
 const DISHES: Array<{ key: DishKey; label: string }> = [
   { key: "jerk_chicken", label: "Jerk Chicken" },
   { key: "curry_chicken", label: "Curry Chicken" },
   { key: "escovitch_fish", label: "Escovitch Fish" },
   { key: "mannish_water", label: "Mannish Water" },
+];
+
+const TABS: Array<{ key: TabKey; label: string }> = [
+  ...DISHES,
+  { key: "beverages", label: "Beverages" },
 ];
 
 const CATEGORIES: Category[] = ["Recipe", "Service", "Energy"];
@@ -85,7 +101,10 @@ function toNum(value: string): number {
 }
 
 function money(n: number) {
-  return `$${(Number.isFinite(n) ? n : 0).toFixed(2)}`;
+  return (Number.isFinite(n) ? n : 0).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 }
 
 function costPerUnit(ing: Ingredient) {
@@ -474,8 +493,173 @@ function DishWorksheet({ dishKey }: { dishKey: DishKey }) {
   );
 }
 
+function BeverageWorksheet() {
+  const [items, setItems] = useState<BeverageItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("plate_cost_beverage_items")
+      .select("*")
+      .order("sort_order");
+    if (error) toast.error("Couldn't load the beverage list. Try refreshing.");
+    setItems(data ?? []);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  function updateLocal(id: string, field: keyof BeverageItem, value: string | number) {
+    setItems((prev) => prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)));
+  }
+
+  async function commit(id: string, field: keyof BeverageItem, value: string | number) {
+    updateLocal(id, field, value);
+    const { error } = await supabase
+      .from("plate_cost_beverage_items")
+      .update({ [field]: value })
+      .eq("id", id);
+    if (error) toast.error("Couldn't save that change.");
+  }
+
+  async function addRow() {
+    const { data, error } = await supabase
+      .from("plate_cost_beverage_items")
+      .insert({ item: "", quantity: "", total_cost: 0, notes: "", sort_order: Date.now() })
+      .select()
+      .single();
+    if (error || !data) {
+      toast.error("Couldn't add a new row.");
+      return;
+    }
+    setItems((prev) => [...prev, data]);
+  }
+
+  async function removeRow(id: string) {
+    setItems((prev) => prev.filter((row) => row.id !== id));
+    const { error } = await supabase.from("plate_cost_beverage_items").delete().eq("id", id);
+    if (error) {
+      toast.error("Couldn't remove that row.");
+      load();
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-2 py-12 text-base text-gray-700">
+        <Loader2 className="size-4 animate-spin" /> Loading…
+      </div>
+    );
+  }
+
+  const grandTotal = items.reduce((sum, row) => sum + row.total_cost, 0);
+
+  return (
+    <div>
+      <div className="flex justify-end">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-gray-400 bg-white text-base text-black hover:bg-gray-100"
+          onClick={load}
+        >
+          <RefreshCw className="size-4" /> Refresh
+        </Button>
+      </div>
+
+      <div className="mt-4 rounded-lg border border-gray-300">
+        <Table className="text-base">
+          <TableHeader>
+            <TableRow className="border-gray-200 hover:bg-transparent">
+              <TableHead className="min-w-[220px] text-base font-semibold text-black">
+                Item
+              </TableHead>
+              <TableHead className="text-base font-semibold text-black">Quantity</TableHead>
+              <TableHead className="text-base font-semibold text-black">Cost ($)</TableHead>
+              <TableHead className="min-w-[260px] text-base font-semibold text-black">
+                Notes
+              </TableHead>
+              <TableHead />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {items.map((row) => (
+              <TableRow key={row.id} className="border-gray-200 hover:bg-gray-50">
+                <TableCell>
+                  <TextCell
+                    value={row.item}
+                    placeholder="Item name"
+                    onCommit={(v) => commit(row.id, "item", v)}
+                    className="h-10 min-w-[200px]"
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextCell
+                    value={row.quantity}
+                    placeholder="e.g. 10 cases"
+                    onCommit={(v) => commit(row.id, "quantity", v)}
+                    className="h-10 w-32"
+                  />
+                </TableCell>
+                <TableCell>
+                  <NumberCell
+                    value={row.total_cost}
+                    onCommit={(v) => commit(row.id, "total_cost", v)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextCell
+                    value={row.notes}
+                    placeholder="Brands, source, estimate needed…"
+                    onCommit={(v) => commit(row.id, "notes", v)}
+                    className="h-10 min-w-[240px]"
+                  />
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:bg-gray-100"
+                    onClick={() => removeRow(row.id)}
+                    aria-label="Remove row"
+                  >
+                    <Trash2 className="size-4 text-gray-600" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        className="mt-2 border-gray-400 bg-white text-base text-black hover:bg-gray-100"
+        onClick={addRow}
+      >
+        <Plus className="size-4" /> Add item
+      </Button>
+
+      <Card className="mt-6 border-gray-300 bg-white text-black">
+        <CardHeader>
+          <CardTitle className="font-display text-black">Total Beverage Budget</CardTitle>
+        </CardHeader>
+        <CardContent className="text-base">
+          <div className="flex justify-between border-t border-gray-300 pt-2 text-lg font-bold text-black">
+            <span>Total</span>
+            <span>{money(grandTotal)}</span>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 export function PlateCostPage() {
-  const [dish, setDish] = useState<DishKey>(DISHES[0].key);
+  const [tab, setTab] = useState<TabKey>(TABS[0].key);
 
   return (
     <div className="min-h-screen bg-white text-black [color-scheme:light]">
@@ -485,27 +669,27 @@ export function PlateCostPage() {
         </h1>
         <p className="mt-1 text-base text-gray-700">
           Shared, live worksheet for pricing one plate each of Jerk Chicken, Curry Chicken,
-          Escovitch Fish, and Mannish Water. Add or remove ingredient rows as needed — case cost,
-          units per case, and quantity used per plate are the only fields to fill in; everything
-          else calculates automatically. Changes save as soon as you leave a field, so anyone with
-          this link (including Jerky Jerk) is editing the same live sheet.
+          Escovitch Fish, and Mannish Water, plus the event's beverage budget. Add or remove rows as
+          needed — everything calculates automatically as you fill in the editable fields. Changes
+          save as soon as you leave a field, so anyone with this link (including Jerky Jerk) is
+          editing the same live sheet.
         </p>
 
-        <Tabs value={dish} onValueChange={(v) => setDish(v as DishKey)} className="mt-6">
+        <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="mt-6">
           <TabsList className="flex-wrap bg-gray-100 text-gray-700">
-            {DISHES.map((d) => (
+            {TABS.map((t) => (
               <TabsTrigger
-                key={d.key}
-                value={d.key}
+                key={t.key}
+                value={t.key}
                 className="text-base data-[state=active]:bg-white data-[state=active]:text-black"
               >
-                {d.label}
+                {t.label}
               </TabsTrigger>
             ))}
           </TabsList>
-          {DISHES.map((d) => (
-            <TabsContent key={d.key} value={d.key}>
-              <DishWorksheet dishKey={d.key} />
+          {TABS.map((t) => (
+            <TabsContent key={t.key} value={t.key}>
+              {t.key === "beverages" ? <BeverageWorksheet /> : <DishWorksheet dishKey={t.key} />}
             </TabsContent>
           ))}
         </Tabs>
