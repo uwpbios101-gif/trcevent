@@ -26,5 +26,13 @@ export default defineConfig({
       // Only real routes should ever be prerendered, so skip anything under /assets/.
       filter: ({ path }) => !path.startsWith("/assets/"),
     },
+    // /sing-ova-sundays/$city is never linked from anywhere (crawlLinks can't find
+    // it), so without this it falls back to GitHub Pages' 404.html -- a raw copy of
+    // whatever page happens to be dist/client/index.html at deploy time (currently
+    // Charly Black), which isn't guaranteed to hydrate cleanly into a totally
+    // different route. Chicago is a known, confirmed city, so prerender it for
+    // real; the still-tentative cities keep relying on the fallback for now since
+    // nobody has a direct link to them yet.
+    pages: [{ path: "/sing-ova-sundays/chicago" }],
   },
 });
