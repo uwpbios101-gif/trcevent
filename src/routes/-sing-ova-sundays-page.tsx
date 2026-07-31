@@ -553,7 +553,7 @@ export function SingOvaSundaysPage({ citySlug }) {
       <section className="border-b border-border">
         <h1 className="sr-only">Sing Ova Sundays — {city.name}</h1>
         {heroSlides.length > 0 && (
-          <div className="relative aspect-[2/1] w-full overflow-hidden">
+          <div className="relative aspect-[100/39] w-full overflow-hidden">
             {heroSlides.map((slide, i) => (
               <img
                 key={slide.id}
