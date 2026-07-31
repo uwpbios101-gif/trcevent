@@ -219,6 +219,15 @@ export function SingOvaSundaysPage({ citySlug }) {
   const [verifyMsg, setVerifyMsg] = useState(null);
 
   const [pairings, setPairings] = useState([]);
+  // Submissions are moderated -- a fresh pairing is `pending` and invisible
+  // in the public feed (loadFeed only selects approved/played) until a city
+  // admin approves it. Without this, hitting "Submit" feels like it did
+  // nothing. Since there's no per-session anon identity for RLS to key a
+  // "show me my own pending rows" policy off of, this is a client-only
+  // optimistic echo of what was just submitted -- not re-fetched from the
+  // server, cleared on city change, and deduped against the real feed once
+  // an admin approves it and it shows up there for real.
+  const [myPendingSubmissions, setMyPendingSubmissions] = useState([]);
   const [heartCounts, setHeartCounts] = useState({});
   const [myHearts, setMyHearts] = useState(new Set());
   const [loadingFeed, setLoadingFeed] = useState(true);
@@ -241,6 +250,7 @@ export function SingOvaSundaysPage({ citySlug }) {
       setCity(null);
       setHeroSlides([]);
       setHeroSelected(0);
+      setMyPendingSubmissions([]);
       // RLS only returns a row here when status = 'published' -- a pending
       // or nonexistent slug both come back empty, indistinguishable from
       // the anon side on purpose (no leaking which cities are in the works).
@@ -417,17 +427,24 @@ export function SingOvaSundaysPage({ citySlug }) {
     setSubmittingPairing(true);
     setSubmitMsg(null);
     try {
+      const trimmedOriginalArtist = originalArtist.trim();
+      const trimmedOriginalTitle = originalTitle.trim();
+      const trimmedReggaeArtist = reggaeArtist.trim();
+      const trimmedReggaeTitle = reggaeTitle.trim();
+      const trimmedNote = note.trim();
+      const submittedWeekTheme = weekTheme === "any" ? null : weekTheme;
+
       const { error } = await supabase.from("sos_pairings").insert({
         city_id: city.id,
         email: session.email,
         display_name: session.displayName,
-        original_artist: originalArtist.trim(),
-        original_title: originalTitle.trim(),
-        reggae_artist: reggaeArtist.trim(),
-        reggae_title: reggaeTitle.trim(),
+        original_artist: trimmedOriginalArtist,
+        original_title: trimmedOriginalTitle,
+        reggae_artist: trimmedReggaeArtist,
+        reggae_title: trimmedReggaeTitle,
         direction,
-        note: note.trim() || null,
-        week_theme: weekTheme === "any" ? null : weekTheme,
+        note: trimmedNote || null,
+        week_theme: submittedWeekTheme,
       });
       if (error) {
         setSubmitMsg({
@@ -436,6 +453,28 @@ export function SingOvaSundaysPage({ citySlug }) {
         });
         return;
       }
+      // The real row is `pending` and invisible to the public feed until a
+      // city admin approves it (no anon RLS policy can key "my own rows" --
+      // there's no per-request identity for the anon role). Echo it locally
+      // so the submitter sees proof it was received.
+      setMyPendingSubmissions((prev) => [
+        {
+          id: `local-${crypto.randomUUID()}`,
+          email: session.email,
+          display_name: session.displayName,
+          original_artist: trimmedOriginalArtist,
+          original_title: trimmedOriginalTitle,
+          reggae_artist: trimmedReggaeArtist,
+          reggae_title: trimmedReggaeTitle,
+          direction,
+          note: trimmedNote || null,
+          week_theme: submittedWeekTheme,
+          status: "pending",
+          created_at: new Date().toISOString(),
+          _localOnly: true,
+        },
+        ...prev,
+      ]);
       setOriginalArtist("");
       setOriginalTitle("");
       setReggaeArtist("");
@@ -443,7 +482,7 @@ export function SingOvaSundaysPage({ citySlug }) {
       setNote("");
       setWeekTheme("any");
       setSubmitMsg({
-        text: "Pairing submitted! It'll show up in the feed once approved.",
+        text: "Pairing submitted! You'll see it marked \"Pending\" below until it's approved.",
         ok: true,
       });
     } finally {
@@ -504,9 +543,22 @@ export function SingOvaSundaysPage({ citySlug }) {
   }
 
   const launchDateFormatted = formatLaunchDate(city.launch_date);
-  const mapsSrc = city.venue_address
-    ? `https://www.google.com/maps?q=${encodeURIComponent(city.venue_address)}&output=embed`
-    : null;
+
+  // Once a locally-echoed submission shows up for real (admin approved it
+  // while the submitter is still on the page), drop the local echo instead
+  // of showing it twice.
+  const confirmedPending = myPendingSubmissions.filter(
+    (local) =>
+      !pairings.some(
+        (real) =>
+          real.email === local.email &&
+          real.original_artist === local.original_artist &&
+          real.original_title === local.original_title &&
+          real.reggae_artist === local.reggae_artist &&
+          real.reggae_title === local.reggae_title,
+      ),
+  );
+  const displayPairings = [...confirmedPending, ...pairings];
 
   const eventSchema = city.launch_date
     ? {
@@ -869,25 +921,29 @@ export function SingOvaSundaysPage({ citySlug }) {
             </div>
           )}
 
-          {!loadingFeed && pairings.length === 0 && (
+          {!loadingFeed && displayPairings.length === 0 && (
             <p className="mt-8 text-sm text-muted-foreground">
               No approved pairings yet — be the first to submit one above.
             </p>
           )}
 
           <div className="mt-6 space-y-4">
-            {pairings.map((p) => {
+            {displayPairings.map((p) => {
               const count = heartCounts[p.id] ?? 0;
               const mine = myHearts.has(p.id);
               const directionLabel = DIRECTIONS.find((d) => d.value === p.direction)?.label ?? "";
               return (
-                <div key={p.id} className="rounded-xl border border-border bg-card p-5">
+                <div
+                  key={p.id}
+                  className={`rounded-xl border p-5 ${p._localOnly ? "border-dashed border-secondary/60 bg-secondary/5" : "border-border bg-card"}`}
+                >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="text-xs uppercase tracking-wide text-muted-foreground">
                         {directionLabel}
                         {p.week_theme ? ` · ${p.week_theme}` : ""}
                         {p.status === "played" ? " · Played" : ""}
+                        {p._localOnly ? " · Pending review — only you can see this" : ""}
                       </p>
                       <p className="mt-1 font-display text-lg font-semibold">
                         {p.original_artist} — "{p.original_title}"
@@ -899,24 +955,33 @@ export function SingOvaSundaysPage({ citySlug }) {
                       )}
                       <p className="mt-2 text-xs text-muted-foreground">— {p.display_name}</p>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleToggleHeart(p.id)}
-                      disabled={!session || heartBusyId === p.id}
-                      className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
-                        mine
-                          ? "border-gold bg-gold/10 text-gold"
-                          : "border-border text-muted-foreground hover:border-secondary hover:text-secondary"
-                      } ${!session ? "cursor-not-allowed opacity-50" : ""}`}
-                      title={session ? "Heart this pairing" : "Log in to heart pairings"}
-                    >
-                      {heartBusyId === p.id ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : (
-                        <Heart className={`size-4 ${mine ? "fill-gold" : ""}`} />
-                      )}
-                      {count}
-                    </button>
+                    {p._localOnly ? (
+                      <span
+                        className="flex shrink-0 items-center gap-1.5 rounded-lg border border-dashed border-secondary/60 px-3 py-2 text-sm text-secondary"
+                        title="This hasn't been approved yet, so hearting isn't available until it's live for everyone"
+                      >
+                        <Loader2 className="size-4" /> Pending
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleToggleHeart(p.id)}
+                        disabled={!session || heartBusyId === p.id}
+                        className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
+                          mine
+                            ? "border-gold bg-gold/10 text-gold"
+                            : "border-border text-muted-foreground hover:border-secondary hover:text-secondary"
+                        } ${!session ? "cursor-not-allowed opacity-50" : ""}`}
+                        title={session ? "Heart this pairing" : "Log in to heart pairings"}
+                      >
+                        {heartBusyId === p.id ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Heart className={`size-4 ${mine ? "fill-gold" : ""}`} />
+                        )}
+                        {count}
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -944,14 +1009,21 @@ export function SingOvaSundaysPage({ citySlug }) {
             ))}
           </div>
 
-          <div className="mt-8 grid gap-8 md:grid-cols-2">
+          <div className="mt-8">
             <div className="space-y-4 rounded-xl border border-border bg-card p-6">
               <div className="flex items-start gap-3">
                 <MapPin className="mt-0.5 size-5 shrink-0 text-secondary" />
                 <div>
                   <p className="font-semibold">{city.venue_name ?? `${city.name} venue TBA`}</p>
                   {city.venue_address && (
-                    <p className="text-sm text-muted-foreground">{city.venue_address}</p>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(city.venue_address)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground underline decoration-dotted hover:text-secondary"
+                    >
+                      {city.venue_address}
+                    </a>
                   )}
                 </div>
               </div>
@@ -967,21 +1039,19 @@ export function SingOvaSundaysPage({ citySlug }) {
                   <p className="text-sm">{city.hours_label}</p>
                 </div>
               )}
+              <div className="flex items-start gap-3">
+                <Phone className="mt-0.5 size-5 shrink-0 text-secondary" />
+                <a
+                  href={`tel:${CONTACT_PHONE.replace(/[^\d+]/g, "")}`}
+                  className="text-sm text-muted-foreground underline decoration-dotted hover:text-secondary"
+                >
+                  {CONTACT_PHONE}
+                </a>
+              </div>
               <p className="text-xs text-muted-foreground">
                 Schedule, occupancy, and admission remain subject to venue confirmation.
               </p>
             </div>
-            {mapsSrc && (
-              <div className="overflow-hidden rounded-xl border border-border">
-                <iframe
-                  className="aspect-square w-full sm:aspect-video"
-                  src={mapsSrc}
-                  title={`Map of ${city.venue_name ?? city.name}`}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            )}
           </div>
         </section>
       </div>
