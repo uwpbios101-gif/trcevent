@@ -23,7 +23,7 @@ import { Route as ContractAdminRouteImport } from './routes/contract-admin'
 import { Route as ContractRouteImport } from './routes/contract'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SingOvaSundaysCityRouteImport } from './routes/sing-ova-sundays.$city'
+import { Route as SingOvaSundaysCityRouteImport } from './routes/sing-ova-sundays_.$city'
 import { Route as PitchSlugRouteImport } from './routes/pitch.$slug'
 import { Route as CharlyBlackStreetTeamRouteImport } from './routes/charly-black_.street-team'
 import { Route as CharlyBlackCompAdminRouteImport } from './routes/charly-black_.comp-admin'
@@ -100,9 +100,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const SingOvaSundaysCityRoute = SingOvaSundaysCityRouteImport.update({
-  id: '/$city',
-  path: '/$city',
-  getParentRoute: () => SingOvaSundaysRoute,
+  id: '/sing-ova-sundays_/$city',
+  path: '/sing-ova-sundays/$city',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PitchSlugRoute = PitchSlugRouteImport.update({
   id: '/pitch/$slug',
@@ -136,7 +136,7 @@ export interface FileRoutesByFullPath {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
-  '/sing-ova-sundays': typeof SingOvaSundaysRouteWithChildren
+  '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -157,7 +157,7 @@ export interface FileRoutesByTo {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
-  '/sing-ova-sundays': typeof SingOvaSundaysRouteWithChildren
+  '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -179,7 +179,7 @@ export interface FileRoutesById {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
-  '/sing-ova-sundays': typeof SingOvaSundaysRouteWithChildren
+  '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
@@ -187,7 +187,7 @@ export interface FileRoutesById {
   '/charly-black_/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black_/street-team': typeof CharlyBlackStreetTeamRoute
   '/pitch/$slug': typeof PitchSlugRoute
-  '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
+  '/sing-ova-sundays_/$city': typeof SingOvaSundaysCityRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -252,7 +252,7 @@ export interface FileRouteTypes {
     | '/charly-black_/comp-admin'
     | '/charly-black_/street-team'
     | '/pitch/$slug'
-    | '/sing-ova-sundays/$city'
+    | '/sing-ova-sundays_/$city'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -266,7 +266,7 @@ export interface RootRouteChildren {
   JamaicadayRoute: typeof JamaicadayRoute
   PlateCostRoute: typeof PlateCostRoute
   RunOfShowRoute: typeof RunOfShowRoute
-  SingOvaSundaysRoute: typeof SingOvaSundaysRouteWithChildren
+  SingOvaSundaysRoute: typeof SingOvaSundaysRoute
   SingOvaSundaysAdminRoute: typeof SingOvaSundaysAdminRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
   TechRiderRoute: typeof TechRiderRoute
@@ -274,6 +274,7 @@ export interface RootRouteChildren {
   CharlyBlackCompAdminRoute: typeof CharlyBlackCompAdminRoute
   CharlyBlackStreetTeamRoute: typeof CharlyBlackStreetTeamRoute
   PitchSlugRoute: typeof PitchSlugRoute
+  SingOvaSundaysCityRoute: typeof SingOvaSundaysCityRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -376,12 +377,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sing-ova-sundays/$city': {
-      id: '/sing-ova-sundays/$city'
-      path: '/$city'
+    '/sing-ova-sundays_/$city': {
+      id: '/sing-ova-sundays_/$city'
+      path: '/sing-ova-sundays/$city'
       fullPath: '/sing-ova-sundays/$city'
       preLoaderRoute: typeof SingOvaSundaysCityRouteImport
-      parentRoute: typeof SingOvaSundaysRoute
+      parentRoute: typeof rootRouteImport
     }
     '/pitch/$slug': {
       id: '/pitch/$slug'
@@ -414,18 +415,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface SingOvaSundaysRouteChildren {
-  SingOvaSundaysCityRoute: typeof SingOvaSundaysCityRoute
-}
-
-const SingOvaSundaysRouteChildren: SingOvaSundaysRouteChildren = {
-  SingOvaSundaysCityRoute: SingOvaSundaysCityRoute,
-}
-
-const SingOvaSundaysRouteWithChildren = SingOvaSundaysRoute._addFileChildren(
-  SingOvaSundaysRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CharlyBlackRoute: CharlyBlackRoute,
@@ -437,7 +426,7 @@ const rootRouteChildren: RootRouteChildren = {
   JamaicadayRoute: JamaicadayRoute,
   PlateCostRoute: PlateCostRoute,
   RunOfShowRoute: RunOfShowRoute,
-  SingOvaSundaysRoute: SingOvaSundaysRouteWithChildren,
+  SingOvaSundaysRoute: SingOvaSundaysRoute,
   SingOvaSundaysAdminRoute: SingOvaSundaysAdminRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
   TechRiderRoute: TechRiderRoute,
@@ -445,6 +434,7 @@ const rootRouteChildren: RootRouteChildren = {
   CharlyBlackCompAdminRoute: CharlyBlackCompAdminRoute,
   CharlyBlackStreetTeamRoute: CharlyBlackStreetTeamRoute,
   PitchSlugRoute: PitchSlugRoute,
+  SingOvaSundaysCityRoute: SingOvaSundaysCityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
