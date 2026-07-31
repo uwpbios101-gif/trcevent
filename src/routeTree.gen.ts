@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TechRiderRouteImport } from './routes/tech-rider'
 import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
+import { Route as SingOvaSundaysRouteImport } from './routes/sing-ova-sundays'
 import { Route as RunOfShowRouteImport } from './routes/run-of-show'
 import { Route as PlateCostRouteImport } from './routes/plate-cost'
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
@@ -34,6 +35,11 @@ const TechRiderRoute = TechRiderRouteImport.update({
 const StCatherineLinkupRoute = StCatherineLinkupRouteImport.update({
   id: '/st-catherine-linkup',
   path: '/st-catherine-linkup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SingOvaSundaysRoute = SingOvaSundaysRouteImport.update({
+  id: '/sing-ova-sundays',
+  path: '/sing-ova-sundays',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RunOfShowRoute = RunOfShowRouteImport.update({
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
+  '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
   '/charly-black/comp': typeof CharlyBlackCompRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
+  '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
   '/charly-black/comp': typeof CharlyBlackCompRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
+  '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
   '/charly-black_/comp': typeof CharlyBlackCompRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/jamaicaday'
     | '/plate-cost'
     | '/run-of-show'
+    | '/sing-ova-sundays'
     | '/st-catherine-linkup'
     | '/tech-rider'
     | '/charly-black/comp'
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/jamaicaday'
     | '/plate-cost'
     | '/run-of-show'
+    | '/sing-ova-sundays'
     | '/st-catherine-linkup'
     | '/tech-rider'
     | '/charly-black/comp'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/jamaicaday'
     | '/plate-cost'
     | '/run-of-show'
+    | '/sing-ova-sundays'
     | '/st-catherine-linkup'
     | '/tech-rider'
     | '/charly-black_/comp'
@@ -230,6 +242,7 @@ export interface RootRouteChildren {
   JamaicadayRoute: typeof JamaicadayRoute
   PlateCostRoute: typeof PlateCostRoute
   RunOfShowRoute: typeof RunOfShowRoute
+  SingOvaSundaysRoute: typeof SingOvaSundaysRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
   TechRiderRoute: typeof TechRiderRoute
   CharlyBlackCompRoute: typeof CharlyBlackCompRoute
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       path: '/st-catherine-linkup'
       fullPath: '/st-catherine-linkup'
       preLoaderRoute: typeof StCatherineLinkupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sing-ova-sundays': {
+      id: '/sing-ova-sundays'
+      path: '/sing-ova-sundays'
+      fullPath: '/sing-ova-sundays'
+      preLoaderRoute: typeof SingOvaSundaysRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/run-of-show': {
@@ -366,6 +386,7 @@ const rootRouteChildren: RootRouteChildren = {
   JamaicadayRoute: JamaicadayRoute,
   PlateCostRoute: PlateCostRoute,
   RunOfShowRoute: RunOfShowRoute,
+  SingOvaSundaysRoute: SingOvaSundaysRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
   TechRiderRoute: TechRiderRoute,
   CharlyBlackCompRoute: CharlyBlackCompRoute,
