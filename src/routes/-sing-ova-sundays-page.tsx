@@ -9,11 +9,30 @@
 // submit and heart their favorite pairings, so the resident DJ has a pool
 // of crowd requests to pull from live on Sunday.
 //
+// Visual design intentionally matches the official flyer
+// (src/assets/sing-ova-sundays-flyer.jpg): warm cream/parchment, deep
+// forest green, and gold -- a different palette from the rest of
+// trcevent.com's all-dark theme. SOS_THEME_VARS below overrides the design
+// system's CSS custom properties (--background, --card, --secondary, etc.)
+// on this page's wrapper only, so every shadcn primitive (Button, Input,
+// Card, Badge...) picks up the new palette automatically without touching
+// src/styles.css or any other page. Gold text is reserved for the large
+// headline and for text sitting on the deep-green plaques (like the flyer
+// itself does) rather than small text directly on cream, since flat gold
+// on this light cream doesn't have enough contrast to read well at small
+// sizes -- the flyer itself uses dark ink/green for its cream-background
+// labels and saves gold for the embossed title and the green plaques.
+//
+// The event's name on the flyer's logotype stylizes as "Sing Over Sundays"
+// (a vinyl record standing in for the "O"), but the real name used in this
+// page's copy stays "Sing Ova Sundays" per the source proposal doc --
+// that's a deliberate call, not an inconsistency.
+//
 // Deliberately NOT linked from the Navbar and not in the sitemap yet — the
-// Bar 22 partnership is still a pending proposal (see the source doc), so
-// this stays reachable by direct URL only until the residency is confirmed.
-// `robots: noindex, nofollow` below matches that same "not for search
-// engines yet" intent used on other pre-launch/gated pages in this repo.
+// Bar 22 partnership is still a pending proposal, so this stays reachable
+// by direct URL only until the residency is confirmed. `robots: noindex,
+// nofollow` below matches that same "not for search engines yet" intent
+// used on other pre-launch/gated pages in this repo.
 //
 // Login uses the same emailed 6-digit code pattern as the comp/street-team
 // pages (never a magic link -- those get silently consumed by mail
@@ -24,7 +43,18 @@
 // a UX shortcut to skip the login form on return visits -- the real gate is
 // always the server-side RLS check on sos_pairings / sos_pairing_hearts.
 import { useEffect, useState } from "react";
-import { CalendarDays, Clock, Heart, Loader2, LogOut, MapPin, CheckCircle2 } from "lucide-react";
+import {
+  CalendarDays,
+  Clock,
+  Heart,
+  Loader2,
+  LogOut,
+  MapPin,
+  CheckCircle2,
+  Ticket,
+  Phone,
+  Globe,
+} from "lucide-react";
 
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
@@ -41,11 +71,45 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SOCIAL_LINKS } from "@/lib/social";
+import heroImg from "@/assets/sing-ova-sundays-hero.jpg";
 
 const SITE_URL = "https://trcevent.com";
 const VENUE_NAME = "Bar 22";
 const VENUE_ADDRESS = "2244 S Michigan Ave, Chicago, IL 60616";
+const CONTACT_PHONE = "(414) 301-2457";
 const SESSION_STORAGE_KEY = "sos_session";
+
+// Overrides the design system's CSS custom properties for this page only —
+// see the file header comment for why. Values are hand-picked oklch matches
+// for the flyer's cream/forest-green/gold palette; --gold/--primary are
+// deliberately left untouched so the site's one brand gold stays consistent
+// everywhere it's used.
+const SOS_THEME_VARS = {
+  "--background": "oklch(0.93 0.028 85)",
+  "--foreground": "oklch(0.22 0.025 85)",
+  "--card": "oklch(0.895 0.03 82)",
+  "--card-foreground": "oklch(0.22 0.025 85)",
+  "--popover": "oklch(0.895 0.03 82)",
+  "--popover-foreground": "oklch(0.22 0.025 85)",
+  "--border": "oklch(0.72 0.035 78)",
+  "--input": "oklch(0.85 0.03 82)",
+  "--muted": "oklch(0.87 0.025 82)",
+  "--muted-foreground": "oklch(0.42 0.03 80)",
+  "--accent": "oklch(0.2 0.05 155)",
+  "--accent-foreground": "oklch(0.93 0.025 85)",
+  "--secondary": "oklch(0.19 0.045 155)",
+  "--secondary-foreground": "oklch(0.93 0.02 85)",
+  "--ring": "oklch(0.5 0.11 80)",
+};
+
+const EMBOSS_SHADOW = "[text-shadow:0_1px_1px_rgba(20,15,5,0.35),0_0_18px_rgba(201,168,76,0.25)]";
+const LABEL_CLASS = "text-xs font-semibold uppercase tracking-wide text-secondary";
+
+const FEATURED_PAIRINGS = [
+  { rnb: "Anita Baker", reggae: "Beres Hammond", genres: "Quiet Storm × Lovers Rock" },
+  { rnb: "Sade", reggae: "Maxi Priest", genres: "Smooth Soul × Reggae Fusion" },
+  { rnb: "Mary J. Blige", reggae: "Buju Banton", genres: "Hip-Hop Soul × Reggae/Dancehall" },
+];
 
 const WEEK_THEMES = [
   { week: 1, theme: "Lovers Rock vs. Slow Jams", promise: "Reggae lovers rock paired with R&B slow jams." },
@@ -64,14 +128,26 @@ const DIRECTIONS = [
 ] as const;
 
 export function singOvaSundaysHead() {
+  const imageUrl = `${SITE_URL}${heroImg}`;
   return {
     meta: [
       { title: "Sing Ova Sundays — TRC Events" },
       {
         name: "description",
         content:
-          "Sing Ova Sundays: a proposed weekly reggae x R&B residency at Bar 22, South Loop Chicago. Log in during the week to submit and vote on your favorite R&B-to-reggae song pairings for the DJ to play live on Sunday.",
+          "Sing Ova Sundays: one riddim, two worlds, endless classics. A weekly reggae x R&B day party at Bar 22, South Loop Chicago, starting Sunday, August 30, 2026, 4-9 PM. Log in during the week to submit and vote on your favorite R&B-to-reggae song pairings for the DJ to play live on Sunday. Free admission the first four Sundays.",
       },
+      { property: "og:title", content: "Sing Ova Sundays — TRC Events" },
+      {
+        property: "og:description",
+        content: "One Riddim. Two Worlds. Endless Classics. Starting Sunday, Aug 30, 2026 — every Sunday, 4-9 PM — Bar 22, South Loop Chicago.",
+      },
+      { property: "og:type", content: "article" },
+      { property: "og:image", content: imageUrl },
+      { property: "og:url", content: `${SITE_URL}/sing-ova-sundays` },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Sing Ova Sundays — TRC Events" },
+      { name: "twitter:image", content: imageUrl },
       { name: "robots", content: "noindex, nofollow" },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/sing-ova-sundays` }],
@@ -331,39 +407,70 @@ export function SingOvaSundaysPage() {
 
   const mapsSrc = `https://www.google.com/maps?q=${encodeURIComponent(VENUE_ADDRESS)}&output=embed`;
 
+  const eventSchema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: "Sing Ova Sundays",
+    startDate: "2026-08-30T16:00:00-05:00",
+    eventSchedule: "Weekly on Sunday",
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    image: [`${SITE_URL}${heroImg}`],
+    location: {
+      "@type": "Place",
+      name: VENUE_NAME,
+      address: VENUE_ADDRESS,
+    },
+    organizer: {
+      "@type": "Organization",
+      name: "Marlon TRC",
+      url: SITE_URL,
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${SITE_URL}/sing-ova-sundays`,
+      priceCurrency: "USD",
+      price: "0",
+      availability: "https://schema.org/InStock",
+      description: "Free admission for the first four Sundays.",
+    },
+  };
+
   return (
-    <div>
+    <div className="bg-background text-foreground" style={SOS_THEME_VARS}>
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
+      />
+
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-4xl px-4 py-12 text-center sm:px-6 sm:py-16">
-          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
-            <Badge className="bg-gold text-gold-foreground hover:bg-gold">Presented by Marlon TRC</Badge>
-            <Badge variant="outline" className="border-gold/40 text-gold">
-              Proposed Eight-Week Pilot
-            </Badge>
-          </div>
-          <p className="eyebrow mb-2">Every Sunday · Bar 22 · South Loop</p>
-          <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-7xl">
+      <section className="border-b border-border">
+        <img
+          src={heroImg}
+          alt="Sing Ova Sundays featured pairings: Anita Baker × Beres Hammond (Quiet Storm × Lovers Rock), Sade × Maxi Priest (Smooth Soul × Reggae Fusion), and Mary J. Blige × Buju Banton (Hip-Hop Soul × Reggae/Dancehall)"
+          className="w-full object-cover"
+        />
+        <div className="mx-auto max-w-5xl px-4 py-10 text-center sm:px-6">
+          <p className={`${LABEL_CLASS} mb-2`}>Marlon TRC · The Reggae Connection Presents</p>
+          <h1
+            className={`font-display text-4xl font-extrabold tracking-tight text-gold sm:text-5xl ${EMBOSS_SHADOW}`}
+          >
             Sing Ova Sundays
           </h1>
-          <p className="mt-1 font-display text-2xl italic text-gradient-gold sm:text-3xl">
-            One Riddim. Two Worlds. One Dance Floor.
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Every hit has a history — heard ova. Each Sunday's "Cover Story" segment pairs the
-            R&B or hip-hop record you know with the reggae version, sample, or riddim that reveals
-            where it came from.
+          <p className="mt-2 font-display text-lg italic text-secondary sm:text-xl">
+            A Weekly Reggae &amp; R&amp;B Day Party
           </p>
 
           <div className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
-              <CalendarDays className="size-4 text-gold" /> Sundays
+              <CalendarDays className="size-4 text-secondary" /> Starting Sun, Aug 30, 2026
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Clock className="size-4 text-gold" /> 4 PM – 9 PM
+              <MapPin className="size-4 text-secondary" /> {VENUE_NAME}, South Loop
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <MapPin className="size-4 text-gold" /> {VENUE_NAME}, South Loop
+              <Ticket className="size-4 text-secondary" /> Free — First 4 Sundays
             </span>
           </div>
 
@@ -371,7 +478,12 @@ export function SingOvaSundaysPage() {
             <Button asChild variant="gold" size="xl">
               <a href="#pairings">See This Week's Pairings</a>
             </Button>
-            <Button asChild variant="goldOutline" size="xl">
+            <Button
+              asChild
+              variant="outline"
+              size="xl"
+              className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground"
+            >
               <a href="#login">Submit Your Pairing</a>
             </Button>
           </div>
@@ -379,6 +491,37 @@ export function SingOvaSundaysPage() {
       </section>
 
       <div className="mx-auto max-w-5xl space-y-20 px-4 py-16 sm:px-6">
+        {/* Featuring the music of */}
+        <section className="rounded-xl border border-border bg-card p-6 text-center">
+          <p className={`${LABEL_CLASS} mb-4`}>Featuring the Music Of</p>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {FEATURED_PAIRINGS.map((p) => (
+              <div key={p.rnb} className="rounded-lg border border-border/60 p-4">
+                <p className="font-display text-lg font-semibold sm:text-xl">
+                  {p.rnb} <span className="text-secondary">×</span> {p.reggae}
+                </p>
+                <p className="mt-1 text-xs italic text-muted-foreground">{p.genres}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-5 text-sm text-muted-foreground">...and many more R&B &amp; reggae legends</p>
+          <p className="mx-auto mt-5 max-w-md text-xs italic text-muted-foreground">
+            Featured music only — artists will not appear live at this event.
+          </p>
+        </section>
+
+        {/* Cover Story blurb */}
+        <section className="text-center">
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Every hit has a history — heard ova. Each Sunday's "Cover Story" segment pairs the
+            R&B or hip-hop record you know with the reggae version, sample, or riddim that reveals
+            where it came from.
+          </p>
+          <p className="mt-3 text-xs uppercase tracking-widest text-secondary">
+            Classic Vibes · Timeless Music · Elegant People
+          </p>
+        </section>
+
         {/* Eight-week themes */}
         <section>
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Eight-Week Theme Rotation</h2>
@@ -394,8 +537,8 @@ export function SingOvaSundaysPage() {
                   w.week === 8 ? "border-2 border-gold bg-gold/10" : "border-border bg-card"
                 }`}
               >
-                <p className="eyebrow mb-1">Week {w.week}</p>
-                <p className="font-display text-lg font-semibold">{w.theme}</p>
+                <p className={LABEL_CLASS}>Week {w.week}</p>
+                <p className="mt-1 font-display text-lg font-semibold">{w.theme}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{w.promise}</p>
               </div>
             ))}
@@ -439,8 +582,9 @@ export function SingOvaSundaysPage() {
                 <div className="space-y-3 rounded-lg border border-border p-4">
                   <Button
                     type="button"
-                    variant="goldOutline"
+                    variant="outline"
                     size="sm"
+                    className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground"
                     onClick={handleSendCode}
                     disabled={sendingCode}
                   >
@@ -470,7 +614,7 @@ export function SingOvaSundaysPage() {
                     </div>
                   )}
                   {verifyMsg && (
-                    <p className={`text-xs ${verifyMsg.ok ? "text-gold" : "text-destructive"}`}>
+                    <p className={`text-xs ${verifyMsg.ok ? "text-secondary" : "text-destructive"}`}>
                       {verifyMsg.text}
                     </p>
                   )}
@@ -481,13 +625,13 @@ export function SingOvaSundaysPage() {
             {session && (
               <>
                 <div className="flex items-center justify-between">
-                  <p className="flex items-center gap-1.5 text-sm text-gold">
+                  <p className="flex items-center gap-1.5 text-sm text-secondary">
                     <CheckCircle2 className="size-4" /> Logged in as {session.displayName}
                   </p>
                   <button
                     type="button"
                     onClick={handleLogOut}
-                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-gold"
+                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-secondary"
                   >
                     <LogOut className="size-3.5" /> Log out
                   </button>
@@ -542,7 +686,7 @@ export function SingOvaSundaysPage() {
                         <ToggleGroupItem
                           key={d.value}
                           value={d.value}
-                          className="data-[state=on]:bg-gold data-[state=on]:text-gold-foreground"
+                          className="data-[state=on]:bg-secondary data-[state=on]:text-secondary-foreground"
                         >
                           {d.label}
                         </ToggleGroupItem>
@@ -579,7 +723,7 @@ export function SingOvaSundaysPage() {
                   </div>
 
                   {submitMsg && (
-                    <p className={`text-sm ${submitMsg.ok ? "text-gold" : "text-destructive"}`}>
+                    <p className={`text-sm ${submitMsg.ok ? "text-secondary" : "text-destructive"}`}>
                       {submitMsg.text}
                     </p>
                   )}
@@ -603,7 +747,7 @@ export function SingOvaSundaysPage() {
 
           {loadingFeed && (
             <div className="mt-8 flex justify-center">
-              <Loader2 className="size-6 animate-spin text-gold" />
+              <Loader2 className="size-6 animate-spin text-secondary" />
             </div>
           )}
 
@@ -628,7 +772,7 @@ export function SingOvaSundaysPage() {
                       </p>
                       <p className="mt-1 font-display text-lg font-semibold">
                         {p.original_artist} — "{p.original_title}"
-                        <span className="mx-2 text-gold">→</span>
+                        <span className="mx-2 text-secondary">→</span>
                         {p.reggae_artist} — "{p.reggae_title}"
                       </p>
                       {p.note && (
@@ -643,7 +787,7 @@ export function SingOvaSundaysPage() {
                       className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
                         mine
                           ? "border-gold bg-gold/10 text-gold"
-                          : "border-border text-muted-foreground hover:border-gold hover:text-gold"
+                          : "border-border text-muted-foreground hover:border-secondary hover:text-secondary"
                       } ${!session ? "cursor-not-allowed opacity-50" : ""}`}
                       title={session ? "Heart this pairing" : "Log in to heart pairings"}
                     >
@@ -663,22 +807,39 @@ export function SingOvaSundaysPage() {
 
         {/* Venue */}
         <section id="venue" className="scroll-mt-20">
-          <h2 className="font-display text-2xl font-bold sm:text-3xl">Venue</h2>
-          <div className="mt-6 grid gap-8 md:grid-cols-2">
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">Venue &amp; Details</h2>
+
+          <div className="mt-6 grid grid-cols-3 gap-4 text-center">
+            {[
+              { icon: MapPin, label: "Address", value: "2244 S Michigan Ave, Chicago, IL" },
+              { icon: Clock, label: "Time", value: "4 PM – 9 PM" },
+              { icon: Ticket, label: "Admission", value: "Free · First 4 Sundays" },
+            ].map(({ icon: Icon, label, value }) => (
+              <div key={label}>
+                <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-secondary">
+                  <Icon className="size-6 text-gold" />
+                </div>
+                <p className={`${LABEL_CLASS} mt-2`}>{label}</p>
+                <p className="text-sm">{value}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 grid gap-8 md:grid-cols-2">
             <div className="space-y-4 rounded-xl border border-border bg-card p-6">
               <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 size-5 shrink-0 text-gold" />
+                <MapPin className="mt-0.5 size-5 shrink-0 text-secondary" />
                 <div>
                   <p className="font-semibold">{VENUE_NAME}</p>
                   <p className="text-sm text-muted-foreground">{VENUE_ADDRESS}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <CalendarDays className="mt-0.5 size-5 shrink-0 text-gold" />
-                <p className="text-sm">Every Sunday</p>
+                <CalendarDays className="mt-0.5 size-5 shrink-0 text-secondary" />
+                <p className="text-sm">Every Sunday, starting August 30, 2026</p>
               </div>
               <div className="flex items-start gap-3">
-                <Clock className="mt-0.5 size-5 shrink-0 text-gold" />
+                <Clock className="mt-0.5 size-5 shrink-0 text-secondary" />
                 <p className="text-sm">4:00 PM – 9:00 PM</p>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -697,23 +858,38 @@ export function SingOvaSundaysPage() {
             </div>
           </div>
         </section>
+      </div>
 
-        {/* Follow */}
-        <section className="rounded-xl border border-border bg-card p-6 text-center">
-          <h3 className="eyebrow mb-4">Follow TRC Events</h3>
-          <div className="mx-auto flex max-w-xs justify-center gap-4 text-sm">
-            <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-gold">
+      {/* Closing bar */}
+      <section className="bg-secondary py-10 text-secondary-foreground">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-6">
+          <p className="font-display text-xl font-semibold sm:text-2xl">
+            One Riddim. Two Worlds. <span className="text-gold">Endless Classics.</span>
+          </p>
+          <div className="mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm">
+            <a
+              href={`tel:${CONTACT_PHONE.replace(/[^\d+]/g, "")}`}
+              className="inline-flex items-center gap-1.5 hover:text-gold"
+            >
+              <Phone className="size-4 text-gold" /> {CONTACT_PHONE}
+            </a>
+            <a href={SITE_URL} className="inline-flex items-center gap-1.5 hover:text-gold">
+              <Globe className="size-4 text-gold" /> trcevent.com
+            </a>
+          </div>
+          <div className="mx-auto mt-4 flex max-w-xs justify-center gap-4 text-sm">
+            <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="hover:text-gold">
               Instagram
             </a>
-            <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-gold">
+            <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer" className="hover:text-gold">
               Facebook
             </a>
-            <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-gold">
+            <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer" className="hover:text-gold">
               TikTok
             </a>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
