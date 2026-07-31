@@ -57,6 +57,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -70,8 +71,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { SOCIAL_LINKS } from "@/lib/social";
-import heroImg from "@/assets/sing-ova-sundays-hero.jpg";
+import heroSlide1 from "@/assets/sing-ova-sundays-hero-1.jpg";
+import heroSlide2 from "@/assets/sing-ova-sundays-hero-2.jpg";
 
 const SITE_URL = "https://trcevent.com";
 const VENUE_NAME = "Bar 22";
@@ -104,10 +107,30 @@ const SOS_THEME_VARS = {
 
 const LABEL_CLASS = "text-xs font-semibold uppercase tracking-wide text-secondary";
 
-const FEATURED_PAIRINGS = [
-  { rnb: "Anita Baker", reggae: "Beres Hammond", genres: "Quiet Storm × Lovers Rock" },
-  { rnb: "Sade", reggae: "Maxi Priest", genres: "Smooth Soul × Reggae Fusion" },
-  { rnb: "Mary J. Blige", reggae: "Buju Banton", genres: "Hip-Hop Soul × Reggae/Dancehall" },
+// Each hero banner features a different set of pairings, so the "Featuring
+// the Music Of" text block below tracks whichever slide is currently
+// showing (via heroSelected in the page component) instead of a fixed list
+// that would drift out of sync as more slides get added.
+const HERO_AUTOPLAY_MS = 6000;
+const HERO_SLIDES = [
+  {
+    src: heroSlide1,
+    alt: "Sing Ova Sundays featured pairings: Anita Baker × Beres Hammond (Quiet Storm × Lovers Rock), Sade × Maxi Priest (Smooth Soul × Reggae Fusion), and Mary J. Blige × Buju Banton (Hip-Hop Soul × Reggae/Dancehall)",
+    pairings: [
+      { rnb: "Anita Baker", reggae: "Beres Hammond", genres: "Quiet Storm × Lovers Rock" },
+      { rnb: "Sade", reggae: "Maxi Priest", genres: "Smooth Soul × Reggae Fusion" },
+      { rnb: "Mary J. Blige", reggae: "Buju Banton", genres: "Hip-Hop Soul × Reggae/Dancehall" },
+    ],
+  },
+  {
+    src: heroSlide2,
+    alt: "Sing Ova Sundays featured pairings: Luther Vandross × Gregory Isaacs (Velvet Soul × Lovers Rock), Chaka Khan × Dennis Brown (Funk-Soul × Roots Reggae), and Toni Braxton × Sanchez (Contemporary R&B × Reggae Ballads)",
+    pairings: [
+      { rnb: "Luther Vandross", reggae: "Gregory Isaacs", genres: "Velvet Soul × Lovers Rock" },
+      { rnb: "Chaka Khan", reggae: "Dennis Brown", genres: "Funk-Soul × Roots Reggae" },
+      { rnb: "Toni Braxton", reggae: "Sanchez", genres: "Contemporary R&B × Reggae Ballads" },
+    ],
+  },
 ];
 
 const WEEK_THEMES = [
@@ -127,7 +150,7 @@ const DIRECTIONS = [
 ] as const;
 
 export function singOvaSundaysHead() {
-  const imageUrl = `${SITE_URL}${heroImg}`;
+  const imageUrl = `${SITE_URL}${HERO_SLIDES[0].src}`;
   return {
     meta: [
       { title: "Sing Ova Sundays — TRC Events" },
@@ -217,6 +240,23 @@ export function SingOvaSundaysPage() {
   const [weekTheme, setWeekTheme] = useState("any");
   const [submittingPairing, setSubmittingPairing] = useState(false);
   const [submitMsg, setSubmitMsg] = useState(null);
+
+  const [heroApi, setHeroApi] = useState<CarouselApi>();
+  const [heroSelected, setHeroSelected] = useState(0);
+
+  useEffect(() => {
+    if (!heroApi) return;
+    const onSelect = () => setHeroSelected(heroApi.selectedScrollSnap());
+    onSelect();
+    heroApi.on("select", onSelect);
+    return () => heroApi.off("select", onSelect);
+  }, [heroApi]);
+
+  useEffect(() => {
+    if (!heroApi || HERO_SLIDES.length < 2) return;
+    const id = setInterval(() => heroApi.scrollNext(), HERO_AUTOPLAY_MS);
+    return () => clearInterval(id);
+  }, [heroApi]);
 
   async function loadFeed() {
     setLoadingFeed(true);
@@ -414,7 +454,7 @@ export function SingOvaSundaysPage() {
     eventSchedule: "Weekly on Sunday",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    image: [`${SITE_URL}${heroImg}`],
+    image: HERO_SLIDES.map((slide) => `${SITE_URL}${slide.src}`),
     location: {
       "@type": "Place",
       name: VENUE_NAME,
@@ -446,11 +486,37 @@ export function SingOvaSundaysPage() {
       {/* Hero */}
       <section className="border-b border-border">
         <h1 className="sr-only">Sing Ova Sundays</h1>
-        <img
-          src={heroImg}
-          alt="Sing Ova Sundays featured pairings: Anita Baker × Beres Hammond (Quiet Storm × Lovers Rock), Sade × Maxi Priest (Smooth Soul × Reggae Fusion), and Mary J. Blige × Buju Banton (Hip-Hop Soul × Reggae/Dancehall)"
-          className="w-full object-cover"
-        />
+        <div className="relative">
+          <Carousel setApi={setHeroApi} opts={{ loop: true }}>
+            <CarouselContent className="ml-0">
+              {HERO_SLIDES.map((slide) => (
+                <CarouselItem key={slide.src} className="basis-full pl-0">
+                  <img src={slide.src} alt={slide.alt} className="w-full object-cover" />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+
+          {HERO_SLIDES.length > 1 && (
+            <div className="absolute inset-x-0 bottom-3 flex justify-center">
+              <div className="flex items-center gap-2 rounded-full bg-black/25 px-3 py-1.5 backdrop-blur-sm">
+                {HERO_SLIDES.map((slide, i) => (
+                  <button
+                    key={slide.src}
+                    type="button"
+                    aria-label={`Show hero slide ${i + 1}`}
+                    aria-current={heroSelected === i}
+                    onClick={() => heroApi?.scrollTo(i)}
+                    className={cn(
+                      "size-2 rounded-full transition-colors",
+                      heroSelected === i ? "bg-gold" : "bg-white/50 hover:bg-white/80",
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
         <div className="mx-auto max-w-5xl px-4 py-10 text-center sm:px-6">
           <div className="flex flex-wrap justify-center gap-3">
             <Button asChild variant="gold" size="xl">
@@ -473,7 +539,7 @@ export function SingOvaSundaysPage() {
         <section className="rounded-xl border border-border bg-card p-6 text-center">
           <p className={`${LABEL_CLASS} mb-4`}>Featuring the Music Of</p>
           <div className="grid gap-6 sm:grid-cols-3">
-            {FEATURED_PAIRINGS.map((p) => (
+            {HERO_SLIDES[heroSelected].pairings.map((p) => (
               <div key={p.rnb} className="rounded-lg border border-border/60 p-4">
                 <p className="font-display text-lg font-semibold sm:text-xl">
                   {p.rnb} <span className="text-secondary">×</span> {p.reggae}
