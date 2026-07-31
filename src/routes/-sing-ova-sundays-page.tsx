@@ -102,7 +102,6 @@ const SOS_THEME_VARS = {
   "--ring": "oklch(0.5 0.11 80)",
 };
 
-const EMBOSS_SHADOW = "[text-shadow:0_1px_1px_rgba(20,15,5,0.35),0_0_18px_rgba(201,168,76,0.25)]";
 const LABEL_CLASS = "text-xs font-semibold uppercase tracking-wide text-secondary";
 
 const FEATURED_PAIRINGS = [
@@ -446,35 +445,14 @@ export function SingOvaSundaysPage() {
 
       {/* Hero */}
       <section className="border-b border-border">
+        <h1 className="sr-only">Sing Ova Sundays</h1>
         <img
           src={heroImg}
           alt="Sing Ova Sundays featured pairings: Anita Baker × Beres Hammond (Quiet Storm × Lovers Rock), Sade × Maxi Priest (Smooth Soul × Reggae Fusion), and Mary J. Blige × Buju Banton (Hip-Hop Soul × Reggae/Dancehall)"
           className="w-full object-cover"
         />
         <div className="mx-auto max-w-5xl px-4 py-10 text-center sm:px-6">
-          <p className={`${LABEL_CLASS} mb-2`}>Marlon TRC · The Reggae Connection Presents</p>
-          <h1
-            className={`font-display text-4xl font-extrabold tracking-tight text-gold sm:text-5xl ${EMBOSS_SHADOW}`}
-          >
-            Sing Ova Sundays
-          </h1>
-          <p className="mt-2 font-display text-lg italic text-secondary sm:text-xl">
-            A Weekly Reggae &amp; R&amp;B Day Party
-          </p>
-
-          <div className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5">
-              <CalendarDays className="size-4 text-secondary" /> Starting Sun, Aug 30, 2026
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin className="size-4 text-secondary" /> {VENUE_NAME}, South Loop
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Ticket className="size-4 text-secondary" /> Free — First 4 Sundays
-            </span>
-          </div>
-
-          <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3">
             <Button asChild variant="gold" size="xl">
               <a href="#pairings">See This Week's Pairings</a>
             </Button>
