@@ -71,7 +71,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { SOCIAL_LINKS } from "@/lib/social";
 import heroSlide1 from "@/assets/sing-ova-sundays-hero-1.jpg";
 import heroSlide2 from "@/assets/sing-ova-sundays-hero-2.jpg";
@@ -111,7 +110,7 @@ const LABEL_CLASS = "text-xs font-semibold uppercase tracking-wide text-secondar
 // the Music Of" text block below tracks whichever slide is currently
 // showing (via heroSelected in the page component) instead of a fixed list
 // that would drift out of sync as more slides get added.
-const HERO_AUTOPLAY_MS = 6000;
+const HERO_AUTOPLAY_MS = 7000;
 const HERO_SLIDES = [
   {
     src: heroSlide1,
@@ -241,22 +240,22 @@ export function SingOvaSundaysPage() {
   const [submittingPairing, setSubmittingPairing] = useState(false);
   const [submitMsg, setSubmitMsg] = useState(null);
 
-  const [heroApi, setHeroApi] = useState<CarouselApi>();
   const [heroSelected, setHeroSelected] = useState(0);
 
+  // A slow crossfade rather than a slide -- since every banner shares the
+  // same layout (same title lockup, same green info bar in the same spot),
+  // dissolving between them reads as "the artist photos changed" rather
+  // than "a new slide arrived." Kept deliberately gentle: a long hold per
+  // slide and a long, eased opacity transition so the change is only
+  // obvious to someone actively watching for it.
   useEffect(() => {
-    if (!heroApi) return;
-    const onSelect = () => setHeroSelected(heroApi.selectedScrollSnap());
-    onSelect();
-    heroApi.on("select", onSelect);
-    return () => heroApi.off("select", onSelect);
-  }, [heroApi]);
-
-  useEffect(() => {
-    if (!heroApi || HERO_SLIDES.length < 2) return;
-    const id = setInterval(() => heroApi.scrollNext(), HERO_AUTOPLAY_MS);
+    if (HERO_SLIDES.length < 2) return;
+    const id = setInterval(
+      () => setHeroSelected((i) => (i + 1) % HERO_SLIDES.length),
+      HERO_AUTOPLAY_MS,
+    );
     return () => clearInterval(id);
-  }, [heroApi]);
+  }, []);
 
   async function loadFeed() {
     setLoadingFeed(true);
@@ -486,16 +485,19 @@ export function SingOvaSundaysPage() {
       {/* Hero */}
       <section className="border-b border-border">
         <h1 className="sr-only">Sing Ova Sundays</h1>
-        <div className="relative">
-          <Carousel setApi={setHeroApi} opts={{ loop: true }}>
-            <CarouselContent className="ml-0">
-              {HERO_SLIDES.map((slide) => (
-                <CarouselItem key={slide.src} className="basis-full pl-0">
-                  <img src={slide.src} alt={slide.alt} className="w-full object-cover" />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+        <div className="relative aspect-[2/1] w-full overflow-hidden">
+          {HERO_SLIDES.map((slide, i) => (
+            <img
+              key={slide.src}
+              src={slide.src}
+              alt={slide.alt}
+              aria-hidden={i !== heroSelected}
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover transition-opacity duration-[3000ms] ease-in-out",
+                i === heroSelected ? "opacity-100" : "opacity-0",
+              )}
+            />
+          ))}
 
           {HERO_SLIDES.length > 1 && (
             <div className="absolute inset-x-0 bottom-3 flex justify-center">
@@ -506,7 +508,7 @@ export function SingOvaSundaysPage() {
                     type="button"
                     aria-label={`Show hero slide ${i + 1}`}
                     aria-current={heroSelected === i}
-                    onClick={() => heroApi?.scrollTo(i)}
+                    onClick={() => setHeroSelected(i)}
                     className={cn(
                       "size-2 rounded-full transition-colors",
                       heroSelected === i ? "bg-gold" : "bg-white/50 hover:bg-white/80",
