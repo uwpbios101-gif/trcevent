@@ -1,38 +1,45 @@
-// Shared by src/routes/sing-ova-sundays.tsx. The "-" prefix excludes this
-// file from route generation (TanStack Router convention) — see
+// Shared by src/routes/sing-ova-sundays.$city.tsx. The "-" prefix excludes
+// this file from route generation (TanStack Router convention) — see
 // src/routes/README.md.
 //
-// Companion site for Marlon TRC's proposed "Sing Ova Sundays" residency at
-// Bar 22 (South Loop, Chicago): every Sunday's "Cover Story" segment pairs
-// an R&B/hip-hop original with the reggae version, sample, or riddim that
-// reveals its history. This page lets people log in during the week to
-// submit and heart their favorite pairings, so the resident DJ has a pool
-// of crowd requests to pull from live on Sunday.
+// Companion site for Marlon TRC's "Sing Ova Sundays" reggae x R&B day party,
+// expanding city by city (Chicago confirmed; Milwaukee, Indianapolis,
+// St. Louis, and Detroit tentative). Every Sunday's "Cover Story" segment
+// pairs an R&B/hip-hop original with the reggae version, sample, or riddim
+// that reveals its history. People log in during the week to submit/heart
+// pairings, and the resident DJ pulls from the approved queue live Sunday.
 //
-// Visual design intentionally matches the official flyer
-// (src/assets/sing-ova-sundays-flyer.jpg): warm cream/parchment, deep
-// forest green, and gold -- a different palette from the rest of
-// trcevent.com's all-dark theme. SOS_THEME_VARS below overrides the design
-// system's CSS custom properties (--background, --card, --secondary, etc.)
-// on this page's wrapper only, so every shadcn primitive (Button, Input,
-// Card, Badge...) picks up the new palette automatically without touching
-// src/styles.css or any other page. Gold text is reserved for the large
-// headline and for text sitting on the deep-green plaques (like the flyer
-// itself does) rather than small text directly on cream, since flat gold
-// on this light cream doesn't have enough contrast to read well at small
-// sizes -- the flyer itself uses dark ink/green for its cream-background
-// labels and saves gold for the embossed title and the green plaques.
+// City is a dimension on ACTIONS (pairings, hearts), not on the account --
+// sos_verifications/sos_members are global by design, so someone who
+// verifies once can participate in any city without re-verifying. This
+// component is fully data-driven by citySlug: it fetches the matching
+// sos_cities row (+ its sos_city_hero_slides) at runtime and renders a
+// "Coming Soon" placeholder for any slug that doesn't resolve to a
+// `published` city -- adding city #6 next year should never require
+// touching this file, only a new sos_cities row (mirrors the existing
+// -pitch-page.tsx pattern in this repo: "adding pitch #301 should never
+// require touching this file, only a new DB row").
 //
-// The event's name on the flyer's logotype stylizes as "Sing Over Sundays"
-// (a vinyl record standing in for the "O"), but the real name used in this
-// page's copy stays "Sing Ova Sundays" per the source proposal doc --
-// that's a deliberate call, not an inconsistency.
+// Hero images live in the public `sos-hero-images` Storage bucket (not
+// Vite-bundled) for the same reason -- a new city's art shouldn't require a
+// rebuild/deploy.
 //
-// Deliberately NOT linked from the Navbar and not in the sitemap yet — the
-// Bar 22 partnership is still a pending proposal, so this stays reachable
-// by direct URL only until the residency is confirmed. `robots: noindex,
-// nofollow` below matches that same "not for search engines yet" intent
-// used on other pre-launch/gated pages in this repo.
+// Visual design intentionally matches the official flyer aesthetic: warm
+// cream/parchment, deep forest green, and gold -- a different palette from
+// the rest of trcevent.com's all-dark theme. SOS_THEME_VARS below overrides
+// the design system's CSS custom properties (--background, --card,
+// --secondary, etc.) on this page's wrapper only, so every shadcn primitive
+// (Button, Input, Card, Badge...) picks up the new palette automatically
+// without touching src/styles.css or any other page. Gold text is reserved
+// for the large headline and for text sitting on the deep-green plaques
+// (like the flyer itself does) rather than small text directly on cream,
+// since flat gold on this light cream doesn't have enough contrast to read
+// well at small sizes.
+//
+// Deliberately NOT linked from the Navbar and not in a sitemap yet -- every
+// city here is either a pending proposal or (Chicago) a still-unconfirmed
+// residency, so this stays reachable by direct URL only. `robots: noindex,
+// nofollow` matches that same "not for search engines yet" intent.
 //
 // Login uses the same emailed 6-digit code pattern as the comp/street-team
 // pages (never a magic link -- those get silently consumed by mail
@@ -62,7 +69,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Select,
@@ -72,14 +78,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SOCIAL_LINKS } from "@/lib/social";
-import heroSlide1 from "@/assets/sing-ova-sundays-hero-1.jpg";
-import heroSlide2 from "@/assets/sing-ova-sundays-hero-2.jpg";
 
 const SITE_URL = "https://trcevent.com";
-const VENUE_NAME = "Bar 22";
-const VENUE_ADDRESS = "2244 S Michigan Ave, Chicago, IL 60616";
 const CONTACT_PHONE = "(414) 301-2457";
 const SESSION_STORAGE_KEY = "sos_session";
+const HERO_AUTOPLAY_MS = 7000;
 
 // Overrides the design system's CSS custom properties for this page only —
 // see the file header comment for why. Values are hand-picked oklch matches
@@ -106,32 +109,9 @@ const SOS_THEME_VARS = {
 
 const LABEL_CLASS = "text-xs font-semibold uppercase tracking-wide text-secondary";
 
-// Each hero banner features a different set of pairings, so the "Featuring
-// the Music Of" text block below tracks whichever slide is currently
-// showing (via heroSelected in the page component) instead of a fixed list
-// that would drift out of sync as more slides get added.
-const HERO_AUTOPLAY_MS = 7000;
-const HERO_SLIDES = [
-  {
-    src: heroSlide1,
-    alt: "Sing Ova Sundays featured pairings: Anita Baker × Beres Hammond (Quiet Storm × Lovers Rock), Sade × Maxi Priest (Smooth Soul × Reggae Fusion), and Mary J. Blige × Buju Banton (Hip-Hop Soul × Reggae/Dancehall)",
-    pairings: [
-      { rnb: "Anita Baker", reggae: "Beres Hammond", genres: "Quiet Storm × Lovers Rock" },
-      { rnb: "Sade", reggae: "Maxi Priest", genres: "Smooth Soul × Reggae Fusion" },
-      { rnb: "Mary J. Blige", reggae: "Buju Banton", genres: "Hip-Hop Soul × Reggae/Dancehall" },
-    ],
-  },
-  {
-    src: heroSlide2,
-    alt: "Sing Ova Sundays featured pairings: Luther Vandross × Gregory Isaacs (Velvet Soul × Lovers Rock), Chaka Khan × Dennis Brown (Funk-Soul × Roots Reggae), and Toni Braxton × Sanchez (Contemporary R&B × Reggae Ballads)",
-    pairings: [
-      { rnb: "Luther Vandross", reggae: "Gregory Isaacs", genres: "Velvet Soul × Lovers Rock" },
-      { rnb: "Chaka Khan", reggae: "Dennis Brown", genres: "Funk-Soul × Roots Reggae" },
-      { rnb: "Toni Braxton", reggae: "Sanchez", genres: "Contemporary R&B × Reggae Ballads" },
-    ],
-  },
-];
-
+// The 8-week "Cover Story" format is the brand-wide show format, identical
+// across every city's own 8-week run (each city's "week 1" is relative to
+// its own launch date) -- not per-city data.
 const WEEK_THEMES = [
   { week: 1, theme: "Lovers Rock vs. Slow Jams", promise: "Reggae lovers rock paired with R&B slow jams." },
   { week: 2, theme: "Riddim Rewind", promise: "One riddim traced across eras, artists, and genres." },
@@ -149,26 +129,14 @@ const DIRECTIONS = [
 ] as const;
 
 export function singOvaSundaysHead() {
-  const imageUrl = `${SITE_URL}${HERO_SLIDES[0].src}`;
   return {
     meta: [
       { title: "Sing Ova Sundays — TRC Events" },
       {
         name: "description",
         content:
-          "Sing Ova Sundays: one riddim, two worlds, endless classics. A weekly reggae x R&B day party at Bar 22, South Loop Chicago, starting Sunday, August 30, 2026, 4-9 PM. Log in during the week to submit and vote on your favorite R&B-to-reggae song pairings for the DJ to play live on Sunday. Free admission the first four Sundays.",
+          "Sing Ova Sundays: a weekly reggae x R&B day party, city by city. Log in during the week to submit and vote on your favorite R&B-to-reggae song pairings for the DJ to play live on Sunday.",
       },
-      { property: "og:title", content: "Sing Ova Sundays — TRC Events" },
-      {
-        property: "og:description",
-        content: "One Riddim. Two Worlds. Endless Classics. Starting Sunday, Aug 30, 2026 — every Sunday, 4-9 PM — Bar 22, South Loop Chicago.",
-      },
-      { property: "og:type", content: "article" },
-      { property: "og:image", content: imageUrl },
-      { property: "og:url", content: `${SITE_URL}/sing-ova-sundays` },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Sing Ova Sundays — TRC Events" },
-      { name: "twitter:image", content: imageUrl },
       { name: "robots", content: "noindex, nofollow" },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/sing-ova-sundays` }],
@@ -213,7 +181,33 @@ function clearSession() {
   localStorage.removeItem(SESSION_STORAGE_KEY);
 }
 
-export function SingOvaSundaysPage() {
+// city.launch_date is a plain 'YYYY-MM-DD' calendar date with no time
+// component -- parse it as local, not UTC, or a date like "2026-08-30"
+// can render as "August 29" depending on the reader's timezone offset.
+function formatLaunchDate(dateStr) {
+  if (!dateStr) return null;
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function prettifySlug(slug) {
+  return slug
+    .split("-")
+    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}
+
+export function SingOvaSundaysPage({ citySlug }) {
+  const [city, setCity] = useState(null);
+  const [cityLoading, setCityLoading] = useState(true);
+  const [heroSlides, setHeroSlides] = useState([]);
+  const [heroSelected, setHeroSelected] = useState(0);
+
   const [session, setSession] = useState(() => loadSession());
 
   const [emailInput, setEmailInput] = useState("");
@@ -240,28 +234,60 @@ export function SingOvaSundaysPage() {
   const [submittingPairing, setSubmittingPairing] = useState(false);
   const [submitMsg, setSubmitMsg] = useState(null);
 
-  const [heroSelected, setHeroSelected] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    async function loadCity() {
+      setCityLoading(true);
+      setCity(null);
+      setHeroSlides([]);
+      setHeroSelected(0);
+      // RLS only returns a row here when status = 'published' -- a pending
+      // or nonexistent slug both come back empty, indistinguishable from
+      // the anon side on purpose (no leaking which cities are in the works).
+      const { data: cityRow } = await supabase
+        .from("sos_cities")
+        .select("*")
+        .eq("slug", citySlug)
+        .maybeSingle();
+      if (cancelled) return;
+      setCity(cityRow ?? null);
+      if (cityRow) {
+        const { data: slides } = await supabase
+          .from("sos_city_hero_slides")
+          .select("*")
+          .eq("city_id", cityRow.id)
+          .order("position", { ascending: true });
+        if (!cancelled) setHeroSlides(slides ?? []);
+      }
+      if (!cancelled) setCityLoading(false);
+    }
+    loadCity();
+    return () => {
+      cancelled = true;
+    };
+  }, [citySlug]);
 
   // A slow crossfade rather than a slide -- since every banner shares the
-  // same layout (same title lockup, same green info bar in the same spot),
-  // dissolving between them reads as "the artist photos changed" rather
-  // than "a new slide arrived." Kept deliberately gentle: a long hold per
-  // slide and a long, eased opacity transition so the change is only
-  // obvious to someone actively watching for it.
+  // same layout, dissolving between them reads as "the artist photos
+  // changed" rather than "a new slide arrived." Kept deliberately gentle: a
+  // long hold per slide and a long, eased opacity transition so the change
+  // is only obvious to someone actively watching for it.
   useEffect(() => {
-    if (HERO_SLIDES.length < 2) return;
+    if (heroSlides.length < 2) return;
     const id = setInterval(
-      () => setHeroSelected((i) => (i + 1) % HERO_SLIDES.length),
+      () => setHeroSelected((i) => (i + 1) % heroSlides.length),
       HERO_AUTOPLAY_MS,
     );
     return () => clearInterval(id);
-  }, []);
+  }, [heroSlides.length]);
 
   async function loadFeed() {
+    if (!city) return;
     setLoadingFeed(true);
     const { data: pairingRows } = await supabase
       .from("sos_pairings")
       .select("*")
+      .eq("city_id", city.id)
       .order("created_at", { ascending: false })
       .limit(100);
     const rows = pairingRows ?? [];
@@ -293,7 +319,7 @@ export function SingOvaSundaysPage() {
   useEffect(() => {
     loadFeed();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.email]);
+  }, [city?.id, session?.email]);
 
   async function handleSendCode() {
     const trimmedEmail = emailInput.trim();
@@ -383,7 +409,7 @@ export function SingOvaSundaysPage() {
 
   async function handleSubmitPairing(e) {
     e.preventDefault();
-    if (!session) return;
+    if (!session || !city) return;
     if (!originalArtist.trim() || !originalTitle.trim() || !reggaeArtist.trim() || !reggaeTitle.trim()) {
       setSubmitMsg({ text: "Fill in both songs before submitting.", ok: false });
       return;
@@ -392,6 +418,7 @@ export function SingOvaSundaysPage() {
     setSubmitMsg(null);
     try {
       const { error } = await supabase.from("sos_pairings").insert({
+        city_id: city.id,
         email: session.email,
         display_name: session.displayName,
         original_artist: originalArtist.trim(),
@@ -415,8 +442,10 @@ export function SingOvaSundaysPage() {
       setReggaeTitle("");
       setNote("");
       setWeekTheme("any");
-      setSubmitMsg({ text: "Pairing submitted!", ok: true });
-      await loadFeed();
+      setSubmitMsg({
+        text: "Pairing submitted! It'll show up in the feed once approved.",
+        ok: true,
+      });
     } finally {
       setSubmittingPairing(false);
     }
@@ -443,82 +472,122 @@ export function SingOvaSundaysPage() {
     }
   }
 
-  const mapsSrc = `https://www.google.com/maps?q=${encodeURIComponent(VENUE_ADDRESS)}&output=embed`;
+  if (cityLoading) {
+    return (
+      <div
+        className="flex min-h-[60vh] items-center justify-center bg-background text-foreground"
+        style={SOS_THEME_VARS}
+      >
+        <Loader2 className="size-6 animate-spin text-secondary" />
+      </div>
+    );
+  }
 
-  const eventSchema = {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    name: "Sing Ova Sundays",
-    startDate: "2026-08-30T16:00:00-05:00",
-    eventSchedule: "Weekly on Sunday",
-    eventStatus: "https://schema.org/EventScheduled",
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    image: HERO_SLIDES.map((slide) => `${SITE_URL}${slide.src}`),
-    location: {
-      "@type": "Place",
-      name: VENUE_NAME,
-      address: VENUE_ADDRESS,
-    },
-    organizer: {
-      "@type": "Organization",
-      name: "Marlon TRC",
-      url: SITE_URL,
-    },
-    offers: {
-      "@type": "Offer",
-      url: `${SITE_URL}/sing-ova-sundays`,
-      priceCurrency: "USD",
-      price: "0",
-      availability: "https://schema.org/InStock",
-      description: "Free admission for the first four Sundays.",
-    },
-  };
+  if (!city) {
+    const prettyName = prettifySlug(citySlug);
+    return (
+      <div
+        className="flex min-h-[60vh] flex-col items-center justify-center gap-3 bg-background px-4 text-center text-foreground"
+        style={SOS_THEME_VARS}
+      >
+        <p className={LABEL_CLASS}>Sing Ova Sundays</p>
+        <h1 className="font-display text-3xl font-bold sm:text-4xl">Coming Soon to {prettyName}</h1>
+        <p className="max-w-md text-sm text-muted-foreground">
+          We're working on bringing Sing Ova Sundays to {prettyName}. In the meantime, check out{" "}
+          <a href="/sing-ova-sundays/chicago" className="text-secondary underline">
+            the Chicago edition
+          </a>
+          , live now.
+        </p>
+      </div>
+    );
+  }
+
+  const launchDateFormatted = formatLaunchDate(city.launch_date);
+  const mapsSrc = city.venue_address
+    ? `https://www.google.com/maps?q=${encodeURIComponent(city.venue_address)}&output=embed`
+    : null;
+
+  const eventSchema = city.launch_date
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        name: `Sing Ova Sundays — ${city.name}`,
+        startDate: `${city.launch_date}T16:00:00`,
+        eventSchedule: "Weekly on Sunday",
+        eventStatus: "https://schema.org/EventScheduled",
+        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+        image: heroSlides.map((s) => s.image_url),
+        location: {
+          "@type": "Place",
+          name: city.venue_name,
+          address: city.venue_address,
+        },
+        organizer: {
+          "@type": "Organization",
+          name: "Marlon TRC",
+          url: SITE_URL,
+        },
+        offers: {
+          "@type": "Offer",
+          url: `${SITE_URL}/sing-ova-sundays/${city.slug}`,
+          priceCurrency: "USD",
+          price: "0",
+          availability: "https://schema.org/InStock",
+          description: "Free admission for the first four Sundays.",
+        },
+      }
+    : null;
 
   return (
     <div className="bg-background text-foreground" style={SOS_THEME_VARS}>
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
-      />
+      {eventSchema && (
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
+        />
+      )}
 
       {/* Hero */}
       <section className="border-b border-border">
-        <h1 className="sr-only">Sing Ova Sundays</h1>
-        <div className="relative aspect-[2/1] w-full overflow-hidden">
-          {HERO_SLIDES.map((slide, i) => (
-            <img
-              key={slide.src}
-              src={slide.src}
-              alt={slide.alt}
-              aria-hidden={i !== heroSelected}
-              className={cn(
-                "absolute inset-0 h-full w-full object-cover transition-opacity duration-[3000ms] ease-in-out",
-                i === heroSelected ? "opacity-100" : "opacity-0",
-              )}
-            />
-          ))}
+        <h1 className="sr-only">Sing Ova Sundays — {city.name}</h1>
+        {heroSlides.length > 0 && (
+          <div className="relative aspect-[2/1] w-full overflow-hidden">
+            {heroSlides.map((slide, i) => (
+              <img
+                key={slide.id}
+                src={slide.image_url}
+                alt={slide.alt_text}
+                aria-hidden={i !== heroSelected}
+                className={cn(
+                  "absolute inset-0 h-full w-full object-cover transition-opacity duration-[3000ms] ease-in-out",
+                  i === heroSelected ? "opacity-100" : "opacity-0",
+                )}
+              />
+            ))}
 
-          {HERO_SLIDES.length > 1 && (
-            <div className="absolute inset-x-0 bottom-3 flex justify-center">
-              <div className="flex items-center gap-2 rounded-full bg-black/25 px-3 py-1.5 backdrop-blur-sm">
-                {HERO_SLIDES.map((slide, i) => (
-                  <button
-                    key={slide.src}
-                    type="button"
-                    aria-label={`Show hero slide ${i + 1}`}
-                    aria-current={heroSelected === i}
-                    onClick={() => setHeroSelected(i)}
-                    className={cn(
-                      "size-2 rounded-full transition-colors",
-                      heroSelected === i ? "bg-gold" : "bg-white/50 hover:bg-white/80",
-                    )}
-                  />
-                ))}
+            {heroSlides.length > 1 && (
+              <div className="absolute inset-x-0 bottom-3 flex justify-center">
+                <div className="flex items-center gap-2 rounded-full bg-black/25 px-3 py-1.5 backdrop-blur-sm">
+                  {heroSlides.map((slide, i) => (
+                    <button
+                      key={slide.id}
+                      type="button"
+                      aria-label={`Show hero slide ${i + 1}`}
+                      aria-current={heroSelected === i}
+                      onClick={() => setHeroSelected(i)}
+                      className={cn(
+                        "size-2 rounded-full transition-colors",
+                        heroSelected === i ? "bg-gold" : "bg-white/50 hover:bg-white/80",
+                      )}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
         <div className="mx-auto max-w-5xl px-4 py-10 text-center sm:px-6">
           <div className="flex flex-wrap justify-center gap-3">
             <Button asChild variant="gold" size="xl">
@@ -538,23 +607,25 @@ export function SingOvaSundaysPage() {
 
       <div className="mx-auto max-w-5xl space-y-20 px-4 py-16 sm:px-6">
         {/* Featuring the music of */}
-        <section className="rounded-xl border border-border bg-card p-6 text-center">
-          <p className={`${LABEL_CLASS} mb-4`}>Featuring the Music Of</p>
-          <div className="grid gap-6 sm:grid-cols-3">
-            {HERO_SLIDES[heroSelected].pairings.map((p) => (
-              <div key={p.rnb} className="rounded-lg border border-border/60 p-4">
-                <p className="font-display text-lg font-semibold sm:text-xl">
-                  {p.rnb} <span className="text-secondary">×</span> {p.reggae}
-                </p>
-                <p className="mt-1 text-xs italic text-muted-foreground">{p.genres}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-5 text-sm text-muted-foreground">...and many more R&B &amp; reggae legends</p>
-          <p className="mx-auto mt-5 max-w-md text-xs italic text-muted-foreground">
-            Featured music only — artists will not appear live at this event.
-          </p>
-        </section>
+        {heroSlides[heroSelected]?.pairings?.length > 0 && (
+          <section className="rounded-xl border border-border bg-card p-6 text-center">
+            <p className={`${LABEL_CLASS} mb-4`}>Featuring the Music Of</p>
+            <div className="grid gap-6 sm:grid-cols-3">
+              {heroSlides[heroSelected].pairings.map((p) => (
+                <div key={p.rnb} className="rounded-lg border border-border/60 p-4">
+                  <p className="font-display text-lg font-semibold sm:text-xl">
+                    {p.rnb} <span className="text-secondary">×</span> {p.reggae}
+                  </p>
+                  <p className="mt-1 text-xs italic text-muted-foreground">{p.genres}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 text-sm text-muted-foreground">...and many more R&B &amp; reggae legends</p>
+            <p className="mx-auto mt-5 max-w-md text-xs italic text-muted-foreground">
+              Featured music only — artists will not appear live at this event.
+            </p>
+          </section>
+        )}
 
         {/* Cover Story blurb */}
         <section className="text-center">
@@ -621,7 +692,8 @@ export function SingOvaSundaysPage() {
                     onChange={(e) => setEmailInput(e.target.value)}
                   />
                   <p className="text-xs text-muted-foreground">
-                    We'll email you a 6-digit code — no password, no link to click.
+                    We'll email you a 6-digit code — no password, no link to click. One login
+                    works for every Sing Ova Sundays city.
                   </p>
                 </div>
 
@@ -799,7 +871,7 @@ export function SingOvaSundaysPage() {
 
           {!loadingFeed && pairings.length === 0 && (
             <p className="mt-8 text-sm text-muted-foreground">
-              No pairings submitted yet — be the first to drop one above.
+              No approved pairings yet — be the first to submit one above.
             </p>
           )}
 
@@ -815,6 +887,7 @@ export function SingOvaSundaysPage() {
                       <p className="text-xs uppercase tracking-wide text-muted-foreground">
                         {directionLabel}
                         {p.week_theme ? ` · ${p.week_theme}` : ""}
+                        {p.status === "played" ? " · Played" : ""}
                       </p>
                       <p className="mt-1 font-display text-lg font-semibold">
                         {p.original_artist} — "{p.original_title}"
@@ -857,8 +930,8 @@ export function SingOvaSundaysPage() {
 
           <div className="mt-6 grid grid-cols-3 gap-4 text-center">
             {[
-              { icon: MapPin, label: "Address", value: "2244 S Michigan Ave, Chicago, IL" },
-              { icon: Clock, label: "Time", value: "4 PM – 9 PM" },
+              { icon: MapPin, label: "Address", value: city.venue_address ?? "TBA" },
+              { icon: Clock, label: "Time", value: city.hours_label ?? "TBA" },
               { icon: Ticket, label: "Admission", value: "Free · First 4 Sundays" },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label}>
@@ -876,32 +949,39 @@ export function SingOvaSundaysPage() {
               <div className="flex items-start gap-3">
                 <MapPin className="mt-0.5 size-5 shrink-0 text-secondary" />
                 <div>
-                  <p className="font-semibold">{VENUE_NAME}</p>
-                  <p className="text-sm text-muted-foreground">{VENUE_ADDRESS}</p>
+                  <p className="font-semibold">{city.venue_name ?? `${city.name} venue TBA`}</p>
+                  {city.venue_address && (
+                    <p className="text-sm text-muted-foreground">{city.venue_address}</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <CalendarDays className="mt-0.5 size-5 shrink-0 text-secondary" />
-                <p className="text-sm">Every Sunday, starting August 30, 2026</p>
+                <p className="text-sm">
+                  {launchDateFormatted ? `Every Sunday, starting ${launchDateFormatted}` : "Every Sunday"}
+                </p>
               </div>
-              <div className="flex items-start gap-3">
-                <Clock className="mt-0.5 size-5 shrink-0 text-secondary" />
-                <p className="text-sm">4:00 PM – 9:00 PM</p>
-              </div>
+              {city.hours_label && (
+                <div className="flex items-start gap-3">
+                  <Clock className="mt-0.5 size-5 shrink-0 text-secondary" />
+                  <p className="text-sm">{city.hours_label}</p>
+                </div>
+              )}
               <p className="text-xs text-muted-foreground">
-                Proposed eight-week pilot — final schedule, occupancy, and admission remain
-                subject to Bar 22 confirmation.
+                Schedule, occupancy, and admission remain subject to venue confirmation.
               </p>
             </div>
-            <div className="overflow-hidden rounded-xl border border-border">
-              <iframe
-                className="aspect-square w-full sm:aspect-video"
-                src={mapsSrc}
-                title={`Map of ${VENUE_NAME}`}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
+            {mapsSrc && (
+              <div className="overflow-hidden rounded-xl border border-border">
+                <iframe
+                  className="aspect-square w-full sm:aspect-video"
+                  src={mapsSrc}
+                  title={`Map of ${city.venue_name ?? city.name}`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+            )}
           </div>
         </section>
       </div>

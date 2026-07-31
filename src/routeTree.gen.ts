@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TechRiderRouteImport } from './routes/tech-rider'
 import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
+import { Route as SingOvaSundaysAdminRouteImport } from './routes/sing-ova-sundays-admin'
 import { Route as SingOvaSundaysRouteImport } from './routes/sing-ova-sundays'
 import { Route as RunOfShowRouteImport } from './routes/run-of-show'
 import { Route as PlateCostRouteImport } from './routes/plate-cost'
@@ -22,6 +23,7 @@ import { Route as ContractAdminRouteImport } from './routes/contract-admin'
 import { Route as ContractRouteImport } from './routes/contract'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SingOvaSundaysCityRouteImport } from './routes/sing-ova-sundays.$city'
 import { Route as PitchSlugRouteImport } from './routes/pitch.$slug'
 import { Route as CharlyBlackStreetTeamRouteImport } from './routes/charly-black_.street-team'
 import { Route as CharlyBlackCompAdminRouteImport } from './routes/charly-black_.comp-admin'
@@ -35,6 +37,11 @@ const TechRiderRoute = TechRiderRouteImport.update({
 const StCatherineLinkupRoute = StCatherineLinkupRouteImport.update({
   id: '/st-catherine-linkup',
   path: '/st-catherine-linkup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SingOvaSundaysAdminRoute = SingOvaSundaysAdminRouteImport.update({
+  id: '/sing-ova-sundays-admin',
+  path: '/sing-ova-sundays-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SingOvaSundaysRoute = SingOvaSundaysRouteImport.update({
@@ -92,6 +99,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SingOvaSundaysCityRoute = SingOvaSundaysCityRouteImport.update({
+  id: '/$city',
+  path: '/$city',
+  getParentRoute: () => SingOvaSundaysRoute,
+} as any)
 const PitchSlugRoute = PitchSlugRouteImport.update({
   id: '/pitch/$slug',
   path: '/pitch/$slug',
@@ -124,13 +136,15 @@ export interface FileRoutesByFullPath {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
-  '/sing-ova-sundays': typeof SingOvaSundaysRoute
+  '/sing-ova-sundays': typeof SingOvaSundaysRouteWithChildren
+  '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
   '/charly-black/comp': typeof CharlyBlackCompRoute
   '/charly-black/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black/street-team': typeof CharlyBlackStreetTeamRoute
   '/pitch/$slug': typeof PitchSlugRoute
+  '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -143,13 +157,15 @@ export interface FileRoutesByTo {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
-  '/sing-ova-sundays': typeof SingOvaSundaysRoute
+  '/sing-ova-sundays': typeof SingOvaSundaysRouteWithChildren
+  '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
   '/charly-black/comp': typeof CharlyBlackCompRoute
   '/charly-black/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black/street-team': typeof CharlyBlackStreetTeamRoute
   '/pitch/$slug': typeof PitchSlugRoute
+  '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -163,13 +179,15 @@ export interface FileRoutesById {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
-  '/sing-ova-sundays': typeof SingOvaSundaysRoute
+  '/sing-ova-sundays': typeof SingOvaSundaysRouteWithChildren
+  '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
   '/charly-black_/comp': typeof CharlyBlackCompRoute
   '/charly-black_/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black_/street-team': typeof CharlyBlackStreetTeamRoute
   '/pitch/$slug': typeof PitchSlugRoute
+  '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -185,12 +203,14 @@ export interface FileRouteTypes {
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova-sundays'
+    | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
     | '/tech-rider'
     | '/charly-black/comp'
     | '/charly-black/comp-admin'
     | '/charly-black/street-team'
     | '/pitch/$slug'
+    | '/sing-ova-sundays/$city'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -204,12 +224,14 @@ export interface FileRouteTypes {
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova-sundays'
+    | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
     | '/tech-rider'
     | '/charly-black/comp'
     | '/charly-black/comp-admin'
     | '/charly-black/street-team'
     | '/pitch/$slug'
+    | '/sing-ova-sundays/$city'
   id:
     | '__root__'
     | '/'
@@ -223,12 +245,14 @@ export interface FileRouteTypes {
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova-sundays'
+    | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
     | '/tech-rider'
     | '/charly-black_/comp'
     | '/charly-black_/comp-admin'
     | '/charly-black_/street-team'
     | '/pitch/$slug'
+    | '/sing-ova-sundays/$city'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -242,7 +266,8 @@ export interface RootRouteChildren {
   JamaicadayRoute: typeof JamaicadayRoute
   PlateCostRoute: typeof PlateCostRoute
   RunOfShowRoute: typeof RunOfShowRoute
-  SingOvaSundaysRoute: typeof SingOvaSundaysRoute
+  SingOvaSundaysRoute: typeof SingOvaSundaysRouteWithChildren
+  SingOvaSundaysAdminRoute: typeof SingOvaSundaysAdminRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
   TechRiderRoute: typeof TechRiderRoute
   CharlyBlackCompRoute: typeof CharlyBlackCompRoute
@@ -265,6 +290,13 @@ declare module '@tanstack/react-router' {
       path: '/st-catherine-linkup'
       fullPath: '/st-catherine-linkup'
       preLoaderRoute: typeof StCatherineLinkupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sing-ova-sundays-admin': {
+      id: '/sing-ova-sundays-admin'
+      path: '/sing-ova-sundays-admin'
+      fullPath: '/sing-ova-sundays-admin'
+      preLoaderRoute: typeof SingOvaSundaysAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sing-ova-sundays': {
@@ -344,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sing-ova-sundays/$city': {
+      id: '/sing-ova-sundays/$city'
+      path: '/$city'
+      fullPath: '/sing-ova-sundays/$city'
+      preLoaderRoute: typeof SingOvaSundaysCityRouteImport
+      parentRoute: typeof SingOvaSundaysRoute
+    }
     '/pitch/$slug': {
       id: '/pitch/$slug'
       path: '/pitch/$slug'
@@ -375,6 +414,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface SingOvaSundaysRouteChildren {
+  SingOvaSundaysCityRoute: typeof SingOvaSundaysCityRoute
+}
+
+const SingOvaSundaysRouteChildren: SingOvaSundaysRouteChildren = {
+  SingOvaSundaysCityRoute: SingOvaSundaysCityRoute,
+}
+
+const SingOvaSundaysRouteWithChildren = SingOvaSundaysRoute._addFileChildren(
+  SingOvaSundaysRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CharlyBlackRoute: CharlyBlackRoute,
@@ -386,7 +437,8 @@ const rootRouteChildren: RootRouteChildren = {
   JamaicadayRoute: JamaicadayRoute,
   PlateCostRoute: PlateCostRoute,
   RunOfShowRoute: RunOfShowRoute,
-  SingOvaSundaysRoute: SingOvaSundaysRoute,
+  SingOvaSundaysRoute: SingOvaSundaysRouteWithChildren,
+  SingOvaSundaysAdminRoute: SingOvaSundaysAdminRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
   TechRiderRoute: TechRiderRoute,
   CharlyBlackCompRoute: CharlyBlackCompRoute,
