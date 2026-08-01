@@ -78,50 +78,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SOCIAL_LINKS } from "@/lib/social";
+import { WEEK_THEMES } from "@/lib/sing-ova-week-themes";
+import { loadSession, saveSession, clearSession } from "@/lib/sing-ova-session";
+import { SOS_THEME_VARS, SOS_LABEL_CLASS as LABEL_CLASS } from "@/lib/sing-ova-theme";
 
 const SITE_URL = "https://trcevent.com";
 const CONTACT_PHONE = "(414) 301-2457";
-const SESSION_STORAGE_KEY = "sos_session";
 const HERO_AUTOPLAY_MS = 7000;
 
 // Overrides the design system's CSS custom properties for this page only —
 // see the file header comment for why. Values are hand-picked oklch matches
-// for the flyer's cream/forest-green/gold palette; --gold/--primary are
-// deliberately left untouched so the site's one brand gold stays consistent
-// everywhere it's used.
-const SOS_THEME_VARS = {
-  "--background": "oklch(0.93 0.028 85)",
-  "--foreground": "oklch(0.22 0.025 85)",
-  "--card": "oklch(0.895 0.03 82)",
-  "--card-foreground": "oklch(0.22 0.025 85)",
-  "--popover": "oklch(0.895 0.03 82)",
-  "--popover-foreground": "oklch(0.22 0.025 85)",
-  "--border": "oklch(0.72 0.035 78)",
-  "--input": "oklch(0.85 0.03 82)",
-  "--muted": "oklch(0.87 0.025 82)",
-  "--muted-foreground": "oklch(0.42 0.03 80)",
-  "--accent": "oklch(0.2 0.05 155)",
-  "--accent-foreground": "oklch(0.93 0.025 85)",
-  "--secondary": "oklch(0.19 0.045 155)",
-  "--secondary-foreground": "oklch(0.93 0.02 85)",
-  "--ring": "oklch(0.5 0.11 80)",
-};
-
-const LABEL_CLASS = "text-xs font-semibold uppercase tracking-wide text-secondary";
-
-// The 8-week "Cover Story" format is the brand-wide show format, identical
-// across every city's own 8-week run (each city's "week 1" is relative to
-// its own launch date) -- not per-city data.
-const WEEK_THEMES = [
-  { week: 1, theme: "Lovers Rock vs. Slow Jams", promise: "Reggae lovers rock paired with R&B slow jams." },
-  { week: 2, theme: "Riddim Rewind", promise: "One riddim traced across eras, artists, and genres." },
-  { week: 3, theme: "Dancehall x Hip-Hop", promise: "Dancehall anthems beside the hip-hop records they influenced." },
-  { week: 4, theme: "Roots & Culture", promise: "Message-driven reggae with a deeper cultural frame." },
-  { week: 5, theme: "Unexpected Voices", promise: "White/Latino paired with dancehall/reggae crossover." },
-  { week: 6, theme: "Throwback Sunday", promise: "60s/70s R&B, reggae, and dancehall side by side." },
-  { week: 7, theme: "Queens of the Riddim", promise: "Women artists across R&B, reggae, and dancehall." },
-  { week: 8, theme: "Wildcard / Request Sunday", promise: "Crowd pairings, resident picks, and a guest selector." },
-] as const;
+// for the flyer's cream/forest-green/gold palette -- now shared via
+// src/lib/sing-ova-theme.ts so the /sing-ova hub matches exactly.
 
 const DIRECTIONS = [
   { value: "rnb_to_reggae", label: "R&B/Hip-Hop → Reggae" },
@@ -159,26 +127,6 @@ async function extractFunctionErrorMessage(error) {
     }
   }
   return typeof error.message === "string" ? error.message : null;
-}
-
-function loadSession() {
-  try {
-    const raw = localStorage.getItem(SESSION_STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (parsed?.email && parsed?.displayName) return parsed;
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-function saveSession(session) {
-  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
-}
-
-function clearSession() {
-  localStorage.removeItem(SESSION_STORAGE_KEY);
 }
 
 // city.launch_date is a plain 'YYYY-MM-DD' calendar date with no time
@@ -603,7 +551,15 @@ export function SingOvaSundaysPage({ citySlug }) {
 
       {/* Hero */}
       <section className="border-b border-border">
-        <h1 className="sr-only">Sing Ova Sundays — {city.name}</h1>
+        <h1 className="sr-only">Sing Ova — {city.name}</h1>
+        <div className="border-b border-border/60 bg-card px-4 py-2 text-center sm:px-6">
+          <a
+            href="/sing-ova"
+            className={`${LABEL_CLASS} inline-flex items-center gap-1 hover:text-gold`}
+          >
+            ← Sing Ova · {city.name} Chapter
+          </a>
+        </div>
         {heroSlides.length > 0 && (
           <div className="relative aspect-[100/39] w-full overflow-hidden">
             {heroSlides.map((slide, i) => (

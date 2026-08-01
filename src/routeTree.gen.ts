@@ -13,6 +13,7 @@ import { Route as TechRiderRouteImport } from './routes/tech-rider'
 import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
 import { Route as SingOvaSundaysAdminRouteImport } from './routes/sing-ova-sundays-admin'
 import { Route as SingOvaSundaysRouteImport } from './routes/sing-ova-sundays'
+import { Route as SingOvaRouteImport } from './routes/sing-ova'
 import { Route as RunOfShowRouteImport } from './routes/run-of-show'
 import { Route as PlateCostRouteImport } from './routes/plate-cost'
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
@@ -47,6 +48,11 @@ const SingOvaSundaysAdminRoute = SingOvaSundaysAdminRouteImport.update({
 const SingOvaSundaysRoute = SingOvaSundaysRouteImport.update({
   id: '/sing-ova-sundays',
   path: '/sing-ova-sundays',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SingOvaRoute = SingOvaRouteImport.update({
+  id: '/sing-ova',
+  path: '/sing-ova',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RunOfShowRoute = RunOfShowRouteImport.update({
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
+  '/sing-ova': typeof SingOvaRoute
   '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
+  '/sing-ova': typeof SingOvaRoute
   '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/jamaicaday': typeof JamaicadayRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
+  '/sing-ova': typeof SingOvaRoute
   '/sing-ova-sundays': typeof SingOvaSundaysRoute
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/jamaicaday'
     | '/plate-cost'
     | '/run-of-show'
+    | '/sing-ova'
     | '/sing-ova-sundays'
     | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/jamaicaday'
     | '/plate-cost'
     | '/run-of-show'
+    | '/sing-ova'
     | '/sing-ova-sundays'
     | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/jamaicaday'
     | '/plate-cost'
     | '/run-of-show'
+    | '/sing-ova'
     | '/sing-ova-sundays'
     | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   JamaicadayRoute: typeof JamaicadayRoute
   PlateCostRoute: typeof PlateCostRoute
   RunOfShowRoute: typeof RunOfShowRoute
+  SingOvaRoute: typeof SingOvaRoute
   SingOvaSundaysRoute: typeof SingOvaSundaysRoute
   SingOvaSundaysAdminRoute: typeof SingOvaSundaysAdminRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       path: '/sing-ova-sundays'
       fullPath: '/sing-ova-sundays'
       preLoaderRoute: typeof SingOvaSundaysRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sing-ova': {
+      id: '/sing-ova'
+      path: '/sing-ova'
+      fullPath: '/sing-ova'
+      preLoaderRoute: typeof SingOvaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/run-of-show': {
@@ -426,6 +446,7 @@ const rootRouteChildren: RootRouteChildren = {
   JamaicadayRoute: JamaicadayRoute,
   PlateCostRoute: PlateCostRoute,
   RunOfShowRoute: RunOfShowRoute,
+  SingOvaRoute: SingOvaRoute,
   SingOvaSundaysRoute: SingOvaSundaysRoute,
   SingOvaSundaysAdminRoute: SingOvaSundaysAdminRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
