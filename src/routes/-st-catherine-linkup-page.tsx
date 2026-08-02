@@ -31,6 +31,7 @@ import escovitchFishImg from "@/assets/st-catherine-escovitch-fish.jpg";
 import jerkChickenImg from "@/assets/st-catherine-jerk-chicken.jpg";
 import jerkPorkImg from "@/assets/st-catherine-jerk-pork.jpg";
 import steamFishImg from "@/assets/st-catherine-steam-fish.jpg";
+import mannishWaterImg from "@/assets/st-catherine-mannish-water.jpg";
 
 const SITE_URL = "https://trcevent.com";
 const VENUE_NAME = "ILU Club of Chicago";
@@ -41,8 +42,7 @@ const EVENT_START = new Date("2026-08-22T12:00:00");
 const TICKET_URL = "https://buytickets.at/rastafariinc/2340891";
 const HEADLINER = "Suge — Don Dadda";
 // Mirrors the "Select products" list on the Tickettailor pre-order page
-// (checked 2026-08-02). No photo on file yet for Mannish Water -- shows
-// text-only until one's provided.
+// (checked 2026-08-02).
 const MENU_ITEMS = [
   {
     name: "Curry Chicken",
@@ -72,7 +72,7 @@ const MENU_ITEMS = [
     name: "Mannish Water",
     price: "$10",
     description: "A bowl of traditional Mannish Water soup.",
-    image: null,
+    image: mannishWaterImg,
   },
   {
     name: "Steam Fish in Foil",
