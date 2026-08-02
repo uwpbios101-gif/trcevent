@@ -408,9 +408,12 @@ export function StCatherineLinkupPage() {
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {MENU_ITEMS.map((item) => (
-              <div
+              <a
                 key={item.name}
-                className="overflow-hidden rounded-xl border border-border bg-card"
+                href={TICKET_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="group overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-gold"
               >
                 {item.image ? (
                   <img
@@ -425,14 +428,16 @@ export function StCatherineLinkupPage() {
                 )}
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-display font-semibold">{item.name}</h3>
+                    <h3 className="font-display font-semibold group-hover:text-gold">
+                      {item.name}
+                    </h3>
                     <Badge className="shrink-0 bg-gold text-gold-foreground hover:bg-gold">
                       {item.price}
                     </Badge>
                   </div>
                   <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
           <div className="mt-6 text-center">
