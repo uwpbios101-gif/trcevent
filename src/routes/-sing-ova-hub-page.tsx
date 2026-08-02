@@ -22,8 +22,8 @@
 // - The same email+code join flow as every chapter page, using the shared
 //   session helpers in src/lib/sing-ova-session.ts so joining here or on a
 //   city page is the same account either way.
-import { useEffect, useState } from "react";
-import { CheckCircle2, Heart, Loader2, LogOut, MapPin } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { CheckCircle2, Heart, Loader2, LogOut, MapPin, Play, RotateCcw, Volume2, VolumeX } from "lucide-react";
 
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
@@ -64,6 +64,264 @@ async function extractFunctionErrorMessage(error) {
     }
   }
   return typeof error.message === "string" ? error.message : null;
+}
+
+// Two invented hosts (not real people -- same reasoning as the AI-generated
+// artist-representation hero art, just original characters instead), voiced
+// live via the browser's Web Speech API rather than pre-rendered audio.
+// Free and requires no backend, at the cost of voice quality/availability
+// varying by the visitor's browser and OS -- a deliberate tradeoff, not an
+// oversight. HOST_INFO.avatar is a placeholder monogram until real host
+// portraits exist; swapping in an <img> there later is a one-line change.
+const HOST_INFO = {
+  marcus: { name: "Marcus", role: "Selector" },
+  nadine: { name: "Nadine", role: "Host" },
+};
+
+// A scripted duet, not two monologues -- the back-and-forth is what makes
+// it read as a real conversation rather than narration split across two
+// voices. The user's only real "input" is which branch to hear next; both
+// branches converge on the same wrap-up either way.
+const HOSTS_SCRIPT = {
+  coldOpen: [
+    { speaker: "marcus", text: "Every Sunday, somebody in that room hears their pick get played." },
+    { speaker: "nadine", text: "And by the time the needle drops, they've already been arguing about it all week." },
+    { speaker: "marcus", text: "That's the whole idea. One riddim—" },
+    { speaker: "nadine", text: "—two worlds—" },
+    { speaker: "marcus", text: "—and a room full of people who showed up because of a song, not because of an app." },
+    { speaker: "nadine", text: "So — which side do you want first? The conversation, or the Sunday?" },
+  ],
+  branches: {
+    conversation: [
+      {
+        speaker: "nadine",
+        text: "Here's how it actually works. You hear a song — say, Anita Baker — and somewhere in the back of your head you know there's a reggae version that hits just as hard.",
+      },
+      { speaker: "marcus", text: "So you say so. Right there in the feed. Beres Hammond, you said?" },
+      {
+        speaker: "nadine",
+        text: "And somebody else jumps in — maybe they've never even heard the original, only the cover.",
+      },
+      {
+        speaker: "marcus",
+        text: "That's the whole debate. Which one came first, which one hits harder, why the reggae version changes the whole feeling of the song.",
+      },
+      {
+        speaker: "nadine",
+        text: "It's not a suggestion box. It's a conversation that's been going on all week before you ever walk in the door.",
+      },
+    ],
+    sunday: [
+      {
+        speaker: "marcus",
+        text: "Four o'clock, the room's still easy — lovers rock, slow jams, people getting settled.",
+      },
+      { speaker: "nadine", text: "By six it's turned all the way over. Dancehall next to hip-hop, everybody on the floor." },
+      {
+        speaker: "marcus",
+        text: "And somewhere in there, the DJ pulls up a pairing straight from the feed — somebody's pick, live, in front of the room.",
+      },
+      { speaker: "nadine", text: "That's the moment the whole week of arguing was for." },
+      { speaker: "marcus", text: "Out by nine. No 2 a.m. energy required." },
+    ],
+  },
+  wrap: [
+    { speaker: "nadine", text: "So — one login. Every city." },
+    { speaker: "marcus", text: "Start the conversation whenever. Show up whenever your city's ready." },
+    { speaker: "nadine", text: "This is Sing Ova." },
+    { speaker: "marcus", text: "Every hit has a history." },
+    { speaker: "nadine", text: "Go on and hear it sung ova." },
+  ],
+};
+
+function HostsConversation() {
+  const [phase, setPhase] = useState("idle"); // idle | playing | choice | done
+  const [currentLine, setCurrentLine] = useState(null);
+  const [muted, setMuted] = useState(false);
+  const [voices, setVoices] = useState({ male: null, female: null });
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [ttsSupported, setTtsSupported] = useState(true);
+  const cancelledRef = useRef(false);
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
+
+  useEffect(() => {
+    setTtsSupported(typeof window !== "undefined" && "speechSynthesis" in window);
+    if (typeof window !== "undefined" && window.matchMedia) {
+      setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    function pickVoices() {
+      const all = window.speechSynthesis.getVoices();
+      if (!all.length) return;
+      const isFemale = (v) => /female|zira|samantha|victoria|susan|karen|moira|tessa|fiona|aria/i.test(v.name);
+      const isMale = (v) => /male|david|daniel|alex|fred|george|mark|guy/i.test(v.name);
+      const english = all.filter((v) => v.lang.startsWith("en"));
+      const pool = english.length ? english : all;
+      const female = pool.find(isFemale) ?? pool[0];
+      const male = pool.find((v) => isMale(v) && v !== female) ?? pool.find((v) => v !== female) ?? pool[0];
+      setVoices({ male, female });
+    }
+    pickVoices();
+    window.speechSynthesis.addEventListener("voiceschanged", pickVoices);
+    return () => window.speechSynthesis.removeEventListener("voiceschanged", pickVoices);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      cancelledRef.current = true;
+      if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+    };
+  }, []);
+
+  function speakLine(line, onDone) {
+    setCurrentLine(line);
+    if (!ttsSupported) {
+      // No TTS support -- advance on a timer so captions still tell the story.
+      const t = setTimeout(() => !cancelledRef.current && onDone(), 2400);
+      return () => clearTimeout(t);
+    }
+    const utter = new SpeechSynthesisUtterance(line.text);
+    const voice = line.speaker === "marcus" ? voices.male : voices.female;
+    if (voice) utter.voice = voice;
+    utter.pitch = line.speaker === "marcus" ? 0.9 : 1.08;
+    utter.rate = 0.98;
+    // Mute only affects lines spoken from here on -- an in-flight utterance
+    // can't have its volume changed mid-speech, so toggling mute during a
+    // line lets that one line finish rather than cutting off mid-word.
+    utter.volume = mutedRef.current ? 0 : 1;
+    utter.onend = () => !cancelledRef.current && onDone();
+    utter.onerror = () => !cancelledRef.current && onDone();
+    window.speechSynthesis.speak(utter);
+  }
+
+  function playSequence(lines, onComplete) {
+    let i = 0;
+    function next() {
+      if (cancelledRef.current) return;
+      if (i >= lines.length) {
+        onComplete();
+        return;
+      }
+      const line = lines[i];
+      i += 1;
+      speakLine(line, next);
+    }
+    next();
+  }
+
+  function handleStart() {
+    cancelledRef.current = false;
+    setPhase("playing");
+    playSequence(HOSTS_SCRIPT.coldOpen, () => setPhase("choice"));
+  }
+
+  function handleChoice(branch) {
+    setPhase("playing");
+    playSequence(HOSTS_SCRIPT.branches[branch], () => {
+      playSequence(HOSTS_SCRIPT.wrap, () => setPhase("done"));
+    });
+  }
+
+  function handleReplay() {
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+    setCurrentLine(null);
+    handleStart();
+  }
+
+  const speaking = phase === "playing";
+
+  return (
+    <div className="mx-auto mt-8 max-w-2xl rounded-2xl border border-border bg-card p-6 sm:p-8">
+      <div className="flex items-center justify-center gap-8 sm:gap-12">
+        {["marcus", "nadine"].map((key) => {
+          const active = currentLine?.speaker === key;
+          return (
+            <div key={key} className="flex flex-col items-center gap-2">
+              <div
+                className={cn(
+                  "flex size-16 items-center justify-center rounded-full border-2 bg-secondary font-display text-xl font-bold text-gold transition-all sm:size-20",
+                  active && speaking ? "border-gold scale-105" : "border-border",
+                )}
+              >
+                {HOST_INFO[key].name[0]}
+              </div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {HOST_INFO[key].name}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mx-auto mt-6 flex min-h-[4.5rem] max-w-xl items-center justify-center text-center">
+        {currentLine ? (
+          <p className="font-display text-lg italic sm:text-xl">
+            <span className="not-italic text-gold">{HOST_INFO[currentLine.speaker].name}:</span> "
+            {currentLine.text}"
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Press play to hear Marcus and Nadine talk through what Sing Ova actually is.
+          </p>
+        )}
+      </div>
+
+      {!reducedMotion && speaking && (
+        <div className="mt-4 flex justify-center gap-1" aria-hidden="true">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              className="w-1 animate-pulse rounded-full bg-gold"
+              style={{ height: `${8 + (i % 3) * 6}px`, animationDelay: `${i * 120}ms` }}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        {phase === "idle" && (
+          <Button variant="gold" size="lg" onClick={handleStart}>
+            <Play className="size-4" /> Start the Conversation
+          </Button>
+        )}
+        {phase === "choice" && (
+          <>
+            <Button variant="gold" onClick={() => handleChoice("conversation")}>
+              Show me the conversation
+            </Button>
+            <Button
+              variant="outline"
+              className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground"
+              onClick={() => handleChoice("sunday")}
+            >
+              Show me the Sunday
+            </Button>
+          </>
+        )}
+        {phase !== "idle" && (
+          <>
+            <Button variant="outline" size="sm" onClick={handleReplay} disabled={speaking}>
+              <RotateCcw className="size-4" /> Replay
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => setMuted((m) => !m)}>
+              {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+              {muted ? "Unmute" : "Mute"}
+            </Button>
+          </>
+        )}
+      </div>
+
+      {!ttsSupported && (
+        <p className="mt-3 text-center text-xs text-muted-foreground">
+          Your browser doesn't support voice narration — captions will play on their own.
+        </p>
+      )}
+    </div>
+  );
 }
 
 export function SingOvaHubPage() {
@@ -271,12 +529,7 @@ export function SingOvaHubPage() {
           <p className="mt-2 font-display text-lg italic text-secondary sm:text-xl">
             One Riddim. Two Worlds. Endless Classics.
           </p>
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Every hit has a history — heard ova. Sing Ova is the community behind{" "}
-            <span className="text-secondary">Sing Ova Sundays</span>: log in any time to submit and
-            heart your favorite R&B ↔ reggae pairings, debate them with people in every city, then
-            find your local Sunday to hear the DJ rip the winners live.
-          </p>
+          <HostsConversation />
         </div>
       </section>
 
