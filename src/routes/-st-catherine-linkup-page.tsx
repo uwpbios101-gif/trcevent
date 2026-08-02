@@ -26,6 +26,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SOCIAL_LINKS } from "@/lib/social";
 import flyerImg from "@/assets/st-catherine-linkup-flyer.jpg";
+import curryChickenImg from "@/assets/st-catherine-curry-chicken.jpg";
+import escovitchFishImg from "@/assets/st-catherine-escovitch-fish.jpg";
+import jerkChickenImg from "@/assets/st-catherine-jerk-chicken.jpg";
+import jerkPorkImg from "@/assets/st-catherine-jerk-pork.jpg";
+import steamFishImg from "@/assets/st-catherine-steam-fish.jpg";
 
 const SITE_URL = "https://trcevent.com";
 const VENUE_NAME = "ILU Club of Chicago";
@@ -33,7 +38,49 @@ const VENUE_ADDRESS = "14421 Greenwood Rd, Dolton, IL";
 // Free noon–midnight, $20 after midnight, per the flyer. Countdown targets
 // the noon start.
 const EVENT_START = new Date("2026-08-22T12:00:00");
+const TICKET_URL = "https://buytickets.at/rastafariinc/2340891";
 const HEADLINER = "Suge — Don Dadda";
+// Mirrors the "Select products" list on the Tickettailor pre-order page
+// (checked 2026-08-02). No photo on file yet for Mannish Water -- shows
+// text-only until one's provided.
+const MENU_ITEMS = [
+  {
+    name: "Curry Chicken",
+    price: "$20",
+    description: "Curry chicken plate with rice, cabbage, and bread.",
+    image: curryChickenImg,
+  },
+  {
+    name: "Escovitch Fish",
+    price: "$30",
+    description: "Escovitch fish plate served with bammy or festival.",
+    image: escovitchFishImg,
+  },
+  {
+    name: "Jerk Chicken",
+    price: "$20",
+    description: "Jerk chicken plate with rice, cabbage, and bread.",
+    image: jerkChickenImg,
+  },
+  {
+    name: "Jerk Pork",
+    price: "$20",
+    description: "Jerk pork plate with rice, cabbage, and bread.",
+    image: jerkPorkImg,
+  },
+  {
+    name: "Mannish Water",
+    price: "$10",
+    description: "A bowl of traditional Mannish Water soup.",
+    image: null,
+  },
+  {
+    name: "Steam Fish in Foil",
+    price: "$30",
+    description: "Steam fish in foil, served with roast corn.",
+    image: steamFishImg,
+  },
+];
 const SOUND_SYSTEMS = [
   "City Rock",
   "Mighty Prestige Sound",
@@ -339,12 +386,61 @@ export function StCatherineLinkupPage() {
               <p className="font-display text-3xl font-extrabold text-gold">$20</p>
             </div>
           </div>
-          <div className="mt-6 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gold/30 bg-card px-6 py-8 text-center">
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 rounded-xl border border-gold/30 bg-card px-6 py-8 text-center">
             <Ticket className="size-6 text-gold" />
-            <p className="font-display font-semibold">Ticket outlet link coming soon</p>
             <p className="max-w-md text-sm text-muted-foreground">
-              No pre-sale required to attend — walk-ins welcome.
+              No pre-sale required to attend — walk-ins welcome. Pre-order food for pickup at the
+              event using the same link.
             </p>
+            <Button asChild variant="gold" size="lg">
+              <a href={TICKET_URL} target="_blank" rel="noreferrer">
+                Pre-Order Food &amp; Entry Info
+              </a>
+            </Button>
+          </div>
+        </section>
+
+        {/* Food & Menu */}
+        <section id="menu" className="scroll-mt-20">
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">Food &amp; Menu</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Pre-order below, then redeem at the food booth day-of. From Jerky Jerk / Tropical Jerk.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {MENU_ITEMS.map((item) => (
+              <div
+                key={item.name}
+                className="overflow-hidden rounded-xl border border-border bg-card"
+              >
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="aspect-video w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex aspect-video w-full items-center justify-center bg-muted">
+                    <UtensilsCrossed className="size-8 text-muted-foreground" />
+                  </div>
+                )}
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-display font-semibold">{item.name}</h3>
+                    <Badge className="shrink-0 bg-gold text-gold-foreground hover:bg-gold">
+                      {item.price}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 text-center">
+            <Button asChild variant="goldOutline" size="lg">
+              <a href={TICKET_URL} target="_blank" rel="noreferrer">
+                Pre-Order Food
+              </a>
+            </Button>
           </div>
         </section>
 
