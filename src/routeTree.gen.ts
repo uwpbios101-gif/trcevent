@@ -16,6 +16,9 @@ import { Route as SingOvaSundaysRouteImport } from './routes/sing-ova-sundays'
 import { Route as SingOvaRouteImport } from './routes/sing-ova'
 import { Route as RunOfShowRouteImport } from './routes/run-of-show'
 import { Route as PlateCostRouteImport } from './routes/plate-cost'
+import { Route as MinglesTuesdaysBrainstormRouteImport } from './routes/mingles-tuesdays-brainstorm'
+import { Route as KaraokeThursdaysBrainstormRouteImport } from './routes/karaoke-thursdays-brainstorm'
+import { Route as JustLaughWednesdayBrainstormRouteImport } from './routes/just-laugh-wednesday-brainstorm'
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as GetStartedRouteImport } from './routes/get-started'
@@ -65,6 +68,24 @@ const PlateCostRoute = PlateCostRouteImport.update({
   path: '/plate-cost',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MinglesTuesdaysBrainstormRoute =
+  MinglesTuesdaysBrainstormRouteImport.update({
+    id: '/mingles-tuesdays-brainstorm',
+    path: '/mingles-tuesdays-brainstorm',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const KaraokeThursdaysBrainstormRoute =
+  KaraokeThursdaysBrainstormRouteImport.update({
+    id: '/karaoke-thursdays-brainstorm',
+    path: '/karaoke-thursdays-brainstorm',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const JustLaughWednesdayBrainstormRoute =
+  JustLaughWednesdayBrainstormRouteImport.update({
+    id: '/just-laugh-wednesday-brainstorm',
+    path: '/just-laugh-wednesday-brainstorm',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const JamaicadayRoute = JamaicadayRouteImport.update({
   id: '/jamaicaday',
   path: '/jamaicaday',
@@ -140,6 +161,9 @@ export interface FileRoutesByFullPath {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
+  '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
+  '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/sing-ova': typeof SingOvaRoute
@@ -162,6 +186,9 @@ export interface FileRoutesByTo {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
+  '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
+  '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/sing-ova': typeof SingOvaRoute
@@ -185,6 +212,9 @@ export interface FileRoutesById {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
+  '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
+  '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/sing-ova': typeof SingOvaRoute
@@ -209,6 +239,9 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/just-laugh-wednesday-brainstorm'
+    | '/karaoke-thursdays-brainstorm'
+    | '/mingles-tuesdays-brainstorm'
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova'
@@ -231,6 +264,9 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/just-laugh-wednesday-brainstorm'
+    | '/karaoke-thursdays-brainstorm'
+    | '/mingles-tuesdays-brainstorm'
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova'
@@ -253,6 +289,9 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/just-laugh-wednesday-brainstorm'
+    | '/karaoke-thursdays-brainstorm'
+    | '/mingles-tuesdays-brainstorm'
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova'
@@ -276,6 +315,9 @@ export interface RootRouteChildren {
   GetStartedRoute: typeof GetStartedRoute
   Jamaica64Route: typeof Jamaica64Route
   JamaicadayRoute: typeof JamaicadayRoute
+  JustLaughWednesdayBrainstormRoute: typeof JustLaughWednesdayBrainstormRoute
+  KaraokeThursdaysBrainstormRoute: typeof KaraokeThursdaysBrainstormRoute
+  MinglesTuesdaysBrainstormRoute: typeof MinglesTuesdaysBrainstormRoute
   PlateCostRoute: typeof PlateCostRoute
   RunOfShowRoute: typeof RunOfShowRoute
   SingOvaRoute: typeof SingOvaRoute
@@ -339,6 +381,27 @@ declare module '@tanstack/react-router' {
       path: '/plate-cost'
       fullPath: '/plate-cost'
       preLoaderRoute: typeof PlateCostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mingles-tuesdays-brainstorm': {
+      id: '/mingles-tuesdays-brainstorm'
+      path: '/mingles-tuesdays-brainstorm'
+      fullPath: '/mingles-tuesdays-brainstorm'
+      preLoaderRoute: typeof MinglesTuesdaysBrainstormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/karaoke-thursdays-brainstorm': {
+      id: '/karaoke-thursdays-brainstorm'
+      path: '/karaoke-thursdays-brainstorm'
+      fullPath: '/karaoke-thursdays-brainstorm'
+      preLoaderRoute: typeof KaraokeThursdaysBrainstormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/just-laugh-wednesday-brainstorm': {
+      id: '/just-laugh-wednesday-brainstorm'
+      path: '/just-laugh-wednesday-brainstorm'
+      fullPath: '/just-laugh-wednesday-brainstorm'
+      preLoaderRoute: typeof JustLaughWednesdayBrainstormRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jamaicaday': {
@@ -444,6 +507,9 @@ const rootRouteChildren: RootRouteChildren = {
   GetStartedRoute: GetStartedRoute,
   Jamaica64Route: Jamaica64Route,
   JamaicadayRoute: JamaicadayRoute,
+  JustLaughWednesdayBrainstormRoute: JustLaughWednesdayBrainstormRoute,
+  KaraokeThursdaysBrainstormRoute: KaraokeThursdaysBrainstormRoute,
+  MinglesTuesdaysBrainstormRoute: MinglesTuesdaysBrainstormRoute,
   PlateCostRoute: PlateCostRoute,
   RunOfShowRoute: RunOfShowRoute,
   SingOvaRoute: SingOvaRoute,
