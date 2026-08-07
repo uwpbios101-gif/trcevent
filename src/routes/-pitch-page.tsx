@@ -253,6 +253,48 @@ function FactsSlide({ slide }: { slide: Slide }) {
   );
 }
 
+function PhotoSlide({ slide }: { slide: Slide }) {
+  return (
+    <SlideShell>
+      <Kicker>{slide.kicker}</Kicker>
+      <h2 className="font-display text-2xl font-bold sm:text-4xl">{slide.heading}</h2>
+      {slide.subheading && (
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base">{slide.subheading}</p>
+      )}
+      {slide.image_url && (
+        <img
+          src={slide.image_url}
+          alt={slide.heading}
+          className="mt-6 max-h-[55vh] w-full rounded-xl border border-border object-contain"
+        />
+      )}
+    </SlideShell>
+  );
+}
+
+function GallerySlide({ slide }: { slide: Slide }) {
+  const images = (slide.body.images as { url: string; caption: string }[]) ?? [];
+  return (
+    <SlideShell>
+      <Kicker>{slide.kicker}</Kicker>
+      <h2 className="font-display text-2xl font-bold sm:text-4xl">{slide.heading}</h2>
+      {slide.subheading && (
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base">{slide.subheading}</p>
+      )}
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        {images.map((img, i) => (
+          <figure key={i} className="overflow-hidden rounded-xl border border-border bg-card">
+            <img src={img.url} alt={img.caption} className="aspect-[3/4] w-full object-cover" />
+            {img.caption && (
+              <figcaption className="p-3 text-xs text-muted-foreground">{img.caption}</figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+    </SlideShell>
+  );
+}
+
 function CrowdSlide({ slide }: { slide: Slide }) {
   const quote = (slide.body.quote as string) ?? "";
   const region = (slide.body.region as string) ?? "";
@@ -477,6 +519,10 @@ function SlideContent({ pitch, slide }: { pitch: Pitch; slide: Slide }) {
       return <FactsSlide slide={slide} />;
     case "crowd":
       return <CrowdSlide slide={slide} />;
+    case "photo":
+      return <PhotoSlide slide={slide} />;
+    case "gallery":
+      return <GallerySlide slide={slide} />;
     case "timeline":
       return <TimelineSlide slide={slide} />;
     case "criteria":
