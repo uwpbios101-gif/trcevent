@@ -31,6 +31,7 @@ import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SingOvaSundaysCityRouteImport } from './routes/sing-ova-sundays_.$city'
 import { Route as PitchSlugRouteImport } from './routes/pitch.$slug'
+import { Route as JerkyJerkSlugRouteImport } from './routes/jerky-jerk.$slug'
 import { Route as Dancehall101TicketRouteImport } from './routes/dancehall-101_.ticket'
 import { Route as Dancehall101LeaderboardRouteImport } from './routes/dancehall-101_.leaderboard'
 import { Route as Dancehall101CheckinRouteImport } from './routes/dancehall-101_.checkin'
@@ -151,6 +152,11 @@ const PitchSlugRoute = PitchSlugRouteImport.update({
   path: '/pitch/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JerkyJerkSlugRoute = JerkyJerkSlugRouteImport.update({
+  id: '/jerky-jerk/$slug',
+  path: '/jerky-jerk/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Dancehall101TicketRoute = Dancehall101TicketRouteImport.update({
   id: '/dancehall-101_/ticket',
   path: '/dancehall-101/ticket',
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101/ticket': typeof Dancehall101TicketRoute
+  '/jerky-jerk/$slug': typeof JerkyJerkSlugRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
 }
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101/ticket': typeof Dancehall101TicketRoute
+  '/jerky-jerk/$slug': typeof JerkyJerkSlugRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
 }
@@ -270,6 +278,7 @@ export interface FileRoutesById {
   '/dancehall-101_/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101_/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101_/ticket': typeof Dancehall101TicketRoute
+  '/jerky-jerk/$slug': typeof JerkyJerkSlugRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays_/$city': typeof SingOvaSundaysCityRoute
 }
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/dancehall-101/checkin'
     | '/dancehall-101/leaderboard'
     | '/dancehall-101/ticket'
+    | '/jerky-jerk/$slug'
     | '/pitch/$slug'
     | '/sing-ova-sundays/$city'
   fileRoutesByTo: FileRoutesByTo
@@ -332,6 +342,7 @@ export interface FileRouteTypes {
     | '/dancehall-101/checkin'
     | '/dancehall-101/leaderboard'
     | '/dancehall-101/ticket'
+    | '/jerky-jerk/$slug'
     | '/pitch/$slug'
     | '/sing-ova-sundays/$city'
   id:
@@ -362,6 +373,7 @@ export interface FileRouteTypes {
     | '/dancehall-101_/checkin'
     | '/dancehall-101_/leaderboard'
     | '/dancehall-101_/ticket'
+    | '/jerky-jerk/$slug'
     | '/pitch/$slug'
     | '/sing-ova-sundays_/$city'
   fileRoutesById: FileRoutesById
@@ -393,6 +405,7 @@ export interface RootRouteChildren {
   Dancehall101CheckinRoute: typeof Dancehall101CheckinRoute
   Dancehall101LeaderboardRoute: typeof Dancehall101LeaderboardRoute
   Dancehall101TicketRoute: typeof Dancehall101TicketRoute
+  JerkyJerkSlugRoute: typeof JerkyJerkSlugRoute
   PitchSlugRoute: typeof PitchSlugRoute
   SingOvaSundaysCityRoute: typeof SingOvaSundaysCityRoute
 }
@@ -553,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PitchSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jerky-jerk/$slug': {
+      id: '/jerky-jerk/$slug'
+      path: '/jerky-jerk/$slug'
+      fullPath: '/jerky-jerk/$slug'
+      preLoaderRoute: typeof JerkyJerkSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dancehall-101_/ticket': {
       id: '/dancehall-101_/ticket'
       path: '/dancehall-101/ticket'
@@ -625,6 +645,7 @@ const rootRouteChildren: RootRouteChildren = {
   Dancehall101CheckinRoute: Dancehall101CheckinRoute,
   Dancehall101LeaderboardRoute: Dancehall101LeaderboardRoute,
   Dancehall101TicketRoute: Dancehall101TicketRoute,
+  JerkyJerkSlugRoute: JerkyJerkSlugRoute,
   PitchSlugRoute: PitchSlugRoute,
   SingOvaSundaysCityRoute: SingOvaSundaysCityRoute,
 }

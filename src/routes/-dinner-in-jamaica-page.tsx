@@ -7,10 +7,9 @@
 // guidance, membership pricing, the Passport program, and the corporate
 // package ladder are intentionally NOT built here yet — add them once the
 // pilot at Jerky Jerk proves out which nights actually pull traffic.
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   CalendarDays,
-  Music,
   UtensilsCrossed,
   BookOpen,
   Mail,
@@ -24,63 +23,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SOCIAL_LINKS } from "@/lib/social";
 import { supabase } from "@/lib/supabase";
+import {
+  fetchJerkyJerkLineup,
+  jerkyJerkDetailHref,
+  type JerkyJerkLineupRow,
+} from "@/lib/jerkyJerkLineup";
 
 const SITE_URL = "https://trcevent.com";
 const EVENT_SLUG = "dinner-in-jamaica";
 const EVENT_NAME = "Dinner in Jamaica";
-
-const ROTATION = [
-  {
-    day: "Sunday",
-    identity: "Sunday Dinner",
-    food: "Rice & Peas, Brown Stew Chicken, Curry Goat, Oxtail",
-    music: "Beres Hammond, Dennis Brown, Gospel Reggae",
-    hook: "Jamaica's Thanksgiving — every week.",
-  },
-  {
-    day: "Monday",
-    identity: "Sunday Monday",
-    food: "Yesterday's leftovers, reimagined",
-    music: "Quiet Lovers Rock",
-    hook: "Discount plate. The comfort-food comedown.",
-  },
-  {
-    day: "Tuesday",
-    identity: "Curry Tuesday",
-    food: "Curry Chicken, Curry Goat, White Rice, Festival",
-    music: "Dancehall Classics — Super Cat, Shabba, Buju",
-    hook: "Economical, bold, built to reheat well — just like home.",
-  },
-  {
-    day: "Wednesday",
-    identity: "Stew Peas Wednesday",
-    food: "Stew Peas, Spinners",
-    music: "Roots Reggae — Burning Spear, Culture",
-    hook: "The education night — a short culture story with the meal.",
-  },
-  {
-    day: "Thursday",
-    identity: "Throwback Thursday",
-    food: "Brown Stew Chicken, Escovitch Fish",
-    music: "Ska, Rocksteady, Studio One",
-    hook: "Old-school Jamaican dance party energy.",
-  },
-  {
-    day: "Friday",
-    identity: "Cook Wah?",
-    food: "Jerk Chicken, Jerk Pork, Fried Fish, Rum Punch",
-    music: "Live DJ — Dancehall, Afrobeats, Soca",
-    hook: "“Mama nah cook tonight.” The week's biggest night.",
-    flagship: true,
-  },
-  {
-    day: "Saturday",
-    identity: "Soup Saturday",
-    food: "Chicken, Red Peas & Pumpkin Soup, Mannish Water (monthly)",
-    music: "Nyabinghi, Roots, Live Drumming",
-    hook: "Rotates monthly: Sound System Night, Dominoes, Rum & Roots, Live Band.",
-  },
-];
+const DAY_ORDER = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function dinnerInJamaicaHead() {
   return {
@@ -110,6 +62,100 @@ export function dinnerInJamaicaHead() {
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/dinner-in-jamaica` }],
   };
+}
+
+function ActivityCard({ activity }: { activity: JerkyJerkLineupRow }) {
+  return (
+    <a
+      href={jerkyJerkDetailHref(activity)}
+      className={
+        activity.is_flagship
+          ? "block rounded-xl border-2 border-gold bg-gold/10 p-3 shadow-lg shadow-gold/20 transition-colors hover:border-gold"
+          : "block rounded-xl border border-border bg-card p-3 transition-colors hover:border-gold/50"
+      }
+    >
+      {activity.is_flagship && (
+        <span className="mb-2 inline-block whitespace-nowrap rounded-full bg-gold px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-gold-foreground">
+          Biggest Night
+        </span>
+      )}
+      <p className="text-[0.65rem] uppercase tracking-wide text-muted-foreground">
+        {activity.phase === "day" ? "Day" : "Night"}
+        {activity.time_window ? ` · ${activity.time_window}` : ""}
+      </p>
+      <p className="mt-1 font-display text-base font-bold">{activity.name}</p>
+      {activity.description && (
+        <p className="mt-1.5 text-xs text-muted-foreground">{activity.description}</p>
+      )}
+      {activity.signature_plate && (
+        <p className="mt-2 text-xs font-medium italic">{activity.signature_plate}</p>
+      )}
+      <p className="mt-2 flex items-center gap-2 text-[0.65rem] font-medium text-gold">
+        {activity.cover_charge ? `$${activity.cover_charge} cover` : "Free entry"}
+        {activity.is_21_plus && (
+          <span className="rounded-sm border border-gold/50 px-1 py-0.5 text-muted-foreground">
+            21+
+          </span>
+        )}
+      </p>
+    </a>
+  );
+}
+
+function LineupGrid() {
+  const [rows, setRows] = useState<JerkyJerkLineupRow[] | null>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    fetchJerkyJerkLineup()
+      .then(setRows)
+      .catch((err) => {
+        console.error("Failed to load the Jerky Jerk weekly lineup:", err);
+        setError(true);
+      });
+  }, []);
+
+  if (error) {
+    return (
+      <p className="text-center text-sm text-muted-foreground">
+        Couldn't load this week's lineup — check back shortly.
+      </p>
+    );
+  }
+
+  if (!rows) {
+    return <p className="text-center text-sm text-muted-foreground">Loading the week…</p>;
+  }
+
+  const byDay = DAY_ORDER.map((day) => ({
+    day,
+    activities: rows.filter((r) => r.day_of_week === day && !r.is_monthly_special),
+    monthly: rows.filter((r) => r.day_of_week === day && r.is_monthly_special),
+  }));
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
+      {byDay.map(({ day, activities, monthly }) => (
+        <div key={day} className="flex flex-col gap-3">
+          <p className="eyebrow text-center">{day}</p>
+          {activities.map((activity) => (
+            <ActivityCard key={activity.slug} activity={activity} />
+          ))}
+          {monthly.map((special) => (
+            <p key={special.slug} className="text-center text-[0.65rem] text-muted-foreground">
+              Once a month:{" "}
+              <a
+                href={jerkyJerkDetailHref(special)}
+                className="font-medium text-gold hover:underline"
+              >
+                {special.name}
+              </a>
+            </p>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function NotifySignup() {
@@ -219,9 +265,7 @@ export function DinnerInJamaicaPage() {
             A Real Tradition, Not a Theme Night
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            Every Jamaican household already runs on the same seven-day rotation — rice and peas
-            Sunday, curry Tuesday, stew peas Wednesday, "Cook wah pon Friday?", soup Saturday.
-            Dinner in Jamaica brings that rotation to life as a recurring weekly experience at{" "}
+            Every night at{" "}
             <a
               href="https://www.jerkyjerk.net/"
               target="_blank"
@@ -230,7 +274,8 @@ export function DinnerInJamaicaPage() {
             >
               Jerky Jerk
             </a>{" "}
-            — a different track every night, all riding the same riddim.
+            runs day into night — 100% alcohol-free, each with its own vibe, signature plate, and
+            mocktail specials. A different track every night, all riding the same riddim.
           </p>
         </section>
 
@@ -239,30 +284,8 @@ export function DinnerInJamaicaPage() {
           <h2 className="text-center font-display text-2xl font-bold sm:text-3xl">
             The Week, Track by Track
           </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
-            {ROTATION.map((night) => (
-              <div
-                key={night.day}
-                className={
-                  night.flagship
-                    ? "rounded-xl border-2 border-gold bg-gold/10 p-4 shadow-lg shadow-gold/20"
-                    : "rounded-xl border border-border bg-card p-4"
-                }
-              >
-                {night.flagship && (
-                  <span className="mb-2 inline-block whitespace-nowrap rounded-full bg-gold px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-gold-foreground">
-                    Biggest Night
-                  </span>
-                )}
-                <p className="eyebrow mb-1">{night.day}</p>
-                <p className="font-display text-lg font-bold">{night.identity}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{night.food}</p>
-                <p className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
-                  <Music className="mt-0.5 size-3.5 shrink-0 text-gold" /> {night.music}
-                </p>
-                <p className="mt-3 text-sm font-medium italic">{night.hook}</p>
-              </div>
-            ))}
+          <div className="mt-8">
+            <LineupGrid />
           </div>
         </section>
 
@@ -272,10 +295,9 @@ export function DinnerInJamaicaPage() {
             <BookOpen className="mx-auto size-6 text-gold" />
             <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">The Culture Card</h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              Every table gets a short Culture Card tied to that night's dish or tradition — why
-              Saturday became soup day, why rice and peas is inseparable from Sunday. It's a direct
-              extension of Ras Tafari Inc.'s educational mission, delivered through food instead of
-              a lecture hall.
+              Every table gets a short Culture Card tied to that night's signature plate or
+              tradition. It's a direct extension of Ras Tafari Inc.'s educational mission, delivered
+              through food instead of a lecture hall.
             </p>
           </div>
         </section>

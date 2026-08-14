@@ -33,6 +33,29 @@ export default defineConfig({
     // different route. Chicago is a known, confirmed city, so prerender it for
     // real; the still-tentative cities keep relying on the fallback for now since
     // nobody has a direct link to them yet.
-    pages: [{ path: "/sing-ova-sundays/chicago" }],
+    //
+    // Same reasoning applies to /jerky-jerk/$slug: the links to each stub detail
+    // page are rendered by /dinner-in-jamaica's LineupGrid only after a client-side
+    // Supabase fetch resolves, so crawlLinks never sees them in the prerendered
+    // HTML either. List every real slug from jerky_jerk_weekly_lineup here (all
+    // except 'dancehall101', which reuses the existing /dancehall-101 route
+    // instead of this generic stub) -- see src/lib/jerkyJerkLineup.ts.
+    pages: [
+      { path: "/sing-ova-sundays/chicago" },
+      { path: "/jerky-jerk/sunday-sessions" },
+      { path: "/jerky-jerk/sing-ova-sundays" },
+      { path: "/jerky-jerk/soul-sundays" },
+      { path: "/jerky-jerk/nu2u-radio-sessions" },
+      { path: "/jerky-jerk/nu2u-radio-live" },
+      { path: "/jerky-jerk/ackee-acid-jazz" },
+      { path: "/jerky-jerk/ackee-acid-jazz-after-dark" },
+      { path: "/jerky-jerk/just-laugh-wednesdays" },
+      { path: "/jerky-jerk/laugh-after-dark" },
+      { path: "/jerky-jerk/karaoke-thursdays" },
+      { path: "/jerky-jerk/karaoke-after-dark" },
+      { path: "/jerky-jerk/dancehall101-hospitality" },
+      { path: "/jerky-jerk/swiftie-saturdays" },
+      { path: "/jerky-jerk/swiftie-saturdays-after-dark" },
+    ],
   },
 });
