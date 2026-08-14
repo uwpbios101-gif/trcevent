@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>TRC Events</title>
+    <script>
+      // GitHub Pages serves this file, unmodified, for any path with no matching
+      // static file -- both genuinely nonexistent URLs and real client-only
+      // routes that just weren't prerendered (e.g. a new /jerky-jerk/<slug> added
+      // straight to the database, or /charly-black/comp?code=...). Redirect to
+      // the real root page with the original path stashed in a query param; the
+      // root route's recovery effect (see src/routes/__root.tsx) picks it up
+      // and does a client-side navigation once the app has actually mounted.
+      //
+      // This deliberately avoids re-serving a copy of index.html directly as
+      // 404.html (the previous approach): TanStack Start embeds hydration state
+      // for whatever route that copy was built from, and hydrating it against a
+      // totally different URL throws a hard "Invariant failed" crash -- a blank
+      // page -- instead of falling through to the app's own not-found page.
+      var target = window.location.pathname + window.location.search + window.location.hash;
+      window.location.replace("/?_redirect=" + encodeURIComponent(target));
+    </script>
+  </head>
+  <body></body>
+</html>

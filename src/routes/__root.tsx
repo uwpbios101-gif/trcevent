@@ -149,8 +149,27 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+// Recovers from public/404.html's redirect: GitHub Pages has no server-side
+// routing, so any path with no matching static file lands on 404.html, which
+// bounces here with the originally-requested path in `?_redirect=`. Once this
+// component has actually mounted (post-hydration, not during it), hand that
+// path to the router's own history so it re-matches normally -- either the
+// real route (a dynamic page that just wasn't prerendered) or, for a
+// genuinely nonexistent path, the app's own notFoundComponent. Doing this via
+// router.history.replace (not a raw history.pushState) is what makes the
+// router actually notice the location changed and re-match.
+function useRedirectRecovery() {
+  const router = useRouter();
+  useEffect(() => {
+    const target = new URLSearchParams(window.location.search).get("_redirect");
+    if (!target) return;
+    router.history.replace(target);
+  }, [router]);
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useRedirectRecovery();
 
   return (
     <QueryClientProvider client={queryClient}>
