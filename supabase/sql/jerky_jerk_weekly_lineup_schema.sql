@@ -10,10 +10,19 @@
 -- like plate_cost_ingredients. See src/lib/jerkyJerkLineup.ts for the reader.
 --
 -- detail_path is null for most rows -- the app defaults those to
--- /jerky-jerk/<slug> (a generic stub detail page). It's set explicitly here
--- only for Dancehall101, which reuses the existing /dancehall-101 route
--- (formerly Uptown Lounge's Wednesday-night event, rerouted to this Friday
--- Jerky Jerk flagship night per Stephen's call 2026-08-14).
+-- /jerky-jerk/<slug> (a generic stub detail page). It's set explicitly for
+-- two exceptions that reuse an existing page instead:
+--   - Dancehall101 -> /dancehall-101 (formerly Uptown Lounge's Wednesday-night
+--     event, rerouted to this Friday Jerky Jerk flagship night per Stephen's
+--     call 2026-08-14)
+--   - sing-ova-sundays -> /sing-ova-sundays/chicago (confirmed by Stephen
+--     2026-08-14 to be the same brand/event, not a coincidental name reuse --
+--     see the sos_cities 'chicago' row, whose venue was updated to Jerky
+--     Jerk at the same time). Soul Sundays (the monthly special that swaps
+--     into this same slot) keeps its own generic stub instead, since the
+--     Sing Ova chapter page has no Soul Sundays-specific content.
+-- Every other Jerky Jerk activity's ONLY venue is Jerky Jerk itself unless a
+-- row says otherwise (Stephen's explicit rule, 2026-08-14).
 
 create table if not exists jerky_jerk_weekly_lineup (
   id uuid primary key default gen_random_uuid(),
@@ -53,7 +62,7 @@ values
   ('sing-ova-sundays', 'Sun', 0, 'night', 2, 'Sing Ova Sundays', '4:00p–9:00p',
     'Reggae/R&B/crossover residency — the week''s Sunday gathering.',
     'Sing Ova Sunday Supper', 'Roots & Culture Sunrise, Redemption Peanut Punch, Rasta Roots Sorrel Spritz',
-    5, false, false, false, null, null),
+    5, false, false, false, null, '/sing-ova-sundays/chicago'),
   ('soul-sundays', 'Sun', 0, 'night', 2, 'Soul Sundays', '4:00p–9:00p',
     'Once-a-month upgrade to Sing Ova Sundays — live soul vocalist/band, bigger production.',
     'Soul Sunday Supper Plate', 'Soul Sunday Sunrise, Harmony Peanut Punch, Gospel Sorrel Spritz',

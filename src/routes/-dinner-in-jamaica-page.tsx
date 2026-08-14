@@ -267,7 +267,7 @@ export function DinnerInJamaicaPage() {
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Every night at{" "}
             <a
-              href="https://www.jerkyjerk.net/"
+              href="https://www.jerkyjerk.info/"
               target="_blank"
               rel="noreferrer"
               className="font-medium text-foreground hover:text-gold hover:underline"
@@ -342,7 +342,7 @@ export function DinnerInJamaicaPage() {
           <p className="mt-6 text-sm text-muted-foreground">
             Presented by TRC Events, at{" "}
             <a
-              href="https://www.jerkyjerk.net/"
+              href="https://www.jerkyjerk.info/"
               target="_blank"
               rel="noreferrer"
               className="font-medium text-foreground hover:text-gold hover:underline"

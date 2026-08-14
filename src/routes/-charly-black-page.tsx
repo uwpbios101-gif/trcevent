@@ -505,7 +505,7 @@ export function CharlyBlackPage() {
               <UtensilsCrossed className="size-4 text-gold" />
               Kitchen powered by{" "}
               <a
-                href="https://www.jerkyjerk.net/"
+                href="https://www.jerkyjerk.info/"
                 target="_blank"
                 rel="noreferrer"
                 className="font-medium text-foreground hover:text-gold hover:underline"
