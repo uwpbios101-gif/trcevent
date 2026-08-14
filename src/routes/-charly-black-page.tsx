@@ -513,6 +513,18 @@ export function CharlyBlackPage() {
                 Jerky Jerk
               </a>
             </div>
+            <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+              <Youtube className="size-4 text-gold" />
+              Get in the mood —{" "}
+              <a
+                href="https://www.youtube.com/@CharlyBlackWorld/videos"
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-foreground hover:text-gold hover:underline"
+              >
+                listen to Charly Black on YouTube
+              </a>
+            </div>
           </div>
           <img
             src={portraitImg}
