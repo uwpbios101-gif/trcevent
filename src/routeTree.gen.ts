@@ -22,13 +22,18 @@ import { Route as JustLaughWednesdayBrainstormRouteImport } from './routes/just-
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as GetStartedRouteImport } from './routes/get-started'
+import { Route as DinnerInJamaicaRouteImport } from './routes/dinner-in-jamaica'
 import { Route as DancehallFridaysRouteImport } from './routes/dancehall-fridays'
+import { Route as Dancehall101RouteImport } from './routes/dancehall-101'
 import { Route as ContractAdminRouteImport } from './routes/contract-admin'
 import { Route as ContractRouteImport } from './routes/contract'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SingOvaSundaysCityRouteImport } from './routes/sing-ova-sundays_.$city'
 import { Route as PitchSlugRouteImport } from './routes/pitch.$slug'
+import { Route as Dancehall101TicketRouteImport } from './routes/dancehall-101_.ticket'
+import { Route as Dancehall101LeaderboardRouteImport } from './routes/dancehall-101_.leaderboard'
+import { Route as Dancehall101CheckinRouteImport } from './routes/dancehall-101_.checkin'
 import { Route as CharlyBlackStreetTeamRouteImport } from './routes/charly-black_.street-team'
 import { Route as CharlyBlackCompAdminRouteImport } from './routes/charly-black_.comp-admin'
 import { Route as CharlyBlackCompRouteImport } from './routes/charly-black_.comp'
@@ -101,9 +106,19 @@ const GetStartedRoute = GetStartedRouteImport.update({
   path: '/get-started',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DinnerInJamaicaRoute = DinnerInJamaicaRouteImport.update({
+  id: '/dinner-in-jamaica',
+  path: '/dinner-in-jamaica',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DancehallFridaysRoute = DancehallFridaysRouteImport.update({
   id: '/dancehall-fridays',
   path: '/dancehall-fridays',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Dancehall101Route = Dancehall101RouteImport.update({
+  id: '/dancehall-101',
+  path: '/dancehall-101',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContractAdminRoute = ContractAdminRouteImport.update({
@@ -136,6 +151,21 @@ const PitchSlugRoute = PitchSlugRouteImport.update({
   path: '/pitch/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Dancehall101TicketRoute = Dancehall101TicketRouteImport.update({
+  id: '/dancehall-101_/ticket',
+  path: '/dancehall-101/ticket',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Dancehall101LeaderboardRoute = Dancehall101LeaderboardRouteImport.update({
+  id: '/dancehall-101_/leaderboard',
+  path: '/dancehall-101/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Dancehall101CheckinRoute = Dancehall101CheckinRouteImport.update({
+  id: '/dancehall-101_/checkin',
+  path: '/dancehall-101/checkin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CharlyBlackStreetTeamRoute = CharlyBlackStreetTeamRouteImport.update({
   id: '/charly-black_/street-team',
   path: '/charly-black/street-team',
@@ -157,7 +187,9 @@ export interface FileRoutesByFullPath {
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
   '/contract-admin': typeof ContractAdminRoute
+  '/dancehall-101': typeof Dancehall101Route
   '/dancehall-fridays': typeof DancehallFridaysRoute
+  '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -174,6 +206,9 @@ export interface FileRoutesByFullPath {
   '/charly-black/comp': typeof CharlyBlackCompRoute
   '/charly-black/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black/street-team': typeof CharlyBlackStreetTeamRoute
+  '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
+  '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
+  '/dancehall-101/ticket': typeof Dancehall101TicketRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
 }
@@ -182,7 +217,9 @@ export interface FileRoutesByTo {
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
   '/contract-admin': typeof ContractAdminRoute
+  '/dancehall-101': typeof Dancehall101Route
   '/dancehall-fridays': typeof DancehallFridaysRoute
+  '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -199,6 +236,9 @@ export interface FileRoutesByTo {
   '/charly-black/comp': typeof CharlyBlackCompRoute
   '/charly-black/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black/street-team': typeof CharlyBlackStreetTeamRoute
+  '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
+  '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
+  '/dancehall-101/ticket': typeof Dancehall101TicketRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
 }
@@ -208,7 +248,9 @@ export interface FileRoutesById {
   '/charly-black': typeof CharlyBlackRoute
   '/contract': typeof ContractRoute
   '/contract-admin': typeof ContractAdminRoute
+  '/dancehall-101': typeof Dancehall101Route
   '/dancehall-fridays': typeof DancehallFridaysRoute
+  '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -225,6 +267,9 @@ export interface FileRoutesById {
   '/charly-black_/comp': typeof CharlyBlackCompRoute
   '/charly-black_/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black_/street-team': typeof CharlyBlackStreetTeamRoute
+  '/dancehall-101_/checkin': typeof Dancehall101CheckinRoute
+  '/dancehall-101_/leaderboard': typeof Dancehall101LeaderboardRoute
+  '/dancehall-101_/ticket': typeof Dancehall101TicketRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays_/$city': typeof SingOvaSundaysCityRoute
 }
@@ -235,7 +280,9 @@ export interface FileRouteTypes {
     | '/charly-black'
     | '/contract'
     | '/contract-admin'
+    | '/dancehall-101'
     | '/dancehall-fridays'
+    | '/dinner-in-jamaica'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -252,6 +299,9 @@ export interface FileRouteTypes {
     | '/charly-black/comp'
     | '/charly-black/comp-admin'
     | '/charly-black/street-team'
+    | '/dancehall-101/checkin'
+    | '/dancehall-101/leaderboard'
+    | '/dancehall-101/ticket'
     | '/pitch/$slug'
     | '/sing-ova-sundays/$city'
   fileRoutesByTo: FileRoutesByTo
@@ -260,7 +310,9 @@ export interface FileRouteTypes {
     | '/charly-black'
     | '/contract'
     | '/contract-admin'
+    | '/dancehall-101'
     | '/dancehall-fridays'
+    | '/dinner-in-jamaica'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -277,6 +329,9 @@ export interface FileRouteTypes {
     | '/charly-black/comp'
     | '/charly-black/comp-admin'
     | '/charly-black/street-team'
+    | '/dancehall-101/checkin'
+    | '/dancehall-101/leaderboard'
+    | '/dancehall-101/ticket'
     | '/pitch/$slug'
     | '/sing-ova-sundays/$city'
   id:
@@ -285,7 +340,9 @@ export interface FileRouteTypes {
     | '/charly-black'
     | '/contract'
     | '/contract-admin'
+    | '/dancehall-101'
     | '/dancehall-fridays'
+    | '/dinner-in-jamaica'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -302,6 +359,9 @@ export interface FileRouteTypes {
     | '/charly-black_/comp'
     | '/charly-black_/comp-admin'
     | '/charly-black_/street-team'
+    | '/dancehall-101_/checkin'
+    | '/dancehall-101_/leaderboard'
+    | '/dancehall-101_/ticket'
     | '/pitch/$slug'
     | '/sing-ova-sundays_/$city'
   fileRoutesById: FileRoutesById
@@ -311,7 +371,9 @@ export interface RootRouteChildren {
   CharlyBlackRoute: typeof CharlyBlackRoute
   ContractRoute: typeof ContractRoute
   ContractAdminRoute: typeof ContractAdminRoute
+  Dancehall101Route: typeof Dancehall101Route
   DancehallFridaysRoute: typeof DancehallFridaysRoute
+  DinnerInJamaicaRoute: typeof DinnerInJamaicaRoute
   GetStartedRoute: typeof GetStartedRoute
   Jamaica64Route: typeof Jamaica64Route
   JamaicadayRoute: typeof JamaicadayRoute
@@ -328,6 +390,9 @@ export interface RootRouteChildren {
   CharlyBlackCompRoute: typeof CharlyBlackCompRoute
   CharlyBlackCompAdminRoute: typeof CharlyBlackCompAdminRoute
   CharlyBlackStreetTeamRoute: typeof CharlyBlackStreetTeamRoute
+  Dancehall101CheckinRoute: typeof Dancehall101CheckinRoute
+  Dancehall101LeaderboardRoute: typeof Dancehall101LeaderboardRoute
+  Dancehall101TicketRoute: typeof Dancehall101TicketRoute
   PitchSlugRoute: typeof PitchSlugRoute
   SingOvaSundaysCityRoute: typeof SingOvaSundaysCityRoute
 }
@@ -425,11 +490,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GetStartedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dinner-in-jamaica': {
+      id: '/dinner-in-jamaica'
+      path: '/dinner-in-jamaica'
+      fullPath: '/dinner-in-jamaica'
+      preLoaderRoute: typeof DinnerInJamaicaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dancehall-fridays': {
       id: '/dancehall-fridays'
       path: '/dancehall-fridays'
       fullPath: '/dancehall-fridays'
       preLoaderRoute: typeof DancehallFridaysRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dancehall-101': {
+      id: '/dancehall-101'
+      path: '/dancehall-101'
+      fullPath: '/dancehall-101'
+      preLoaderRoute: typeof Dancehall101RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contract-admin': {
@@ -474,6 +553,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PitchSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dancehall-101_/ticket': {
+      id: '/dancehall-101_/ticket'
+      path: '/dancehall-101/ticket'
+      fullPath: '/dancehall-101/ticket'
+      preLoaderRoute: typeof Dancehall101TicketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dancehall-101_/leaderboard': {
+      id: '/dancehall-101_/leaderboard'
+      path: '/dancehall-101/leaderboard'
+      fullPath: '/dancehall-101/leaderboard'
+      preLoaderRoute: typeof Dancehall101LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dancehall-101_/checkin': {
+      id: '/dancehall-101_/checkin'
+      path: '/dancehall-101/checkin'
+      fullPath: '/dancehall-101/checkin'
+      preLoaderRoute: typeof Dancehall101CheckinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/charly-black_/street-team': {
       id: '/charly-black_/street-team'
       path: '/charly-black/street-team'
@@ -503,7 +603,9 @@ const rootRouteChildren: RootRouteChildren = {
   CharlyBlackRoute: CharlyBlackRoute,
   ContractRoute: ContractRoute,
   ContractAdminRoute: ContractAdminRoute,
+  Dancehall101Route: Dancehall101Route,
   DancehallFridaysRoute: DancehallFridaysRoute,
+  DinnerInJamaicaRoute: DinnerInJamaicaRoute,
   GetStartedRoute: GetStartedRoute,
   Jamaica64Route: Jamaica64Route,
   JamaicadayRoute: JamaicadayRoute,
@@ -520,6 +622,9 @@ const rootRouteChildren: RootRouteChildren = {
   CharlyBlackCompRoute: CharlyBlackCompRoute,
   CharlyBlackCompAdminRoute: CharlyBlackCompAdminRoute,
   CharlyBlackStreetTeamRoute: CharlyBlackStreetTeamRoute,
+  Dancehall101CheckinRoute: Dancehall101CheckinRoute,
+  Dancehall101LeaderboardRoute: Dancehall101LeaderboardRoute,
+  Dancehall101TicketRoute: Dancehall101TicketRoute,
   PitchSlugRoute: PitchSlugRoute,
   SingOvaSundaysCityRoute: SingOvaSundaysCityRoute,
 }
