@@ -95,7 +95,7 @@ function TicketCard({ t }: { t: Dh101Ticket }) {
           )}
           <div className="mt-0.5 text-[0.78rem] opacity-85">{t.school_slug} Edition</div>
           <div className="mt-3.5 text-[0.68rem] tracking-[0.08em] uppercase opacity-90">
-            Uptown Lounge &middot; Wednesday Nights &middot; Chicago&rsquo;s #1 Dancehall Experience
+            Jerky Jerk &middot; Friday Nights &middot; Chicago&rsquo;s #1 Dancehall Experience
             &middot; 21+ Event
           </div>
           <div className="mt-3.5 rounded-[10px] bg-black/25 px-3.5 py-2.5 text-[0.82rem] font-semibold">
@@ -183,7 +183,7 @@ function TicketCard({ t }: { t: Dh101Ticket }) {
             className="mt-5 border-t pt-4 text-[0.78rem]"
             style={{ borderColor: DH101_BORDER, color: DH101_TEXT_DIM }}
           >
-            {t.school_name} Takes Wednesdays &middot; Uptown Lounge, Chicago IL
+            {t.school_name} Takes Fridays &middot; Jerky Jerk, Chicago IL
           </div>
         </div>
       </div>

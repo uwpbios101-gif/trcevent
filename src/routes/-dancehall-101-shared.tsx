@@ -121,7 +121,7 @@ export function Dh101Footer() {
       className="border-t px-5 py-5 text-center text-[0.78rem]"
       style={{ borderColor: DH101_BORDER, color: DH101_TEXT_DIM }}
     >
-      Dancehall 101 &mdash; presented by TRC Events, a Ras Tafari Inc production. Uptown Lounge,
+      Dancehall 101 &mdash; presented by TRC Events, a Ras Tafari Inc production. Jerky Jerk,
       Chicago.
     </footer>
   );

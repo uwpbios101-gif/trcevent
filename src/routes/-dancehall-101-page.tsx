@@ -38,11 +38,11 @@ import {
 export function dancehall101Head() {
   return {
     meta: [
-      { title: "Dancehall 101 — Free Student Entry | Uptown Lounge, Chicago" },
+      { title: "Dancehall 101 — Free Student Entry | Jerky Jerk, Chicago" },
       {
         name: "description",
         content:
-          "Dancehall 101 — Wednesday nights at Uptown Lounge, Chicago. College students 21+ get 100% free entry with a verified .edu email.",
+          "Dancehall 101 — Friday nights at Jerky Jerk, Chicago. College students 21+ get 100% free entry with a verified .edu email.",
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Dancehall 101" },
@@ -50,7 +50,7 @@ export function dancehall101Head() {
       {
         property: "og:description",
         content:
-          "Wednesday nights at Uptown Lounge, Chicago. 21+ college students get 100% free entry with a verified .edu email.",
+          "Friday nights at Jerky Jerk, Chicago. 21+ college students get 100% free entry with a verified .edu email.",
       },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/dancehall-101` }, ...DH101_FONT_LINKS],
@@ -76,14 +76,14 @@ function SchoolPicker({ schools }: { schools: Dh101School[] }) {
           className="mx-auto mt-3.5 max-w-[560px] text-[1.05rem]"
           style={{ color: DH101_TEXT_DIM }}
         >
-          Every Wednesday night at Uptown Lounge, Chicago. 21+ students get 100% free entry — verify
-          your .edu email and get your ticket in seconds.
+          Every Friday night at Jerky Jerk, Chicago. 21+ students get 100% free entry — verify your
+          .edu email and get your ticket in seconds.
         </p>
         <span
           className="mt-4.5 inline-block rounded-full px-4 py-1.5 text-[0.78rem] font-bold tracking-[0.08em] text-white uppercase"
           style={{ background: "var(--school-primary)" }}
         >
-          21+ Event · Wednesday Nights
+          21+ Event · Friday Nights
         </span>
       </div>
       <div className="mx-auto max-w-[900px] px-6 pb-15">
@@ -148,7 +148,7 @@ function SchoolLanding({ school, ref: referralCode }: { school: Dh101School; ref
   const [msg, setMsg] = useState<{ text: string; ok: boolean } | null>(null);
 
   useEffect(() => {
-    document.title = `${school.mascot || school.name} Take Wednesdays — Dancehall 101`;
+    document.title = `${school.mascot || school.name} Take Fridays — Dancehall 101`;
   }, [school]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -204,7 +204,7 @@ function SchoolLanding({ school, ref: referralCode }: { school: Dh101School; ref
       <h1 className="mt-4.5 font-[Anton] text-[clamp(2rem,6vw,3.4rem)] uppercase leading-[1.05] tracking-[0.02em]">
         <span style={{ color: "var(--school-primary)" }}>{school.mascot}</span>
         <br />
-        Take Wednesdays
+        Take Fridays
       </h1>
       <div
         className="mt-2 text-[0.95rem] font-semibold tracking-[0.1em] uppercase"
@@ -217,7 +217,7 @@ function SchoolLanding({ school, ref: referralCode }: { school: Dh101School; ref
     <h1 className="mt-4.5 font-[Anton] text-[clamp(2rem,6vw,3.4rem)] uppercase leading-[1.05] tracking-[0.02em]">
       {school.name}
       <br />
-      <span style={{ color: "var(--school-primary)" }}>Takes Wednesdays</span>
+      <span style={{ color: "var(--school-primary)" }}>Takes Fridays</span>
     </h1>
   );
 
@@ -237,7 +237,7 @@ function SchoolLanding({ school, ref: referralCode }: { school: Dh101School; ref
           className="mx-auto mt-3.5 max-w-[560px] text-[1.05rem]"
           style={{ color: DH101_TEXT_DIM }}
         >
-          Dancehall 101 — Wednesdays at Uptown Lounge. Free for {school.name} students, 21+.
+          Dancehall 101 — Fridays at Jerky Jerk. Free for {school.name} students, 21+.
         </p>
         <span
           className="mt-4.5 inline-block rounded-full px-4 py-1.5 text-[0.78rem] font-bold tracking-[0.08em] text-white uppercase"

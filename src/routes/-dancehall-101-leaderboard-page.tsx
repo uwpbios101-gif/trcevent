@@ -30,7 +30,7 @@ export function dancehall101LeaderboardHead() {
       {
         name: "description",
         content:
-          "Dancehall 101 ambassador leaderboard — see who's bringing the most students out to Uptown Lounge on Wednesdays.",
+          "Dancehall 101 ambassador leaderboard — see who's bringing the most students out to Jerky Jerk on Fridays.",
       },
     ],
     links: [
@@ -69,7 +69,7 @@ export function Dancehall101LeaderboardPage() {
             className="mx-auto mt-3.5 max-w-[560px] text-[1.05rem]"
             style={{ color: DH101_TEXT_DIM }}
           >
-            See who&rsquo;s bringing the most students out to Uptown Lounge on Wednesdays.
+            See who&rsquo;s bringing the most students out to Jerky Jerk on Fridays.
           </p>
         </div>
 
