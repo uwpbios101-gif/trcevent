@@ -22,6 +22,7 @@ import { Route as JustLaughWednesdayBrainstormRouteImport } from './routes/just-
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as GetStartedRouteImport } from './routes/get-started'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as DinnerInJamaicaRouteImport } from './routes/dinner-in-jamaica'
 import { Route as DancehallFridaysRouteImport } from './routes/dancehall-fridays'
 import { Route as Dancehall101RouteImport } from './routes/dancehall-101'
@@ -105,6 +106,11 @@ const Jamaica64Route = Jamaica64RouteImport.update({
 const GetStartedRoute = GetStartedRouteImport.update({
   id: '/get-started',
   path: '/get-started',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DinnerInJamaicaRoute = DinnerInJamaicaRouteImport.update({
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/dancehall-101': typeof Dancehall101Route
   '/dancehall-fridays': typeof DancehallFridaysRoute
   '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
+  '/events': typeof EventsRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/dancehall-101': typeof Dancehall101Route
   '/dancehall-fridays': typeof DancehallFridaysRoute
   '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
+  '/events': typeof EventsRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   '/dancehall-101': typeof Dancehall101Route
   '/dancehall-fridays': typeof DancehallFridaysRoute
   '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
+  '/events': typeof EventsRoute
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
@@ -292,6 +301,7 @@ export interface FileRouteTypes {
     | '/dancehall-101'
     | '/dancehall-fridays'
     | '/dinner-in-jamaica'
+    | '/events'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/dancehall-101'
     | '/dancehall-fridays'
     | '/dinner-in-jamaica'
+    | '/events'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -354,6 +365,7 @@ export interface FileRouteTypes {
     | '/dancehall-101'
     | '/dancehall-fridays'
     | '/dinner-in-jamaica'
+    | '/events'
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
@@ -386,6 +398,7 @@ export interface RootRouteChildren {
   Dancehall101Route: typeof Dancehall101Route
   DancehallFridaysRoute: typeof DancehallFridaysRoute
   DinnerInJamaicaRoute: typeof DinnerInJamaicaRoute
+  EventsRoute: typeof EventsRoute
   GetStartedRoute: typeof GetStartedRoute
   Jamaica64Route: typeof Jamaica64Route
   JamaicadayRoute: typeof JamaicadayRoute
@@ -501,6 +514,13 @@ declare module '@tanstack/react-router' {
       path: '/get-started'
       fullPath: '/get-started'
       preLoaderRoute: typeof GetStartedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dinner-in-jamaica': {
@@ -626,6 +646,7 @@ const rootRouteChildren: RootRouteChildren = {
   Dancehall101Route: Dancehall101Route,
   DancehallFridaysRoute: DancehallFridaysRoute,
   DinnerInJamaicaRoute: DinnerInJamaicaRoute,
+  EventsRoute: EventsRoute,
   GetStartedRoute: GetStartedRoute,
   Jamaica64Route: Jamaica64Route,
   JamaicadayRoute: JamaicadayRoute,

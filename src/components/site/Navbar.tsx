@@ -4,6 +4,7 @@ import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 
 const EVENT_LINKS = [
+  { to: "/events", label: "Events" },
   { to: "/dancehall-101", label: "Dancehall 101" },
   { to: "/st-catherine-linkup", label: "St. Catherine Link-Up" },
   { to: "/dinner-in-jamaica", label: "Dinner in Jamaica" },
