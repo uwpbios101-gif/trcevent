@@ -489,7 +489,7 @@ export function CharlyBlackPage() {
           <div>
             <h2 className="font-display text-2xl font-bold sm:text-3xl">About This Night</h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              TRC Events brings dancehall royalty to Chicago for the very first time. Charly Black —
+              TRC Events brings dancehall royalty back to Chicago for one night only. Charly Black —
               the voice behind the global anthem "Gyal You A Party Animal" and one of Jamaica's most
               infectious hitmakers — headlines an Historic Chicago Night built for the culture.
             </p>
