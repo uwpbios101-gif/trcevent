@@ -77,8 +77,8 @@ const SELECTAS = [
   "Buju",
   "Rye Bread",
   "DJ Poyo",
-  "Monatana",
-  "Savvy Lo",
+  "Monatana (Female)",
+  "Savvy Lo (Haitian Female)",
   "Nice It Up",
 ];
 
@@ -312,9 +312,12 @@ export function ChicagoVybezPage() {
           <h2 className="font-display text-2xl font-bold sm:text-3xl">If Yuh Know, Yuh Know</h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Chicago Vybez brings the whole Caribbean diaspora out to the park for four straight days
-            of Labor Day Weekend — every island, every flag, flying side by side. Presented by
-            Prestige Promotion, it's free admission every day: sound systems, good food, and fresh
-            cuts, all in one spot.
+            of Labor Day Weekend — Jamaica, Haiti, Trinidad &amp; Tobago, Barbados, Belize, the
+            Bahamas, Cuba, the Dominican Republic, Guyana, Suriname, Antigua &amp; Barbuda, St.
+            Kitts &amp; Nevis, St. Lucia, St. Vincent &amp; the Grenadines, Grenada, Dominica,
+            Puerto Rico, and the U.S. and British Virgin Islands, all flying flags side by side.
+            Presented by Prestige Promotion, it's free admission every day: sound systems, good
+            food, and fresh cuts, all in one spot.
           </p>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             The catch: the location stays secret until you text in. That's the vybez — real ones
