@@ -29,8 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { SOCIAL_LINKS } from "@/lib/social";
-import heroVideo from "@/assets/chicago-vybez-hero.mp4";
-import heroPoster from "@/assets/chicago-vybez-hero-poster.jpg";
+import heroImg from "@/assets/chicago-vybez-hero.jpg";
 import flyer1 from "@/assets/chicago-vybez-flyer-1.jpg";
 import flyer2 from "@/assets/chicago-vybez-flyer-2.jpg";
 import flyer3 from "@/assets/chicago-vybez-flyer-3.jpg";
@@ -245,16 +244,11 @@ export function ChicagoVybezPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={heroPoster}
-          className="absolute inset-0 h-full w-full object-cover object-top"
-        >
-          <source src={heroVideo} type="video/mp4" />
-        </video>
+        <img
+          src={heroImg}
+          alt="Chicago Vybez — Caribbean flags flying over a Labor Day Weekend cookout with the Chicago skyline behind"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
         <div className="relative mx-auto max-w-4xl px-4 py-12 text-center sm:px-6 sm:py-16">
           <p className="eyebrow mb-2">Prestige Promotion presents</p>
