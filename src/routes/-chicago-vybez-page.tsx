@@ -50,7 +50,7 @@ const EVENT_DAYS = [
   { day: "Friday", date: "Sept 4" },
   { day: "Saturday", date: "Sept 5" },
   { day: "Sunday", date: "Sept 6" },
-  { day: "Monday", date: "Sept 7 — Labor Day" },
+  { day: "Monday", date: "Sept 7", holiday: "Labor Day" },
 ];
 
 // Chicago sound systems called up on the "String Up In The Park" flyer.
@@ -296,10 +296,23 @@ export function ChicagoVybezPage() {
           <p className="eyebrow mb-6">Kickoff In</p>
           <CountdownStrip />
           <div className="mx-auto mt-8 flex max-w-xl flex-wrap justify-center gap-2">
-            {EVENT_DAYS.map(({ day, date }) => (
-              <Badge key={day} variant="outline" className="border-gold/30 px-3 py-1.5 text-sm">
-                <span className="font-semibold text-foreground">{day}</span>
-                <span className="ml-1.5 text-muted-foreground">{date}</span>
+            {EVENT_DAYS.map(({ day, date, holiday }) => (
+              <Badge
+                key={day}
+                variant="outline"
+                className={
+                  holiday
+                    ? "border-transparent bg-gold px-3 py-1.5 text-sm text-gold-foreground shadow shadow-gold/30"
+                    : "border-gold/30 px-3 py-1.5 text-sm"
+                }
+              >
+                <span className={holiday ? "font-semibold" : "font-semibold text-foreground"}>
+                  {day}
+                </span>
+                <span className={holiday ? "ml-1.5" : "ml-1.5 text-muted-foreground"}>
+                  {date}
+                  {holiday ? ` — ${holiday}` : ""}
+                </span>
               </Badge>
             ))}
           </div>
