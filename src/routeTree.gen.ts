@@ -16,6 +16,7 @@ import { Route as SingOvaSundaysRouteImport } from './routes/sing-ova-sundays'
 import { Route as SingOvaRouteImport } from './routes/sing-ova'
 import { Route as RunOfShowRouteImport } from './routes/run-of-show'
 import { Route as PlateCostRouteImport } from './routes/plate-cost'
+import { Route as PastEventsRouteImport } from './routes/past-events'
 import { Route as MinglesTuesdaysBrainstormRouteImport } from './routes/mingles-tuesdays-brainstorm'
 import { Route as KaraokeThursdaysBrainstormRouteImport } from './routes/karaoke-thursdays-brainstorm'
 import { Route as JustLaughWednesdayBrainstormRouteImport } from './routes/just-laugh-wednesday-brainstorm'
@@ -28,6 +29,7 @@ import { Route as DancehallFridaysRouteImport } from './routes/dancehall-fridays
 import { Route as Dancehall101RouteImport } from './routes/dancehall-101'
 import { Route as ContractAdminRouteImport } from './routes/contract-admin'
 import { Route as ContractRouteImport } from './routes/contract'
+import { Route as ChicagoVybezRouteImport } from './routes/chicago-vybez'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SingOvaSundaysCityRouteImport } from './routes/sing-ova-sundays_.$city'
@@ -73,6 +75,11 @@ const RunOfShowRoute = RunOfShowRouteImport.update({
 const PlateCostRoute = PlateCostRouteImport.update({
   id: '/plate-cost',
   path: '/plate-cost',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PastEventsRoute = PastEventsRouteImport.update({
+  id: '/past-events',
+  path: '/past-events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MinglesTuesdaysBrainstormRoute =
@@ -138,6 +145,11 @@ const ContractRoute = ContractRouteImport.update({
   path: '/contract',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChicagoVybezRoute = ChicagoVybezRouteImport.update({
+  id: '/chicago-vybez',
+  path: '/chicago-vybez',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CharlyBlackRoute = CharlyBlackRouteImport.update({
   id: '/charly-black',
   path: '/charly-black',
@@ -197,6 +209,7 @@ const CharlyBlackCompRoute = CharlyBlackCompRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/chicago-vybez': typeof ChicagoVybezRoute
   '/contract': typeof ContractRoute
   '/contract-admin': typeof ContractAdminRoute
   '/dancehall-101': typeof Dancehall101Route
@@ -209,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
   '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
+  '/past-events': typeof PastEventsRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/sing-ova': typeof SingOvaRoute
@@ -229,6 +243,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/chicago-vybez': typeof ChicagoVybezRoute
   '/contract': typeof ContractRoute
   '/contract-admin': typeof ContractAdminRoute
   '/dancehall-101': typeof Dancehall101Route
@@ -241,6 +256,7 @@ export interface FileRoutesByTo {
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
   '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
+  '/past-events': typeof PastEventsRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/sing-ova': typeof SingOvaRoute
@@ -262,6 +278,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/charly-black': typeof CharlyBlackRoute
+  '/chicago-vybez': typeof ChicagoVybezRoute
   '/contract': typeof ContractRoute
   '/contract-admin': typeof ContractAdminRoute
   '/dancehall-101': typeof Dancehall101Route
@@ -274,6 +291,7 @@ export interface FileRoutesById {
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
   '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
+  '/past-events': typeof PastEventsRoute
   '/plate-cost': typeof PlateCostRoute
   '/run-of-show': typeof RunOfShowRoute
   '/sing-ova': typeof SingOvaRoute
@@ -296,6 +314,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/charly-black'
+    | '/chicago-vybez'
     | '/contract'
     | '/contract-admin'
     | '/dancehall-101'
@@ -308,6 +327,7 @@ export interface FileRouteTypes {
     | '/just-laugh-wednesday-brainstorm'
     | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
+    | '/past-events'
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova'
@@ -328,6 +348,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/charly-black'
+    | '/chicago-vybez'
     | '/contract'
     | '/contract-admin'
     | '/dancehall-101'
@@ -340,6 +361,7 @@ export interface FileRouteTypes {
     | '/just-laugh-wednesday-brainstorm'
     | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
+    | '/past-events'
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova'
@@ -360,6 +382,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/charly-black'
+    | '/chicago-vybez'
     | '/contract'
     | '/contract-admin'
     | '/dancehall-101'
@@ -372,6 +395,7 @@ export interface FileRouteTypes {
     | '/just-laugh-wednesday-brainstorm'
     | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
+    | '/past-events'
     | '/plate-cost'
     | '/run-of-show'
     | '/sing-ova'
@@ -393,6 +417,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CharlyBlackRoute: typeof CharlyBlackRoute
+  ChicagoVybezRoute: typeof ChicagoVybezRoute
   ContractRoute: typeof ContractRoute
   ContractAdminRoute: typeof ContractAdminRoute
   Dancehall101Route: typeof Dancehall101Route
@@ -405,6 +430,7 @@ export interface RootRouteChildren {
   JustLaughWednesdayBrainstormRoute: typeof JustLaughWednesdayBrainstormRoute
   KaraokeThursdaysBrainstormRoute: typeof KaraokeThursdaysBrainstormRoute
   MinglesTuesdaysBrainstormRoute: typeof MinglesTuesdaysBrainstormRoute
+  PastEventsRoute: typeof PastEventsRoute
   PlateCostRoute: typeof PlateCostRoute
   RunOfShowRoute: typeof RunOfShowRoute
   SingOvaRoute: typeof SingOvaRoute
@@ -472,6 +498,13 @@ declare module '@tanstack/react-router' {
       path: '/plate-cost'
       fullPath: '/plate-cost'
       preLoaderRoute: typeof PlateCostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/past-events': {
+      id: '/past-events'
+      path: '/past-events'
+      fullPath: '/past-events'
+      preLoaderRoute: typeof PastEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mingles-tuesdays-brainstorm': {
@@ -558,6 +591,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContractRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chicago-vybez': {
+      id: '/chicago-vybez'
+      path: '/chicago-vybez'
+      fullPath: '/chicago-vybez'
+      preLoaderRoute: typeof ChicagoVybezRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/charly-black': {
       id: '/charly-black'
       path: '/charly-black'
@@ -641,6 +681,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CharlyBlackRoute: CharlyBlackRoute,
+  ChicagoVybezRoute: ChicagoVybezRoute,
   ContractRoute: ContractRoute,
   ContractAdminRoute: ContractAdminRoute,
   Dancehall101Route: Dancehall101Route,
@@ -653,6 +694,7 @@ const rootRouteChildren: RootRouteChildren = {
   JustLaughWednesdayBrainstormRoute: JustLaughWednesdayBrainstormRoute,
   KaraokeThursdaysBrainstormRoute: KaraokeThursdaysBrainstormRoute,
   MinglesTuesdaysBrainstormRoute: MinglesTuesdaysBrainstormRoute,
+  PastEventsRoute: PastEventsRoute,
   PlateCostRoute: PlateCostRoute,
   RunOfShowRoute: RunOfShowRoute,
   SingOvaRoute: SingOvaRoute,

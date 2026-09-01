@@ -21,14 +21,20 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5">
-              <img src={logo} alt="TRC Events" width={44} height={44} className="size-10 object-contain" />
+              <img
+                src={logo}
+                alt="TRC Events"
+                width={44}
+                height={44}
+                className="size-10 object-contain"
+              />
               <span className="font-display text-xl font-bold tracking-wide">
                 TRC <span className="text-gold">Events</span>
               </span>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              The Right Connection. The Reggae Connection. Chicago's home for reggae DJs,
-              promoters, venues, and the community that keeps the sound alive.
+              The Right Connection. The Reggae Connection. Chicago's home for reggae DJs, promoters,
+              venues, and the community that keeps the sound alive.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               {SOCIALS.map(({ Icon, href, label }) => (
@@ -49,18 +55,47 @@ export function Footer() {
           <div>
             <h4 className="eyebrow mb-4">Events</h4>
             <ul className="space-y-2.5 text-sm text-muted-foreground">
-              <li><Link to="/charly-black" className="hover:text-gold">Charly Black — Good Times</Link></li>
-              <li><a href="/charly-black#tickets" className="hover:text-gold">Get Tickets</a></li>
+              <li>
+                <Link to="/" className="hover:text-gold">
+                  Chicago Vybez — Prestige In The Park
+                </Link>
+              </li>
+              <li>
+                <a href="/chicago-vybez#location" className="hover:text-gold">
+                  Get the Location
+                </a>
+              </li>
+              <li>
+                <Link to="/past-events" className="hover:text-gold">
+                  Past Events
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="eyebrow mb-4">Company</h4>
             <ul className="space-y-2.5 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-gold">About TRC</a></li>
-              <li><a href={`mailto:${SOCIAL_LINKS.email}`} className="hover:text-gold">Contact</a></li>
-              <li><a href="#" className="hover:text-gold">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-gold">Terms of Service</a></li>
+              <li>
+                <a href="#" className="hover:text-gold">
+                  About TRC
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${SOCIAL_LINKS.email}`} className="hover:text-gold">
+                  Contact
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-gold">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-gold">
+                  Terms of Service
+                </a>
+              </li>
             </ul>
           </div>
         </div>
