@@ -34,19 +34,7 @@ that now that CI does it.
 
 ## Commands
 
-Package manager is **bun** (`bun.lock`, `bunfig.toml` present — don't use npm/yarn/pnpm).
-
-```
-bun install          # install deps
-bun dev              # vite dev — dev server
-bun run build        # vite build (production, targets Cloudflare via nitro)
-bun run build:dev    # vite build --mode development
-bun run preview      # preview a production build
-bun run lint         # eslint .
-bun run format       # prettier --write .
-```
-
-There is no test suite/framework configured in this repo.
+Package manager is **bun** (`bun.lock`, `bunfig.toml` present — don't use npm/yarn/pnpm). See `package.json` for scripts.
 
 `bunfig.toml` enforces a 24h supply-chain guard (`minimumReleaseAge`) blocking newly published
 package versions. Only add a package to `minimumReleaseAgeExcludes` after confirming with the
