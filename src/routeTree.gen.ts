@@ -37,6 +37,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SingOvaSundaysCityRouteImport } from './routes/sing-ova-sundays_.$city'
 import { Route as PitchSlugRouteImport } from './routes/pitch.$slug'
 import { Route as JerkyJerkSlugRouteImport } from './routes/jerky-jerk.$slug'
+import { Route as JayReblSongFactoryRouteImport } from './routes/jay-rebl_.song-factory'
 import { Route as Dancehall101TicketRouteImport } from './routes/dancehall-101_.ticket'
 import { Route as Dancehall101LeaderboardRouteImport } from './routes/dancehall-101_.leaderboard'
 import { Route as Dancehall101CheckinRouteImport } from './routes/dancehall-101_.checkin'
@@ -187,6 +188,11 @@ const JerkyJerkSlugRoute = JerkyJerkSlugRouteImport.update({
   path: '/jerky-jerk/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JayReblSongFactoryRoute = JayReblSongFactoryRouteImport.update({
+  id: '/jay-rebl_/song-factory',
+  path: '/jay-rebl/song-factory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Dancehall101TicketRoute = Dancehall101TicketRouteImport.update({
   id: '/dancehall-101_/ticket',
   path: '/dancehall-101/ticket',
@@ -250,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101/ticket': typeof Dancehall101TicketRoute
+  '/jay-rebl/song-factory': typeof JayReblSongFactoryRoute
   '/jerky-jerk/$slug': typeof JerkyJerkSlugRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
@@ -286,6 +293,7 @@ export interface FileRoutesByTo {
   '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101/ticket': typeof Dancehall101TicketRoute
+  '/jay-rebl/song-factory': typeof JayReblSongFactoryRoute
   '/jerky-jerk/$slug': typeof JerkyJerkSlugRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays/$city': typeof SingOvaSundaysCityRoute
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/dancehall-101_/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101_/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101_/ticket': typeof Dancehall101TicketRoute
+  '/jay-rebl_/song-factory': typeof JayReblSongFactoryRoute
   '/jerky-jerk/$slug': typeof JerkyJerkSlugRoute
   '/pitch/$slug': typeof PitchSlugRoute
   '/sing-ova-sundays_/$city': typeof SingOvaSundaysCityRoute
@@ -361,6 +370,7 @@ export interface FileRouteTypes {
     | '/dancehall-101/checkin'
     | '/dancehall-101/leaderboard'
     | '/dancehall-101/ticket'
+    | '/jay-rebl/song-factory'
     | '/jerky-jerk/$slug'
     | '/pitch/$slug'
     | '/sing-ova-sundays/$city'
@@ -397,6 +407,7 @@ export interface FileRouteTypes {
     | '/dancehall-101/checkin'
     | '/dancehall-101/leaderboard'
     | '/dancehall-101/ticket'
+    | '/jay-rebl/song-factory'
     | '/jerky-jerk/$slug'
     | '/pitch/$slug'
     | '/sing-ova-sundays/$city'
@@ -433,6 +444,7 @@ export interface FileRouteTypes {
     | '/dancehall-101_/checkin'
     | '/dancehall-101_/leaderboard'
     | '/dancehall-101_/ticket'
+    | '/jay-rebl_/song-factory'
     | '/jerky-jerk/$slug'
     | '/pitch/$slug'
     | '/sing-ova-sundays_/$city'
@@ -470,6 +482,7 @@ export interface RootRouteChildren {
   Dancehall101CheckinRoute: typeof Dancehall101CheckinRoute
   Dancehall101LeaderboardRoute: typeof Dancehall101LeaderboardRoute
   Dancehall101TicketRoute: typeof Dancehall101TicketRoute
+  JayReblSongFactoryRoute: typeof JayReblSongFactoryRoute
   JerkyJerkSlugRoute: typeof JerkyJerkSlugRoute
   PitchSlugRoute: typeof PitchSlugRoute
   SingOvaSundaysCityRoute: typeof SingOvaSundaysCityRoute
@@ -673,6 +686,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JerkyJerkSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jay-rebl_/song-factory': {
+      id: '/jay-rebl_/song-factory'
+      path: '/jay-rebl/song-factory'
+      fullPath: '/jay-rebl/song-factory'
+      preLoaderRoute: typeof JayReblSongFactoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dancehall-101_/ticket': {
       id: '/dancehall-101_/ticket'
       path: '/dancehall-101/ticket'
@@ -750,6 +770,7 @@ const rootRouteChildren: RootRouteChildren = {
   Dancehall101CheckinRoute: Dancehall101CheckinRoute,
   Dancehall101LeaderboardRoute: Dancehall101LeaderboardRoute,
   Dancehall101TicketRoute: Dancehall101TicketRoute,
+  JayReblSongFactoryRoute: JayReblSongFactoryRoute,
   JerkyJerkSlugRoute: JerkyJerkSlugRoute,
   PitchSlugRoute: PitchSlugRoute,
   SingOvaSundaysCityRoute: SingOvaSundaysCityRoute,

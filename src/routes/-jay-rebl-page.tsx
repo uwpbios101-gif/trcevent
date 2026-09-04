@@ -23,6 +23,7 @@ import {
   Flame,
   Mic,
   HelpCircle,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -223,6 +224,17 @@ export function JayReblPage() {
                 </Badge>
               </div>
             ))}
+          </div>
+
+          <div className="mt-6 rounded-xl border border-border bg-card p-5 text-center">
+            <p className="text-sm text-muted-foreground">
+              Want the full plan behind this? See how one song becomes fifty pieces of content.
+            </p>
+            <Button asChild variant="goldOutline" size="sm" className="mt-3">
+              <a href="/jay-rebl/song-factory">
+                Read the Song Factory Strategy <ArrowRight className="size-3.5" />
+              </a>
+            </Button>
           </div>
         </section>
 
