@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkFiDiBeachRouteImport } from './routes/work-fi-di-beach'
 import { Route as TechRiderRouteImport } from './routes/tech-rider'
 import { Route as StCatherineLinkupRouteImport } from './routes/st-catherine-linkup'
 import { Route as SingOvaSundaysAdminRouteImport } from './routes/sing-ova-sundays-admin'
@@ -42,6 +43,11 @@ import { Route as CharlyBlackStreetTeamRouteImport } from './routes/charly-black
 import { Route as CharlyBlackCompAdminRouteImport } from './routes/charly-black_.comp-admin'
 import { Route as CharlyBlackCompRouteImport } from './routes/charly-black_.comp'
 
+const WorkFiDiBeachRoute = WorkFiDiBeachRouteImport.update({
+  id: '/work-fi-di-beach',
+  path: '/work-fi-di-beach',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TechRiderRoute = TechRiderRouteImport.update({
   id: '/tech-rider',
   path: '/tech-rider',
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
+  '/work-fi-di-beach': typeof WorkFiDiBeachRoute
   '/charly-black/comp': typeof CharlyBlackCompRoute
   '/charly-black/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black/street-team': typeof CharlyBlackStreetTeamRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
+  '/work-fi-di-beach': typeof WorkFiDiBeachRoute
   '/charly-black/comp': typeof CharlyBlackCompRoute
   '/charly-black/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black/street-team': typeof CharlyBlackStreetTeamRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   '/sing-ova-sundays-admin': typeof SingOvaSundaysAdminRoute
   '/st-catherine-linkup': typeof StCatherineLinkupRoute
   '/tech-rider': typeof TechRiderRoute
+  '/work-fi-di-beach': typeof WorkFiDiBeachRoute
   '/charly-black_/comp': typeof CharlyBlackCompRoute
   '/charly-black_/comp-admin': typeof CharlyBlackCompAdminRoute
   '/charly-black_/street-team': typeof CharlyBlackStreetTeamRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
     | '/tech-rider'
+    | '/work-fi-di-beach'
     | '/charly-black/comp'
     | '/charly-black/comp-admin'
     | '/charly-black/street-team'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
     | '/tech-rider'
+    | '/work-fi-di-beach'
     | '/charly-black/comp'
     | '/charly-black/comp-admin'
     | '/charly-black/street-team'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/sing-ova-sundays-admin'
     | '/st-catherine-linkup'
     | '/tech-rider'
+    | '/work-fi-di-beach'
     | '/charly-black_/comp'
     | '/charly-black_/comp-admin'
     | '/charly-black_/street-team'
@@ -438,6 +450,7 @@ export interface RootRouteChildren {
   SingOvaSundaysAdminRoute: typeof SingOvaSundaysAdminRoute
   StCatherineLinkupRoute: typeof StCatherineLinkupRoute
   TechRiderRoute: typeof TechRiderRoute
+  WorkFiDiBeachRoute: typeof WorkFiDiBeachRoute
   CharlyBlackCompRoute: typeof CharlyBlackCompRoute
   CharlyBlackCompAdminRoute: typeof CharlyBlackCompAdminRoute
   CharlyBlackStreetTeamRoute: typeof CharlyBlackStreetTeamRoute
@@ -451,6 +464,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/work-fi-di-beach': {
+      id: '/work-fi-di-beach'
+      path: '/work-fi-di-beach'
+      fullPath: '/work-fi-di-beach'
+      preLoaderRoute: typeof WorkFiDiBeachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tech-rider': {
       id: '/tech-rider'
       path: '/tech-rider'
@@ -702,6 +722,7 @@ const rootRouteChildren: RootRouteChildren = {
   SingOvaSundaysAdminRoute: SingOvaSundaysAdminRoute,
   StCatherineLinkupRoute: StCatherineLinkupRoute,
   TechRiderRoute: TechRiderRoute,
+  WorkFiDiBeachRoute: WorkFiDiBeachRoute,
   CharlyBlackCompRoute: CharlyBlackCompRoute,
   CharlyBlackCompAdminRoute: CharlyBlackCompAdminRoute,
   CharlyBlackStreetTeamRoute: CharlyBlackStreetTeamRoute,
