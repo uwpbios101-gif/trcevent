@@ -9,7 +9,21 @@
 // quote) are pulled from his real SoundCloud profile (soundcloud.com/m-f-c-muzic,
 // user id 46287578) — don't invent tour dates, releases, or bios beyond what's
 // actually on his profiles.
-import { Instagram, Facebook, Twitter, Music2, Guitar, Mic2, Sliders } from "lucide-react";
+import {
+  Instagram,
+  Facebook,
+  Twitter,
+  Music2,
+  Guitar,
+  Mic2,
+  Sliders,
+  BookOpen,
+  Radio,
+  Footprints,
+  Flame,
+  Mic,
+  HelpCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TikTokIcon } from "@/components/site/BrandIcons";
@@ -43,6 +57,49 @@ const ROLES = [
   { icon: Sliders, label: "Producer" },
 ];
 
+// The recurring series concept behind "The Jay RebL Universe" positioning —
+// character/world first, songs as the payoff rather than the pitch. None of
+// these are live yet, hence "In development" on each card; don't relabel
+// them as active or invent episode counts/view numbers until real content
+// exists to back that up.
+const SERIES = [
+  {
+    icon: BookOpen,
+    title: "Jay RebL Stories",
+    description:
+      "The real story behind a song, told before you ever hear it — the song is the payoff, not the pitch.",
+  },
+  {
+    icon: Radio,
+    title: "Jay RebL Sessions",
+    description:
+      "Stripped-down, one-take performances — acoustic, studio, and live versions of the same song side by side.",
+  },
+  {
+    icon: Footprints,
+    title: "Jay RebL On the Street",
+    description:
+      "Strangers give one word, one sentence, or one story — Jay turns it into a melody on the spot.",
+  },
+  {
+    icon: Flame,
+    title: "Jay RebL Challenges",
+    description:
+      "The audience finishes the verse, votes on the hook, or helps decide what gets released next.",
+  },
+  {
+    icon: Mic,
+    title: "Jay RebL Freestyles",
+    description: "No script, no safety net — a beat, a word, and whatever comes out.",
+  },
+  {
+    icon: HelpCircle,
+    title: "Jay RebL Asks",
+    description:
+      "One uncomfortable, funny, or emotional question per episode — some of the answers become songs.",
+  },
+];
+
 const SELECTED_TRACKS = [
   { title: "Ride or Die", genre: "R&B & Soul", length: "2:42" },
   { title: "Jay Rebl_Cover Me", genre: "Dancehall", length: "3:47" },
@@ -60,12 +117,12 @@ export function jayReblHead() {
       {
         name: "description",
         content:
-          "Jay RebL — R&B/Hip-Hop/Reggae artist, guitarist, and producer from Spanish Town, Jamaica, now based in Evanston/Skokie, Illinois. Listen on SoundCloud, follow on Instagram, TikTok, X, and Facebook.",
+          "Jay RebL — R&B/Hip-Hop/Reggae artist, guitarist, and producer from Spanish Town, Jamaica, now based in Evanston/Skokie, Illinois. Stories, sessions, and street sessions, with the music as the payoff. Listen on SoundCloud, follow on Instagram, TikTok, X, and Facebook.",
       },
       { property: "og:title", content: "Jay RebL | TRC Events" },
       {
         property: "og:description",
-        content: "R&B/Hip-Hop/Reggae artist, guitarist, and producer from Spanish Town, Jamaica.",
+        content: "Not just an artist — a running story. The music is always where it lands.",
       },
       { property: "og:type", content: "profile" },
       { property: "og:image", content: imageUrl },
@@ -110,9 +167,13 @@ export function JayReblPage() {
             <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-6xl">
               Jay <span className="text-gradient-gold">RebL</span>
             </h1>
+            <p className="mt-1 font-display text-xl italic text-gradient-gold">
+              Not Just an Artist — a Running Story
+            </p>
             <p className="mt-3 max-w-lg text-muted-foreground">
               R&amp;B / Hip-Hop / Reggae artist, guitarist, and producer from Spanish Town, Jamaica
-              — now based in the Evanston/Skokie area, Illinois.
+              — now based in the Evanston/Skokie area, Illinois. The music is always where the story
+              lands, never the opening line.
             </p>
 
             <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
@@ -133,7 +194,7 @@ export function JayReblPage() {
                 </a>
               </Button>
               <Button asChild variant="goldOutline" size="xl">
-                <a href="#connect">Follow Jay RebL</a>
+                <a href="#universe">Follow the Story</a>
               </Button>
             </div>
           </div>
@@ -141,6 +202,30 @@ export function JayReblPage() {
       </section>
 
       <div className="mx-auto max-w-5xl space-y-20 px-4 py-16 sm:px-6">
+        {/* Universe */}
+        <section id="universe" className="scroll-mt-20">
+          <p className="eyebrow mb-2">Not "listen to my new song." A running story.</p>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">The Jay RebL Universe</h2>
+          <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
+            The plan isn't one song, one video. It's a handful of recurring series built around one
+            idea: give people a reason to check in on Jay RebL, not just a track to stream. The
+            music is always where each story lands — never the opening line.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {SERIES.map(({ icon: Icon, title, description }) => (
+              <div key={title} className="rounded-xl border border-border bg-card p-5">
+                <Icon className="size-5 text-gold" />
+                <h3 className="mt-3 font-display text-lg font-semibold">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
+                <Badge variant="outline" className="mt-4 border-gold/30 text-xs text-gold">
+                  In development
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Bio */}
         <section>
           <h2 className="font-display text-2xl font-bold sm:text-3xl">The Story</h2>
@@ -209,7 +294,8 @@ export function JayReblPage() {
         >
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Connect</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-            Follow for new music, and reach out directly on Instagram or Facebook for bookings.
+            Follow along as the series rolls out, and reach out directly on Instagram or Facebook
+            for bookings.
           </p>
           <div className="mx-auto mt-6 flex max-w-sm flex-wrap justify-center gap-2">
             {SOCIALS.map(({ platform, icon: Icon, href }) => (
