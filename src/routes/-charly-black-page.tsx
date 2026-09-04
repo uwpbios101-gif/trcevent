@@ -65,6 +65,7 @@ const OPENING_ACTS = [
   {
     name: "Jay Rebl",
     img: jayReblImg,
+    page: "/jay-rebl",
     social: [
       { platform: "TikTok", icon: TikTokIcon, href: "https://www.tiktok.com/@jayrebl" },
       { platform: "SoundCloud", icon: Music2, href: "https://soundcloud.com/m-f-c-muzic" },
@@ -342,7 +343,13 @@ function OpeningActs() {
               </div>
             </button>
             <div className="p-2 text-center">
-              <p className="text-sm font-medium">{act.name}</p>
+              {act.page ? (
+                <a href={act.page} className="text-sm font-medium hover:text-gold hover:underline">
+                  {act.name}
+                </a>
+              ) : (
+                <p className="text-sm font-medium">{act.name}</p>
+              )}
               {act.social.length > 0 && (
                 <div className="mt-1.5 flex items-center justify-center gap-2">
                   {act.social.map(({ platform, icon: Icon, href }) => (

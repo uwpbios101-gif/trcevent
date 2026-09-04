@@ -21,6 +21,7 @@ import { Route as PastEventsRouteImport } from './routes/past-events'
 import { Route as MinglesTuesdaysBrainstormRouteImport } from './routes/mingles-tuesdays-brainstorm'
 import { Route as KaraokeThursdaysBrainstormRouteImport } from './routes/karaoke-thursdays-brainstorm'
 import { Route as JustLaughWednesdayBrainstormRouteImport } from './routes/just-laugh-wednesday-brainstorm'
+import { Route as JayReblRouteImport } from './routes/jay-rebl'
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
 import { Route as GetStartedRouteImport } from './routes/get-started'
@@ -106,6 +107,11 @@ const JustLaughWednesdayBrainstormRoute =
     path: '/just-laugh-wednesday-brainstorm',
     getParentRoute: () => rootRouteImport,
   } as any)
+const JayReblRoute = JayReblRouteImport.update({
+  id: '/jay-rebl',
+  path: '/jay-rebl',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JamaicadayRoute = JamaicadayRouteImport.update({
   id: '/jamaicaday',
   path: '/jamaicaday',
@@ -225,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/jay-rebl': typeof JayReblRoute
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
   '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
@@ -260,6 +267,7 @@ export interface FileRoutesByTo {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/jay-rebl': typeof JayReblRoute
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
   '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
@@ -296,6 +304,7 @@ export interface FileRoutesById {
   '/get-started': typeof GetStartedRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
+  '/jay-rebl': typeof JayReblRoute
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
   '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
@@ -333,6 +342,7 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/jay-rebl'
     | '/just-laugh-wednesday-brainstorm'
     | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
@@ -368,6 +378,7 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/jay-rebl'
     | '/just-laugh-wednesday-brainstorm'
     | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/get-started'
     | '/jamaica64'
     | '/jamaicaday'
+    | '/jay-rebl'
     | '/just-laugh-wednesday-brainstorm'
     | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
@@ -439,6 +451,7 @@ export interface RootRouteChildren {
   GetStartedRoute: typeof GetStartedRoute
   Jamaica64Route: typeof Jamaica64Route
   JamaicadayRoute: typeof JamaicadayRoute
+  JayReblRoute: typeof JayReblRoute
   JustLaughWednesdayBrainstormRoute: typeof JustLaughWednesdayBrainstormRoute
   KaraokeThursdaysBrainstormRoute: typeof KaraokeThursdaysBrainstormRoute
   MinglesTuesdaysBrainstormRoute: typeof MinglesTuesdaysBrainstormRoute
@@ -546,6 +559,13 @@ declare module '@tanstack/react-router' {
       path: '/just-laugh-wednesday-brainstorm'
       fullPath: '/just-laugh-wednesday-brainstorm'
       preLoaderRoute: typeof JustLaughWednesdayBrainstormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jay-rebl': {
+      id: '/jay-rebl'
+      path: '/jay-rebl'
+      fullPath: '/jay-rebl'
+      preLoaderRoute: typeof JayReblRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jamaicaday': {
@@ -711,6 +731,7 @@ const rootRouteChildren: RootRouteChildren = {
   GetStartedRoute: GetStartedRoute,
   Jamaica64Route: Jamaica64Route,
   JamaicadayRoute: JamaicadayRoute,
+  JayReblRoute: JayReblRoute,
   JustLaughWednesdayBrainstormRoute: JustLaughWednesdayBrainstormRoute,
   KaraokeThursdaysBrainstormRoute: KaraokeThursdaysBrainstormRoute,
   MinglesTuesdaysBrainstormRoute: MinglesTuesdaysBrainstormRoute,
