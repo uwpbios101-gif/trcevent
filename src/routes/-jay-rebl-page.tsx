@@ -226,15 +226,28 @@ export function JayReblPage() {
             ))}
           </div>
 
-          <div className="mt-6 rounded-xl border border-border bg-card p-5 text-center">
-            <p className="text-sm text-muted-foreground">
-              Want the full plan behind this? See how one song becomes fifty pieces of content.
-            </p>
-            <Button asChild variant="goldOutline" size="sm" className="mt-3">
-              <a href="/jay-rebl/song-factory">
-                Read the Song Factory Strategy <ArrowRight className="size-3.5" />
-              </a>
-            </Button>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border border-border bg-card p-5 text-center">
+              <p className="text-sm text-muted-foreground">
+                Want the full plan behind this? See how one song becomes fifty pieces of content.
+              </p>
+              <Button asChild variant="goldOutline" size="sm" className="mt-3">
+                <a href="/jay-rebl/song-factory">
+                  Read the Song Factory Strategy <ArrowRight className="size-3.5" />
+                </a>
+              </Button>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-5 text-center">
+              <p className="text-sm text-muted-foreground">
+                Looking for the next riddim to write to? Browse the 20 foundational dancehall
+                riddims.
+              </p>
+              <Button asChild variant="goldOutline" size="sm" className="mt-3">
+                <a href="/jay-rebl/riddim-vault">
+                  Open the Riddim Vault <ArrowRight className="size-3.5" />
+                </a>
+              </Button>
+            </div>
           </div>
         </section>
 
