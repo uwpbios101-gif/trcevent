@@ -110,6 +110,75 @@ const SELECTED_TRACKS = [
   { title: "Jay Rebl_Nobody But You", genre: "R&B & Soul", length: "3:58" },
 ];
 
+// Every non-song project Jay RebL has in motion, grouped for the Projects &
+// Partnerships section below — kept as one array here (rather than
+// scattered ad hoc cards) so a new project just means one more entry, not a
+// new section to remember to build.
+const PROJECT_LINKS = {
+  grants: [
+    {
+      href: "/jay-rebl/reggae-day-proposal",
+      title: "International Reggae Day Proposal",
+      desc: "Community songwriting workshops + a free park showcase, drafted for Night Out in the Parks.",
+      status: "Draft",
+    },
+    {
+      href: "/jay-rebl/reggae-day-production",
+      title: "Technical Rider & Run of Show",
+      desc: "Personnel, stage/power, input list, and the minute-by-minute show schedule for the showcase.",
+      status: "Draft",
+    },
+    {
+      href: "/jay-rebl/nap-idea-submission",
+      title: "NAP Idea Submission (Park District Grant)",
+      desc: "DCASE Neighborhood Access Program application — the 4 required questions plus a recording script.",
+      status: "Draft",
+    },
+  ],
+  tributes: [
+    {
+      href: "/bob-marley-live-forever",
+      title: "Bob Marley: Live Forever",
+      desc: "The complete 1980 Stanley Theatre setlist, recreated live at The Wild Hare — Feb 2027.",
+      status: "Feb 2027",
+    },
+    {
+      href: "/jay-rebl/dolly-parton-tribute",
+      title: "I Will Always Love You — Dolly Parton Tribute",
+      desc: "A tribute cover in memory of Dolly Parton (1946–2026).",
+      status: "In development",
+    },
+  ],
+};
+
+function ProjectCard({
+  href,
+  title,
+  desc,
+  status,
+}: {
+  href: string;
+  title: string;
+  desc: string;
+  status: string;
+}) {
+  return (
+    <a
+      href={href}
+      className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-gold/50"
+    >
+      <Badge variant="outline" className="mb-3 w-fit border-gold/30 text-xs text-gold">
+        {status}
+      </Badge>
+      <h4 className="font-display text-base font-semibold group-hover:text-gold">{title}</h4>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{desc}</p>
+      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-gold">
+        View <ArrowRight className="size-3.5" />
+      </span>
+    </a>
+  );
+}
+
 export function jayReblHead() {
   const imageUrl = `${SITE_URL}${jayReblImg}`;
   return {
@@ -248,17 +317,36 @@ export function JayReblPage() {
                 </a>
               </Button>
             </div>
-            <div className="rounded-xl border border-border bg-card p-5 text-center">
-              <p className="text-sm text-muted-foreground">
-                A community songwriting workshop and free park showcase built around Jay RebL —
-                draft grant proposal, technical rider, and run of show.
-              </p>
-              <Button asChild variant="goldOutline" size="sm" className="mt-3">
-                <a href="/jay-rebl/reggae-day-proposal">
-                  International Reggae Day Proposal <ArrowRight className="size-3.5" />
-                </a>
-              </Button>
-            </div>
+          </div>
+        </section>
+
+        {/* Projects & Partnerships */}
+        <section id="projects" className="scroll-mt-20">
+          <p className="eyebrow mb-2">Beyond the Music</p>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">
+            Projects &amp; Partnerships
+          </h2>
+          <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
+            Grant proposals, tribute performances, and the production packets behind them —
+            everything Jay RebL has in motion right now, in one place.
+          </p>
+
+          <h3 className="mb-3 mt-8 text-xs font-semibold uppercase tracking-wider text-gold">
+            Grants &amp; Community
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {PROJECT_LINKS.grants.map((p) => (
+              <ProjectCard key={p.href} {...p} />
+            ))}
+          </div>
+
+          <h3 className="mb-3 mt-8 text-xs font-semibold uppercase tracking-wider text-gold">
+            Tribute Performances
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {PROJECT_LINKS.tributes.map((p) => (
+              <ProjectCard key={p.href} {...p} />
+            ))}
           </div>
         </section>
 
