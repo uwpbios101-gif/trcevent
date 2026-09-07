@@ -4,14 +4,23 @@
 //
 // Technical rider + run of show for the "International Reggae Day: Roots to
 // Modern Sound" park showcase (companion to -jay-rebl-reggae-day-proposal-page.tsx).
-// No venue, date, or exact gear list is confirmed yet, so every technical
-// spec below is a professional-standard DRAFT starting point for a small
-// acoustic-to-electric reggae/dancehall ensemble -- not a claim about
+// No venue or date is confirmed yet, so the site/power/backline specs below
+// remain a professional-standard DRAFT starting point -- not a claim about
 // equipment that has actually been booked. Confirm every line with the
-// venue's own production contact and Jay RebL's monitor/FOH engineer
-// before a show date is set. Times in the run of show are relative
-// (T+minutes) with an illustrative clock-time column assuming a 5:00 PM
-// start -- shift the whole column once a real start time is confirmed.
+// venue's own production contact before a show date is set.
+//
+// The two production companies ARE real and already established on TRC
+// Events' own roster, not invented for this page: Prestige Sound (selectas)
+// and Q-Ality Sound (PA/stage for bands -- the same role Q-Ality already
+// fills for TRC Events' Charly Black shows, see -charly-black-page.tsx)
+// both appear on -chicago-vybez-page.tsx's SOUND_SYSTEMS list, and Q-Ality
+// has its own tagline/contact on -jamaicaday-page.tsx ("The Difference Is
+// Clear," 773-554-9694). The three named selectas -- Bad Chargie, Dedo High
+// Grade, and Buju -- are likewise real, pulled from
+// -chicago-vybez-page.tsx's SELECTAS list, not invented. Times in the run
+// of show are relative (T+minutes) with an illustrative clock-time column
+// assuming a 5:00 PM start -- shift the whole column once a real start
+// time is confirmed.
 import { ArrowRight, Zap, Mic2, Users2, CloudRain, Volume2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,13 +39,14 @@ const PERSONNEL = [
       "Bass, percussion/Nyabinghi drums, second guitar or keys — headcount to be finalized with the band",
   },
   {
-    role: "Sound system selector(s) (1-2)",
-    detail: "Foundational riddim juggling for Act II and bed tracks under Act III",
+    role: "Prestige Sound — Selectas",
+    detail:
+      "Main selectas: Bad Chargie, Dedo High Grade, and Buju. Foundational riddim juggling for Act II and bed tracks under Act III.",
   },
   {
-    role: "FOH sound engineer",
+    role: "Q-Ality Sound — PA & Stage",
     detail:
-      "One dedicated engineer for the full 2.5-hour set — not shared with another act's changeover",
+      "PA and stage sound reinforcement for the full band across Acts I and III — one dedicated engineer for the full 2.5-hour set, not shared with another act's changeover.",
   },
   {
     role: "Stage manager / production lead",
@@ -52,14 +62,14 @@ const INPUT_LIST = [
   { ch: "4", source: "Bass", type: "DI" },
   { ch: "5-6", source: "Percussion / Nyabinghi drums", type: "2x condenser or dynamic, overhead" },
   { ch: "7", source: "Backing vocal (if applicable)", type: "Handheld or headset condenser" },
-  { ch: "8", source: "Selector / sound-system line feed", type: "Stereo line in (2x TRS/XLR)" },
+  { ch: "8", source: "Prestige Sound line feed", type: "Stereo line in (2x TRS/XLR)" },
   { ch: "9", source: "MC/host mic", type: "Handheld dynamic" },
 ];
 
 const BACKLINE_BRINGS = [
   "Acoustic guitar with pickup, tuner",
   "Electric guitar + pedalboard",
-  "Selector's own controller/mixer and music library",
+  "Prestige Sound's own controller/mixer and music library",
   "Hand percussion (if the percussionist supplies their own)",
 ];
 
@@ -82,7 +92,7 @@ const RUN_OF_SHOW = [
     t: "T+0:00",
     clock: "5:00 PM",
     segment: "Doors / Welcome",
-    detail: "House music (selector), crowd settles, community info tables open.",
+    detail: "House music (Prestige Sound), crowd settles, community info tables open.",
   },
   {
     t: "T+0:05",
@@ -110,7 +120,7 @@ const RUN_OF_SHOW = [
     clock: "5:55 PM",
     segment: "Act II — Sound System Transition",
     detail:
-      "Selector(s) take the stack, juggling foundational riddims. Jay RebL hosts and freestyles live over the transition, working the crowd.",
+      "Prestige Sound's selectas — Bad Chargie, Dedo High Grade, and Buju — take the stack, juggling foundational riddims. Jay RebL hosts and freestyles live over the transition, working the crowd.",
   },
   {
     t: "T+1:25",
@@ -160,9 +170,10 @@ export function ReggaeDayProductionPage() {
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
             "International Reggae Day: Roots to Modern Sound" — a 2.5-hour acoustic-to-electric park
-            showcase. Draft specs below are a professional starting point, not confirmed equipment —
-            finalize every line with the venue and Jay RebL's sound engineer once a date and site
-            are locked.
+            showcase, with Prestige Sound on selectas and Q-Ality Sound on PA and stage. Draft site/
+            power/backline specs below are a professional starting point, not confirmed equipment —
+            finalize every line with the venue and both sound companies once a date and site are
+            locked.
           </p>
           <div className="mt-6 flex justify-center">
             <Badge variant="outline" className="border-gold/40 text-gold">
@@ -226,8 +237,8 @@ export function ReggaeDayProductionPage() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Two dedicated 20A circuits minimum — one for backline/stage power, one for the FOH
                 sound system — plus generator backup if the site has no house power. Exact draw
-                depends on the final PA size; confirm with whichever sound vendor the venue or NOITP
-                assigns.
+                depends on Q-Ality Sound's final PA size for the site; confirm directly with them
+                once a venue is locked.
               </p>
             </div>
           </div>
@@ -264,8 +275,8 @@ export function ReggaeDayProductionPage() {
             </table>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            Monitors: 3-4 wedge mixes minimum (vocal, band, selector) — confirm in-ear availability
-            separately if the budget supports it.
+            Monitors: 3-4 wedge mixes minimum (vocal, band, Prestige Sound selectas) — confirm
+            in-ear availability separately with Q-Ality Sound if the budget supports it.
           </p>
         </section>
 
