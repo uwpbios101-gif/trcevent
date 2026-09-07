@@ -33,6 +33,7 @@ import { Route as ContractAdminRouteImport } from './routes/contract-admin'
 import { Route as ContractRouteImport } from './routes/contract'
 import { Route as ChicagoVybezRouteImport } from './routes/chicago-vybez'
 import { Route as CharlyBlackRouteImport } from './routes/charly-black'
+import { Route as BobMarleyLiveForeverRouteImport } from './routes/bob-marley-live-forever'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SingOvaSundaysCityRouteImport } from './routes/sing-ova-sundays_.$city'
 import { Route as PitchSlugRouteImport } from './routes/pitch.$slug'
@@ -172,6 +173,11 @@ const CharlyBlackRoute = CharlyBlackRouteImport.update({
   path: '/charly-black',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BobMarleyLiveForeverRoute = BobMarleyLiveForeverRouteImport.update({
+  id: '/bob-marley-live-forever',
+  path: '/bob-marley-live-forever',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -253,6 +259,7 @@ const CharlyBlackCompRoute = CharlyBlackCompRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bob-marley-live-forever': typeof BobMarleyLiveForeverRoute
   '/charly-black': typeof CharlyBlackRoute
   '/chicago-vybez': typeof ChicagoVybezRoute
   '/contract': typeof ContractRoute
@@ -294,6 +301,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bob-marley-live-forever': typeof BobMarleyLiveForeverRoute
   '/charly-black': typeof CharlyBlackRoute
   '/chicago-vybez': typeof ChicagoVybezRoute
   '/contract': typeof ContractRoute
@@ -336,6 +344,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bob-marley-live-forever': typeof BobMarleyLiveForeverRoute
   '/charly-black': typeof CharlyBlackRoute
   '/chicago-vybez': typeof ChicagoVybezRoute
   '/contract': typeof ContractRoute
@@ -379,6 +388,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bob-marley-live-forever'
     | '/charly-black'
     | '/chicago-vybez'
     | '/contract'
@@ -420,6 +430,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bob-marley-live-forever'
     | '/charly-black'
     | '/chicago-vybez'
     | '/contract'
@@ -461,6 +472,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/bob-marley-live-forever'
     | '/charly-black'
     | '/chicago-vybez'
     | '/contract'
@@ -503,6 +515,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BobMarleyLiveForeverRoute: typeof BobMarleyLiveForeverRoute
   CharlyBlackRoute: typeof CharlyBlackRoute
   ChicagoVybezRoute: typeof ChicagoVybezRoute
   ContractRoute: typeof ContractRoute
@@ -713,6 +726,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CharlyBlackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bob-marley-live-forever': {
+      id: '/bob-marley-live-forever'
+      path: '/bob-marley-live-forever'
+      fullPath: '/bob-marley-live-forever'
+      preLoaderRoute: typeof BobMarleyLiveForeverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -823,6 +843,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BobMarleyLiveForeverRoute: BobMarleyLiveForeverRoute,
   CharlyBlackRoute: CharlyBlackRoute,
   ChicagoVybezRoute: ChicagoVybezRoute,
   ContractRoute: ContractRoute,
