@@ -41,6 +41,7 @@ import { Route as JayReblSongFactoryRouteImport } from './routes/jay-rebl_.song-
 import { Route as JayReblRiddimVaultRouteImport } from './routes/jay-rebl_.riddim-vault'
 import { Route as JayReblReggaeDayProposalRouteImport } from './routes/jay-rebl_.reggae-day-proposal'
 import { Route as JayReblReggaeDayProductionRouteImport } from './routes/jay-rebl_.reggae-day-production'
+import { Route as JayReblNapIdeaSubmissionRouteImport } from './routes/jay-rebl_.nap-idea-submission'
 import { Route as Dancehall101TicketRouteImport } from './routes/dancehall-101_.ticket'
 import { Route as Dancehall101LeaderboardRouteImport } from './routes/dancehall-101_.leaderboard'
 import { Route as Dancehall101CheckinRouteImport } from './routes/dancehall-101_.checkin'
@@ -213,6 +214,12 @@ const JayReblReggaeDayProductionRoute =
     path: '/jay-rebl/reggae-day-production',
     getParentRoute: () => rootRouteImport,
   } as any)
+const JayReblNapIdeaSubmissionRoute =
+  JayReblNapIdeaSubmissionRouteImport.update({
+    id: '/jay-rebl_/nap-idea-submission',
+    path: '/jay-rebl/nap-idea-submission',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const Dancehall101TicketRoute = Dancehall101TicketRouteImport.update({
   id: '/dancehall-101_/ticket',
   path: '/dancehall-101/ticket',
@@ -276,6 +283,7 @@ export interface FileRoutesByFullPath {
   '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101/ticket': typeof Dancehall101TicketRoute
+  '/jay-rebl/nap-idea-submission': typeof JayReblNapIdeaSubmissionRoute
   '/jay-rebl/reggae-day-production': typeof JayReblReggaeDayProductionRoute
   '/jay-rebl/reggae-day-proposal': typeof JayReblReggaeDayProposalRoute
   '/jay-rebl/riddim-vault': typeof JayReblRiddimVaultRoute
@@ -316,6 +324,7 @@ export interface FileRoutesByTo {
   '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101/ticket': typeof Dancehall101TicketRoute
+  '/jay-rebl/nap-idea-submission': typeof JayReblNapIdeaSubmissionRoute
   '/jay-rebl/reggae-day-production': typeof JayReblReggaeDayProductionRoute
   '/jay-rebl/reggae-day-proposal': typeof JayReblReggaeDayProposalRoute
   '/jay-rebl/riddim-vault': typeof JayReblRiddimVaultRoute
@@ -357,6 +366,7 @@ export interface FileRoutesById {
   '/dancehall-101_/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101_/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101_/ticket': typeof Dancehall101TicketRoute
+  '/jay-rebl_/nap-idea-submission': typeof JayReblNapIdeaSubmissionRoute
   '/jay-rebl_/reggae-day-production': typeof JayReblReggaeDayProductionRoute
   '/jay-rebl_/reggae-day-proposal': typeof JayReblReggaeDayProposalRoute
   '/jay-rebl_/riddim-vault': typeof JayReblRiddimVaultRoute
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/dancehall-101/checkin'
     | '/dancehall-101/leaderboard'
     | '/dancehall-101/ticket'
+    | '/jay-rebl/nap-idea-submission'
     | '/jay-rebl/reggae-day-production'
     | '/jay-rebl/reggae-day-proposal'
     | '/jay-rebl/riddim-vault'
@@ -439,6 +450,7 @@ export interface FileRouteTypes {
     | '/dancehall-101/checkin'
     | '/dancehall-101/leaderboard'
     | '/dancehall-101/ticket'
+    | '/jay-rebl/nap-idea-submission'
     | '/jay-rebl/reggae-day-production'
     | '/jay-rebl/reggae-day-proposal'
     | '/jay-rebl/riddim-vault'
@@ -479,6 +491,7 @@ export interface FileRouteTypes {
     | '/dancehall-101_/checkin'
     | '/dancehall-101_/leaderboard'
     | '/dancehall-101_/ticket'
+    | '/jay-rebl_/nap-idea-submission'
     | '/jay-rebl_/reggae-day-production'
     | '/jay-rebl_/reggae-day-proposal'
     | '/jay-rebl_/riddim-vault'
@@ -520,6 +533,7 @@ export interface RootRouteChildren {
   Dancehall101CheckinRoute: typeof Dancehall101CheckinRoute
   Dancehall101LeaderboardRoute: typeof Dancehall101LeaderboardRoute
   Dancehall101TicketRoute: typeof Dancehall101TicketRoute
+  JayReblNapIdeaSubmissionRoute: typeof JayReblNapIdeaSubmissionRoute
   JayReblReggaeDayProductionRoute: typeof JayReblReggaeDayProductionRoute
   JayReblReggaeDayProposalRoute: typeof JayReblReggaeDayProposalRoute
   JayReblRiddimVaultRoute: typeof JayReblRiddimVaultRoute
@@ -755,6 +769,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JayReblReggaeDayProductionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jay-rebl_/nap-idea-submission': {
+      id: '/jay-rebl_/nap-idea-submission'
+      path: '/jay-rebl/nap-idea-submission'
+      fullPath: '/jay-rebl/nap-idea-submission'
+      preLoaderRoute: typeof JayReblNapIdeaSubmissionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dancehall-101_/ticket': {
       id: '/dancehall-101_/ticket'
       path: '/dancehall-101/ticket'
@@ -832,6 +853,7 @@ const rootRouteChildren: RootRouteChildren = {
   Dancehall101CheckinRoute: Dancehall101CheckinRoute,
   Dancehall101LeaderboardRoute: Dancehall101LeaderboardRoute,
   Dancehall101TicketRoute: Dancehall101TicketRoute,
+  JayReblNapIdeaSubmissionRoute: JayReblNapIdeaSubmissionRoute,
   JayReblReggaeDayProductionRoute: JayReblReggaeDayProductionRoute,
   JayReblReggaeDayProposalRoute: JayReblReggaeDayProposalRoute,
   JayReblRiddimVaultRoute: JayReblRiddimVaultRoute,

@@ -125,9 +125,14 @@ export function ReggaeDayProposalPage() {
                 <ArrowRight className="size-4 rotate-180" /> Back to Jay RebL
               </a>
             </Button>
-            <Button asChild variant="gold" size="lg">
+            <Button asChild variant="goldOutline" size="lg">
               <a href="/jay-rebl/reggae-day-production">
                 Technical Rider &amp; Run of Show <ArrowRight className="size-4" />
+              </a>
+            </Button>
+            <Button asChild variant="gold" size="lg">
+              <a href="/jay-rebl/nap-idea-submission">
+                NAP Idea Submission <ArrowRight className="size-4" />
               </a>
             </Button>
           </div>
