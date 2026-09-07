@@ -69,6 +69,90 @@ const ENCORES = [
   "Get Up, Stand Up",
 ];
 
+// The real 11-piece configuration onstage Sept 23, 1980: Marley, 7 members of
+// The Wailers, and the 3 I Threes vocalists. Jay RebL is confirmed for the
+// Marley role; the other ten chairs go to Indika Reggae Band, with specific
+// member-to-role assignments still TBD.
+const LINEUP = [
+  {
+    section: "Frontman",
+    role: "Lead Vocals & Rhythm Guitar",
+    original: "Bob Marley",
+    cast: "Jay RebL",
+    confirmed: true,
+  },
+  {
+    section: "The Wailers",
+    role: "Bass Guitar",
+    original: 'Aston "Family Man" Barrett',
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The Wailers",
+    role: "Drums",
+    original: 'Carlton "Carly" Barrett',
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The Wailers",
+    role: "Percussion",
+    original: 'Alvin "Seeco" Patterson',
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The Wailers",
+    role: "Lead Guitar / Backing Vocals",
+    original: "Junior Marvin",
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The Wailers",
+    role: "Lead Guitar",
+    original: "Al Anderson",
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The Wailers",
+    role: "Keyboards / Piano / Backing Vocals",
+    original: "Tyrone Downie",
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The Wailers",
+    role: "Keyboards / Organ",
+    original: 'Earl "Wya" Lindo',
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The I Threes",
+    role: "Backing Vocals",
+    original: "Rita Marley",
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The I Threes",
+    role: "Backing Vocals",
+    original: "Judy Mowatt",
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+  {
+    section: "The I Threes",
+    role: "Backing Vocals",
+    original: "Marcia Griffiths",
+    cast: "Indika Reggae Band",
+    confirmed: false,
+  },
+] as const;
+
 export function bobMarleyLiveForeverHead() {
   const imageUrl = `${SITE_URL}${flyerImg}`;
   return {
@@ -171,6 +255,9 @@ export function BobMarleyLiveForeverPage() {
             </Button>
             <Button asChild variant="goldOutline" size="xl">
               <a href="#setlist">See the Setlist</a>
+            </Button>
+            <Button asChild variant="goldOutline" size="xl">
+              <a href="#lineup">See the Lineup</a>
             </Button>
           </div>
 
@@ -304,6 +391,111 @@ export function BobMarleyLiveForeverPage() {
               A real ticket stub — Crystal Palace Bowl, London, Saturday 7th June 1980.
             </figcaption>
           </figure>
+        </section>
+
+        {/* The Lineup */}
+        <section id="lineup" className="scroll-mt-20">
+          <p className="eyebrow mb-2">Eleven Musicians, Then and Now</p>
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">The Lineup</h2>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            It wasn't a solo turn. Eleven musicians shared that Stanley Theatre stage: Marley
+            himself, seven members of The Wailers, and the three vocalists of The I Threes. The
+            Chicago recreation is built to match that same eleven-piece configuration, role for
+            role.
+          </p>
+
+          {/* Mobile: stacked cards (avoids horizontal-scrolling the cast column out of view) */}
+          <div className="mt-6 space-y-3 sm:hidden">
+            {LINEUP.map((row, i) => {
+              const isNewSection = i === 0 || LINEUP[i - 1].section !== row.section;
+              return (
+                <div key={row.role + row.original}>
+                  {isNewSection && (
+                    <p className="mb-2 mt-5 text-[10px] font-semibold uppercase tracking-wider text-gold first:mt-0">
+                      {row.section}
+                    </p>
+                  )}
+                  <div className="rounded-xl border border-border bg-card p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      {row.role}
+                    </p>
+                    <p className="mt-2 text-sm">
+                      <span className="text-muted-foreground">1980: </span>
+                      <span className="font-medium">{row.original}</span>
+                    </p>
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5 text-sm">
+                      <span className="text-muted-foreground">2027: </span>
+                      {row.confirmed ? (
+                        <span className="font-semibold text-gold">{row.cast}</span>
+                      ) : (
+                        <>
+                          <span>{row.cast}</span>
+                          <Badge variant="outline" className="border-gold/40 text-[10px] text-gold">
+                            Member TBD
+                          </Badge>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop/tablet: full comparison table */}
+          <div className="mt-6 hidden sm:block">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
+                  <th className="py-2 pr-4 font-semibold">Role</th>
+                  <th className="py-2 pr-4 font-semibold">Sept 23, 1980 — Stanley Theatre</th>
+                  <th className="py-2 font-semibold">Feb 6, 2027 — The Wild Hare</th>
+                </tr>
+              </thead>
+              <tbody>
+                {LINEUP.map((row, i) => {
+                  const isNewSection = i === 0 || LINEUP[i - 1].section !== row.section;
+                  return (
+                    <tr
+                      key={row.role + row.original}
+                      className="border-b border-border/50 align-top"
+                    >
+                      <td className="py-3 pr-4">
+                        {isNewSection && (
+                          <span className="mb-0.5 block text-[10px] font-semibold uppercase tracking-wider text-gold">
+                            {row.section}
+                          </span>
+                        )}
+                        <span className="text-muted-foreground">{row.role}</span>
+                      </td>
+                      <td className="py-3 pr-4 font-medium">{row.original}</td>
+                      <td className="py-3">
+                        {row.confirmed ? (
+                          <span className="font-semibold text-gold">{row.cast}</span>
+                        ) : (
+                          <div className="flex flex-wrap items-center gap-1.5 text-muted-foreground">
+                            {row.cast}
+                            <Badge
+                              variant="outline"
+                              className="border-gold/40 text-[10px] text-gold"
+                            >
+                              Member TBD
+                            </Badge>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+            Jay RebL takes the Bob Marley role — confirmed. The other ten chairs, covering Wailers
+            instrumentation and I Threes harmonies, are filled by Indika Reggae Band; which member
+            plays which part is still being finalized and will be announced closer to the date.
+          </p>
         </section>
 
         {/* The Recreation */}
