@@ -3,11 +3,17 @@
 // src/routes/README.md.
 //
 // Tribute page for The Wild Hare's "Bob Marley: Live Forever — The Final
-// Concert, Recreated Live" (Feb 2027, Jay RebL & The Wailers Experience
-// performing the Sept 23, 1980 Stanley Theatre setlist). Two real
-// historical artifacts are used as photos: a Stanley Theatre backstage
-// pass (that actual night) and a Crystal Palace Bowl ticket stub (June 7,
-// 1980, same Uprising tour, his last-ever London show).
+// Concert, Recreated Live" (Feb 2027, Jay RebL performing the Sept 23,
+// 1980 Stanley Theatre setlist, backed by Indika Reggae Band -- the flyer
+// itself bills the backing band as "The Wailers Experience," but the real
+// band is Indika, a real Chicago reggae institution since the mid-1990s
+// with its own page at selassiefest.com/main-stage/indika-reggae-band.html
+// -- they've previously played The Wild Hare and backed reggae legends
+// including Gregory Isaacs, Luciano, Richie Spice, and Calypso Rose, per
+// that page). Two real historical artifacts are used as photos: a Stanley
+// Theatre backstage pass (that actual night) and a Crystal Palace Bowl
+// ticket stub (June 7, 1980, same Uprising tour, his last-ever London
+// show).
 //
 // Every historical claim below was verified against real sources before
 // writing, not recalled from memory alone -- notably: Marley collapsed
@@ -20,8 +26,11 @@
 // September 23, 1980 • Stanley Theatre • Pittsburgh, PA" (released Feb
 // 2011) almost exactly (the album additionally opens with a ~30-second
 // spoken "Greetings" intro the flyer omits). He died May 11, 1981, in
-// Miami. The Feb 2027 show's exact date is NOT given on the flyer (it's
-// tied to his Feb 6, 1945 birthday) -- don't invent one; say so on the page.
+// Miami. The flyer gives the show's date as Saturday, February 6, 2027 --
+// Bob Marley's actual birthday (Feb 6, 1945, verified earlier). Feb 6,
+// 2027 does fall on a Saturday, confirmed independently by date
+// arithmetic, not just trusted from the image. No exact showtime is
+// given, so that stays marked TBD rather than invented.
 import { CalendarDays, MapPin, Ticket, Share2, Instagram, Facebook, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -67,7 +76,7 @@ export function bobMarleyLiveForeverHead() {
       {
         name: "description",
         content:
-          "The Wild Hare presents Bob Marley: Live Forever — Jay RebL & The Wailers Experience perform the complete 20-song setlist from Bob Marley's actual final concert, September 23, 1980, Stanley Theatre, Pittsburgh. February 2027, Chicago.",
+          "The Wild Hare presents Bob Marley: Live Forever — Jay RebL, backed by Chicago's Indika Reggae Band, performs the complete 20-song setlist from Bob Marley's actual final concert, September 23, 1980, Stanley Theatre, Pittsburgh. February 2027, Chicago.",
       },
       {
         property: "og:title",
@@ -76,7 +85,7 @@ export function bobMarleyLiveForeverHead() {
       {
         property: "og:description",
         content:
-          "The complete 1980 Stanley Theatre setlist, performed live by Jay RebL & The Wailers Experience at The Wild Hare, Chicago. February 2027.",
+          "The complete 1980 Stanley Theatre setlist, performed live by Jay RebL and Indika Reggae Band at The Wild Hare, Chicago. February 2027.",
       },
       { property: "og:type", content: "article" },
       { property: "og:image", content: imageUrl },
@@ -93,8 +102,37 @@ export function bobMarleyLiveForeverHead() {
 }
 
 export function BobMarleyLiveForeverPage() {
+  const eventSchema = {
+    "@context": "https://schema.org",
+    "@type": "MusicEvent",
+    name: "Bob Marley: Live Forever — The Final Concert, Recreated Live",
+    startDate: "2027-02-06",
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    image: [`${SITE_URL}${flyerImg}`],
+    location: {
+      "@type": "Place",
+      name: VENUE_NAME,
+      address: VENUE_ADDRESS,
+    },
+    organizer: {
+      "@type": "Organization",
+      name: "The Wild Hare",
+    },
+    performer: [
+      { "@type": "MusicGroup", name: "Jay RebL" },
+      { "@type": "MusicGroup", name: "Indika Reggae Band" },
+    ],
+  };
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
+      />
+
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border bg-card">
         <div className="mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-20">
@@ -107,13 +145,13 @@ export function BobMarleyLiveForeverPage() {
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
             The complete 20-song setlist from Bob Marley's actual final concert — September 23,
-            1980, the Stanley Theatre, Pittsburgh — performed live, start to finish, by Jay RebL
-            &amp; The Wailers Experience.
+            1980, the Stanley Theatre, Pittsburgh — performed live, start to finish, by Jay RebL,
+            backed by Indika Reggae Band.
           </p>
 
           <div className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
-              <CalendarDays className="size-4 text-gold" /> February 2027
+              <CalendarDays className="size-4 text-gold" /> Saturday, February 6, 2027
             </span>
             <span className="inline-flex items-center gap-1.5">
               <MapPin className="size-4 text-gold" /> {VENUE_NAME}, Chicago
@@ -121,7 +159,7 @@ export function BobMarleyLiveForeverPage() {
           </div>
           <div className="mt-3 flex justify-center">
             <Badge variant="outline" className="border-gold/40 text-xs text-gold">
-              Bob Marley's Birthday Celebration — exact date TBD, check thewildhare.com
+              Bob Marley's Birthday Celebration — showtime TBD, check thewildhare.com
             </Badge>
           </div>
 
@@ -136,7 +174,7 @@ export function BobMarleyLiveForeverPage() {
 
           <img
             src={flyerImg}
-            alt="Bob Marley: Live Forever — The Final Concert, Recreated Live. The Wild Hare Chicago presents Jay RebL & The Wailers Experience performing the complete 1980 Pittsburgh concert setlist. February 2027, Bob Marley's Birthday Celebration."
+            alt="Bob Marley: Live Forever — The Final Concert, Recreated Live. The Wild Hare Chicago presents Jay RebL & The Wailers Experience performing the complete 1980 Pittsburgh concert setlist. Saturday, February 6, 2027, Bob Marley's Birthday Celebration."
             className="mx-auto mt-10 w-full max-w-sm rounded-2xl border border-gold/30 shadow-[0_0_60px_-15px_var(--color-gold)]"
           />
         </div>
@@ -270,13 +308,19 @@ export function BobMarleyLiveForeverPage() {
         <section className="rounded-2xl border border-gold/30 bg-card p-6 sm:p-8">
           <p className="eyebrow mb-2">Forty-Seven Years Later</p>
           <h2 className="font-display text-2xl font-bold sm:text-3xl">
-            The Recreation — Chicago, Feb 2027
+            The Recreation — Chicago, Feb 6, 2027
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             The Wild Hare — Chicago's reggae capital — is bringing that final set back to the stage.
-            Jay RebL, backed by The Wailers Experience, performs the complete 20-song Stanley
-            Theatre setlist start to finish, as part of the Wild Hare's Bob Marley Birthday
-            Celebration.
+            Jay RebL, backed by Chicago's own Indika Reggae Band (billed on the flyer as "The
+            Wailers Experience"), performs the complete 20-song Stanley Theatre setlist start to
+            finish, as part of the Wild Hare's Bob Marley Birthday Celebration — timed to Bob
+            Marley's actual birthday.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            Indika is no stranger to this stage or this material: a Chicago reggae institution since
+            the mid-1990s, they've played The Wild Hare before and have served as backing band for
+            reggae legends including Gregory Isaacs, Luciano, Richie Spice, and Calypso Rose.
           </p>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -292,16 +336,25 @@ export function BobMarleyLiveForeverPage() {
               <div>
                 <p className="font-semibold">Tickets</p>
                 <p className="text-sm text-muted-foreground">
-                  Per the flyer: on sale now at thewildhare.com. Exact February 2027 date not yet
-                  posted — check the venue directly before making plans.
+                  Per the flyer: on sale now at thewildhare.com. Exact showtime not yet posted —
+                  check the venue directly before making plans.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-6 flex flex-wrap gap-3">
             <Button asChild variant="goldOutline" size="lg">
-              <a href="/jay-rebl">Meet Jay RebL &amp; The Wailers Experience</a>
+              <a href="/jay-rebl">Meet Jay RebL</a>
+            </Button>
+            <Button asChild variant="goldOutline" size="lg">
+              <a
+                href="https://selassiefest.com/main-stage/indika-reggae-band.html"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Meet Indika Reggae Band
+              </a>
             </Button>
           </div>
 
