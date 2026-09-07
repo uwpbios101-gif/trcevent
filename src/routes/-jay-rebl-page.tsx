@@ -248,6 +248,17 @@ export function JayReblPage() {
                 </a>
               </Button>
             </div>
+            <div className="rounded-xl border border-border bg-card p-5 text-center">
+              <p className="text-sm text-muted-foreground">
+                A community songwriting workshop and free park showcase built around Jay RebL —
+                draft grant proposal, technical rider, and run of show.
+              </p>
+              <Button asChild variant="goldOutline" size="sm" className="mt-3">
+                <a href="/jay-rebl/reggae-day-proposal">
+                  International Reggae Day Proposal <ArrowRight className="size-3.5" />
+                </a>
+              </Button>
+            </div>
           </div>
         </section>
 
