@@ -15,6 +15,7 @@
 import { ArrowRight, Zap, Mic2, Users2, CloudRain, Volume2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { JayReblSubNav } from "@/components/site/JayReblSubNav";
 
 const SITE_URL = "https://trcevent.com";
 
@@ -149,6 +150,7 @@ export function reggaeDayProductionHead() {
 export function ReggaeDayProductionPage() {
   return (
     <div>
+      <JayReblSubNav />
       {/* Hero */}
       <section className="border-b border-border bg-card">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 sm:py-20">

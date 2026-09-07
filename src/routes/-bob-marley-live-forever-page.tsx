@@ -34,6 +34,7 @@
 import { CalendarDays, MapPin, Ticket, Share2, Instagram, Facebook, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { JayReblSubNav } from "@/components/site/JayReblSubNav";
 import { SOCIAL_LINKS } from "@/lib/social";
 import flyerImg from "@/assets/bob-marley-live-forever-flyer.jpg";
 import backstagePassImg from "@/assets/bob-marley-stanley-theatre-backstage-pass.jpg";
@@ -132,6 +133,7 @@ export function BobMarleyLiveForeverPage() {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
       />
+      <JayReblSubNav />
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border bg-card">

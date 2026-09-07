@@ -28,6 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TikTokIcon } from "@/components/site/BrandIcons";
+import { JayReblSubNav } from "@/components/site/JayReblSubNav";
 import jayReblImg from "@/assets/opening-act-jayrebl.jpg";
 
 const SITE_URL = "https://trcevent.com";
@@ -223,6 +224,7 @@ export function JayReblPage() {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
       />
+      <JayReblSubNav />
 
       {/* Hero */}
       <section className="border-b border-border bg-card">
