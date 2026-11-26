@@ -8,6 +8,7 @@
 // is the plain "what's on, every day" index.
 import { CalendarDays, UtensilsCrossed } from "lucide-react";
 import { JerkyJerkLineupGrid } from "@/components/site/JerkyJerkLineupGrid";
+import ijjFlyer from "@/assets/irie-jerk-juggling-flyer.png";
 
 const SITE_URL = "https://trcevent.com";
 
@@ -58,6 +59,30 @@ export function EventsPage() {
       </section>
 
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+        <a
+          href="/irie-jerk-and-juggling"
+          className="mb-12 flex flex-col items-center gap-6 rounded-xl border border-gold/40 bg-card p-6 transition-colors hover:border-gold sm:flex-row"
+        >
+          <img
+            src={ijjFlyer}
+            alt="Irie Jerk & Juggling flyer"
+            className="w-40 shrink-0 rounded-lg border border-gold/30"
+          />
+          <div className="text-center sm:text-left">
+            <p className="eyebrow mb-2">Featured · Starts Thursday, Dec 3</p>
+            <h2 className="font-display text-3xl font-extrabold">
+              Irie Jerk <span className="text-gradient-gold">&amp; Juggling</span>
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Free Thursday dancehall party, 5–9 PM, with Jamaican cooking from Irie Jerk in
+              Calumet Park.
+            </p>
+            <span className="mt-3 inline-block text-sm font-medium text-gold">
+              See the event →
+            </span>
+          </div>
+        </a>
+
         <JerkyJerkLineupGrid />
 
         <p className="mt-14 text-center text-sm text-muted-foreground">

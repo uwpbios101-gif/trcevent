@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { chicagoVybezHead, ChicagoVybezPage } from "./-chicago-vybez-page";
+import { irieJerkJugglingHead, IrieJerkJugglingPage } from "./-irie-jerk-juggling-page";
 
 export const Route = createFileRoute("/")({
-  head: chicagoVybezHead,
-  component: ChicagoVybezPage,
+  head: irieJerkJugglingHead,
+  component: IrieJerkJugglingPage,
 });
