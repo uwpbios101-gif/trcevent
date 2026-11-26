@@ -6,11 +6,10 @@
 // of the supplied files — never re-encode:
 //   copenhagen-flyer.png = "Thursday Free 5P–9P poster-4.png"
 //   table.png            = the table photo embedded in the Copenhagen HTML (no separate file)
-//   clip.mp4             = "jj poster-3 - noaudio.mp4" (poster = flyer.png, poster-3)
+//   clip.mp4             = "jj_pimento poster-2 - part1 - noaudio.mp4" (copenhagen-clip.mp4)
 import cphFlyerImg from "@/assets/irie-jerk-juggling-copenhagen-flyer.png";
 import tableImg from "@/assets/irie-jerk-juggling-table.png";
-import flyerImg from "@/assets/irie-jerk-juggling-flyer.png";
-import clipVideo from "@/assets/irie-jerk-juggling-clip.mp4";
+import clipVideo from "@/assets/irie-jerk-juggling-copenhagen-clip.mp4";
 import takeoutImg from "@/assets/irie-jerk-juggling-takeout.png";
 
 const MAPS_URL =
@@ -48,7 +47,7 @@ const CSS = `
 .ijj-cph .story .shell{padding-block:clamp(2.5rem,6vw,5rem);display:grid;grid-template-columns:1fr 1fr;gap:2rem 5rem}
 .ijj-cph .story p{margin-top:1rem;max-width:48ch}
 .ijj-cph .clip{padding-block:3.5rem}
-.ijj-cph .clip .art{max-width:26rem;margin-top:1.4rem}
+.ijj-cph .clip .art{max-width:56rem;margin-top:1.4rem}
 .ijj-cph .programme{padding-block:3.5rem;border-top:1px solid var(--line)}
 .ijj-cph .editions{margin-top:1.5rem}
 .ijj-cph .edition{display:grid;grid-template-columns:minmax(10rem,1fr) 2fr;gap:.4rem 2rem;padding:1rem 0;border-top:1px solid var(--line)}
@@ -181,7 +180,9 @@ export function IrieJerkJugglingCopenhagen() {
             muted
             playsInline
             preload="none"
-            poster={flyerImg}
+            width={1920}
+            height={1080}
+            data-ijj-clip=""
             aria-label="Animated Irie Jerk and Juggling flyer"
           >
             <source src={clipVideo} type="video/mp4" />

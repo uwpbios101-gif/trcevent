@@ -10,12 +10,11 @@
 // supplied files — never re-encode:
 //   tokyo-flyer.png = "Every Thursday_ Free 5P–9P-1.png"
 //   chorus.png      = "Chrome Tonearm Dancehall Chorus.png"
-//   clip.mp4        = "jj poster-3 - noaudio.mp4" (poster = flyer.png, poster-3)
+//   clip.mp4        = "jj_Free 5P–9P-1 - noaudio.mp4" (tokyo-clip.mp4)
 //   takeout.png     = supplied takeout photo
 import tokyoFlyerImg from "@/assets/irie-jerk-juggling-tokyo-flyer.png";
 import chorusImg from "@/assets/irie-jerk-juggling-chorus.png";
-import flyerImg from "@/assets/irie-jerk-juggling-flyer.png";
-import clipVideo from "@/assets/irie-jerk-juggling-clip.mp4";
+import clipVideo from "@/assets/irie-jerk-juggling-tokyo-clip.mp4";
 import takeoutImg from "@/assets/irie-jerk-juggling-takeout.png";
 
 const MAPS_URL =
@@ -56,7 +55,7 @@ const CSS = `
 .ijj-tokyo .tracks .wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem 4rem;padding-block:3.4rem}
 .ijj-tokyo .tracks p{color:var(--muted);margin-top:.8rem;max-width:55ch}
 .ijj-tokyo .clip{padding-block:3.5rem}
-.ijj-tokyo .clip figure{max-width:26rem;margin-top:1.4rem;border:1px solid #638499;box-shadow:0 0 50px #45c5ff44}
+.ijj-tokyo .clip figure{max-width:56rem;margin-top:1.4rem;border:1px solid #638499;box-shadow:0 0 50px #45c5ff44}
 .ijj-tokyo .clip video{display:block;width:100%;height:auto}
 .ijj-tokyo .programme{padding-block:3.5rem;border-top:1px solid var(--line)}
 .ijj-tokyo .editions{margin-top:1.4rem;display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
@@ -190,7 +189,9 @@ export function IrieJerkJugglingTokyo() {
             muted
             playsInline
             preload="none"
-            poster={flyerImg}
+            width={1920}
+            height={1080}
+            data-ijj-clip=""
             aria-label="Animated Irie Jerk and Juggling flyer"
           >
             <source src={clipVideo} type="video/mp4" />

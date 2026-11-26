@@ -49,7 +49,7 @@ const CSS = `
 .ijj-seoul .dates article{padding:1rem 1.2rem;border-top:3px solid var(--coral);background:#111f4b}
 .ijj-seoul .dates p{margin-top:.4rem;color:var(--muted)}
 .ijj-seoul .clip{padding-block:3.3rem}
-.ijj-seoul .clip .art{max-width:26rem;margin-top:1.4rem}
+.ijj-seoul .clip .art{max-width:56rem;margin-top:1.4rem}
 .ijj-seoul .presented{border-top:1px solid var(--line);padding-block:1.1rem;color:var(--muted)}
 @media(max-width:760px){.ijj-seoul .takeout-grid{grid-template-columns:1fr}.ijj-seoul .takeout-copy{order:-1}.ijj-seoul .anchor{margin-left:0;margin-right:.65rem}.ijj-seoul .hero{grid-template-columns:1fr;grid-template-areas:"copy" "art"}.ijj-seoul .art{max-width:33rem}.ijj-seoul .floor .wrap,.ijj-seoul .dates{grid-template-columns:1fr}}
 `;
@@ -152,7 +152,9 @@ export function IrieJerkJugglingSeoul() {
             muted
             playsInline
             preload="none"
-            poster={flyerImg}
+            width={1920}
+            height={1080}
+            data-ijj-clip=""
             aria-label="Animated Irie Jerk and Juggling flyer"
           >
             <source src={clipVideo} type="video/mp4" />

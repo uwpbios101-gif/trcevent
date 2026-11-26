@@ -16,7 +16,9 @@
 //   -irie-jerk-juggling-tokyo.tsx (.ijj-tokyo), -irie-jerk-juggling-copenhagen.tsx
 //   (.ijj-cph), -irie-jerk-juggling-seoul.tsx (.ijj-seoul).
 // To add/remove an edition, change EDITIONS (order = rotation order).
-import { useLayoutEffect, useRef } from "react";
+// Each edition has its OWN animated-flyer clip (tokyo-clip / copenhagen-clip / clip
+// for Seoul); only the shown edition's clip loads and autoplays (muted, looping).
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { IrieJerkJugglingTokyo } from "./-irie-jerk-juggling-tokyo";
 import { IrieJerkJugglingCopenhagen } from "./-irie-jerk-juggling-copenhagen";
 import { IrieJerkJugglingSeoul } from "./-irie-jerk-juggling-seoul";
@@ -81,6 +83,35 @@ export function IrieJerkJugglingPage() {
     if (el && !el.hasAttribute("data-show")) {
       el.setAttribute("data-show", pickNextEdition(KEYS, STORAGE_KEY));
     }
+  }, []);
+
+  // Autoplay (muted, looping) only the shown edition's clip, once it nears the
+  // viewport. Hidden editions keep preload="none", so their clips never download.
+  useEffect(() => {
+    const shown = ref.current?.getAttribute("data-show") || KEYS[0];
+    const video = ref.current?.querySelector<HTMLVideoElement>(
+      `[data-edition="${shown}"] video[data-ijj-clip]`,
+    );
+    if (!video) return;
+    const start = () => {
+      video.preload = "auto";
+      video.play().catch(() => {});
+    };
+    if (!("IntersectionObserver" in window)) {
+      start();
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          start();
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    io.observe(video);
+    return () => io.disconnect();
   }, []);
 
   return (
