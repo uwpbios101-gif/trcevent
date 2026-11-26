@@ -16,11 +16,11 @@ const SITE_URL = "https://trcevent.com";
 export function jerkyJerkActivityHead() {
   return {
     meta: [
-      { title: "This Week at Jerky Jerk | TRC Events" },
+      { title: "This Week at Irie Jerk | TRC Events" },
       {
         name: "description",
         content:
-          "Jerky Jerk's weekly lineup — a different vibe every day and night, 100% alcohol-free.",
+          "Irie Jerk's weekly lineup — a different vibe every day and night, 100% alcohol-free.",
       },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/dinner-in-jamaica` }],
@@ -38,7 +38,7 @@ export function JerkyJerkActivityPage({ slug }: { slug: string }) {
         if (!cancelled) setActivity(row);
       })
       .catch((err) => {
-        console.error("Failed to load Jerky Jerk activity:", err);
+        console.error("Failed to load Irie Jerk activity:", err);
         if (!cancelled) setError(true);
       });
     return () => {
@@ -92,7 +92,7 @@ export function JerkyJerkActivityPage({ slug }: { slug: string }) {
           </span>
         )}
         <span className="inline-flex items-center gap-1.5">
-          <UtensilsCrossed className="size-4 text-gold" /> At Jerky Jerk
+          <UtensilsCrossed className="size-4 text-gold" /> At Irie Jerk
         </span>
         <span className="inline-flex items-center gap-1.5">
           <CalendarDays className="size-4 text-gold" />
@@ -135,7 +135,7 @@ export function JerkyJerkActivityPage({ slug }: { slug: string }) {
 
       <div className="mt-10 text-center">
         <Button asChild variant="goldOutline">
-          <a href="/dinner-in-jamaica">See the full week at Jerky Jerk</a>
+          <a href="/dinner-in-jamaica">See the full week at Irie Jerk</a>
         </Button>
       </div>
     </div>

@@ -57,12 +57,12 @@ export function Footer() {
             <ul className="space-y-2.5 text-sm text-muted-foreground">
               <li>
                 <Link to="/" className="hover:text-gold">
-                  Chicago Vybez — Prestige In The Park
+                  Irie Jerk &amp; Juggling — Free Thursdays
                 </Link>
               </li>
               <li>
-                <a href="/chicago-vybez#location" className="hover:text-gold">
-                  Get the Location
+                <a href="https://www.google.com/maps/search/?api=1&query=Irie+Jerk+Bar+and+Grill+1413+W+127th+St+Calumet+Park+IL+60827" target="_blank" rel="noreferrer" className="hover:text-gold">
+                  Get Directions
                 </a>
               </li>
               <li>

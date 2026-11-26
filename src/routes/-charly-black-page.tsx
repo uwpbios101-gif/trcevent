@@ -506,18 +506,18 @@ export function CharlyBlackPage() {
             </p>
             <p className="mt-4 leading-relaxed text-muted-foreground">
               Good Times is a celebration: real dancehall energy, a room built for the occasion, and
-              a kitchen powered by Jerky Jerk keeping the night fed from doors to last call.
+              a kitchen powered by Irie Jerk keeping the night fed from doors to last call.
             </p>
             <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
               <UtensilsCrossed className="size-4 text-gold" />
               Kitchen powered by{" "}
               <a
-                href="https://www.jerkyjerk.info/"
+                href="/irie-jerk-and-juggling"
                 target="_blank"
                 rel="noreferrer"
                 className="font-medium text-foreground hover:text-gold hover:underline"
               >
-                Jerky Jerk
+                Irie Jerk
               </a>
             </div>
             <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">

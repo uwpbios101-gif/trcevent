@@ -15,21 +15,21 @@ const SITE_URL = "https://trcevent.com";
 export function eventsHead() {
   return {
     meta: [
-      { title: "Events at Jerky Jerk | TRC Events" },
+      { title: "Events at Irie Jerk | TRC Events" },
       {
         name: "description",
         content:
-          "Every event at Jerky Jerk, day by day — a different vibe every night, 100% alcohol-free. Presented by TRC Events.",
+          "Every event at Irie Jerk Bar and Grill, day by day — a different vibe every night, 100% alcohol-free. Presented by TRC Events.",
       },
-      { property: "og:title", content: "Events at Jerky Jerk | TRC Events" },
+      { property: "og:title", content: "Events at Irie Jerk | TRC Events" },
       {
         property: "og:description",
-        content: "Every event at Jerky Jerk, day by day — a different vibe every night.",
+        content: "Every event at Irie Jerk Bar and Grill, day by day — a different vibe every night.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/events` },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Events at Jerky Jerk | TRC Events" },
+      { name: "twitter:title", content: "Events at Irie Jerk | TRC Events" },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/events` }],
   };
@@ -42,7 +42,7 @@ export function EventsPage() {
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 sm:py-20">
           <p className="eyebrow mb-3">Presented by TRC Events</p>
           <h1 className="font-display text-5xl font-extrabold tracking-tight sm:text-6xl">
-            Events at <span className="text-gradient-gold">Jerky Jerk</span>
+            Events at <span className="text-gradient-gold">Irie Jerk</span>
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
             A different vibe every day and night — 100% alcohol-free.
@@ -52,7 +52,7 @@ export function EventsPage() {
               <CalendarDays className="size-4 text-gold" /> 7 days a week
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <UtensilsCrossed className="size-4 text-gold" /> Jerky Jerk, Chicago
+              <UtensilsCrossed className="size-4 text-gold" /> Irie Jerk Bar and Grill, Calumet Park, IL
             </span>
           </div>
         </div>
@@ -92,12 +92,10 @@ export function EventsPage() {
           </a>
           . Presented by TRC Events, at{" "}
           <a
-            href="https://www.jerkyjerk.info/"
-            target="_blank"
-            rel="noreferrer"
+            href="/irie-jerk-and-juggling"
             className="font-medium text-foreground hover:text-gold hover:underline"
           >
-            Jerky Jerk
+            Irie Jerk
           </a>
           .
         </p>

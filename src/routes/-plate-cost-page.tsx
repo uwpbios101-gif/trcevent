@@ -2,7 +2,7 @@
 // from route generation (TanStack Router convention) -- see
 // src/routes/README.md.
 //
-// Live, editable plate-cost worksheet for Jerky Jerk (catering the Charly
+// Live, editable plate-cost worksheet for Irie Jerk (catering the Charly
 // Black "Good Times" show): ingredient-level case-cost -> per-plate-cost
 // build for Jerk Chicken, Curry Chicken, Escovitch Fish, and Mannish Water.
 // Unlike the other admin pages in this repo (comp-admin, contract-admin),
@@ -882,13 +882,13 @@ export function PlateCostPage() {
     <div className="min-h-screen bg-white text-black [color-scheme:light]">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <h1 className="font-display text-2xl font-bold text-black">
-          Jerky Jerk × Charly Black Plate Cost Worksheet
+          Irie Jerk × Charly Black Plate Cost Worksheet
         </h1>
         <p className="mt-1 text-base text-gray-700">
           Shared, live worksheet for pricing one plate each of Jerk Chicken, Curry Chicken,
           Escovitch Fish, and Mannish Water, plus the event's beverage budget. Add or remove rows as
           needed — everything calculates automatically as you fill in the editable fields. Changes
-          save as soon as you leave a field, so anyone with this link (including Jerky Jerk) is
+          save as soon as you leave a field, so anyone with this link (including Irie Jerk) is
           editing the same live sheet.
         </p>
 

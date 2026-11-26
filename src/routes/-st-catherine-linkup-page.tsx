@@ -284,7 +284,7 @@ export function StCatherineLinkupPage() {
             </p>
             <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
               <UtensilsCrossed className="size-4 text-gold" />
-              Pre-ordered food available on-site — Jerky Jerk &amp; Tropical Jerk
+              Pre-ordered food available on-site — Irie Jerk &amp; Tropical Jerk
             </div>
             <p className="mt-4 text-sm font-medium text-gold">#StCatherineLinkUp</p>
           </div>
@@ -404,7 +404,7 @@ export function StCatherineLinkupPage() {
         <section id="menu" className="scroll-mt-20">
           <h2 className="font-display text-2xl font-bold sm:text-3xl">Food &amp; Menu</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Pre-order below, then redeem at the food booth day-of. From Jerky Jerk / Tropical Jerk.
+            Pre-order below, then redeem at the food booth day-of. From Irie Jerk / Tropical Jerk.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {MENU_ITEMS.map((item) => (

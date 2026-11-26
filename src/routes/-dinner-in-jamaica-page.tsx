@@ -6,7 +6,7 @@
 // Per the concept doc's own "pilot for a month before opening memberships"
 // guidance, membership pricing, the Passport program, and the corporate
 // package ladder are intentionally NOT built here yet — add them once the
-// pilot at Jerky Jerk proves out which nights actually pull traffic.
+// pilot at Irie Jerk proves out which nights actually pull traffic.
 import { useState, type FormEvent } from "react";
 import {
   CalendarDays,
@@ -32,27 +32,27 @@ const EVENT_NAME = "Dinner in Jamaica";
 export function dinnerInJamaicaHead() {
   return {
     meta: [
-      { title: "Dinner in Jamaica — The Dinner Riddim | Jerky Jerk x TRC Events" },
+      { title: "Dinner in Jamaica — The Dinner Riddim | Irie Jerk x TRC Events" },
       {
         name: "description",
         content:
-          "A New Track Every Day. Same Riddim All Week. Dinner in Jamaica is the weekly Jamaican dinner rotation at Jerky Jerk — presented by TRC Events, with cultural programming by Ras Tafari Inc.",
+          "A New Track Every Day. Same Riddim All Week. Dinner in Jamaica is the weekly Jamaican dinner rotation at Irie Jerk — presented by TRC Events, with cultural programming by Ras Tafari Inc.",
       },
       {
         property: "og:title",
-        content: "Dinner in Jamaica — The Dinner Riddim | Jerky Jerk x TRC Events",
+        content: "Dinner in Jamaica — The Dinner Riddim | Irie Jerk x TRC Events",
       },
       {
         property: "og:description",
         content:
-          "A New Track Every Day. Same Riddim All Week. The weekly Jamaican dinner rotation at Jerky Jerk.",
+          "A New Track Every Day. Same Riddim All Week. The weekly Jamaican dinner rotation at Irie Jerk.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/dinner-in-jamaica` },
       { name: "twitter:card", content: "summary" },
       {
         name: "twitter:title",
-        content: "Dinner in Jamaica — The Dinner Riddim | Jerky Jerk x TRC Events",
+        content: "Dinner in Jamaica — The Dinner Riddim | Irie Jerk x TRC Events",
       },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/dinner-in-jamaica` }],
@@ -148,7 +148,7 @@ export function DinnerInJamaicaPage() {
               <CalendarDays className="size-4 text-gold" /> Every night, all week
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <UtensilsCrossed className="size-4 text-gold" /> At Jerky Jerk
+              <UtensilsCrossed className="size-4 text-gold" /> At Irie Jerk
             </span>
           </div>
           <div className="mt-7">
@@ -168,12 +168,12 @@ export function DinnerInJamaicaPage() {
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Every night at{" "}
             <a
-              href="https://www.jerkyjerk.info/"
+              href="/irie-jerk-and-juggling"
               target="_blank"
               rel="noreferrer"
               className="font-medium text-foreground hover:text-gold hover:underline"
             >
-              Jerky Jerk
+              Irie Jerk
             </a>{" "}
             runs day into night — 100% alcohol-free, each with its own vibe, signature plate, and
             mocktail specials. A different track every night, all riding the same riddim.
@@ -209,7 +209,7 @@ export function DinnerInJamaicaPage() {
             Get the First Seat at the Table
           </h2>
           <p className="mx-auto mt-3 max-w-md text-muted-foreground">
-            Dinner in Jamaica is launching in pilot at Jerky Jerk. Drop your email and we'll tell
+            Dinner in Jamaica is launching in pilot at Irie Jerk. Drop your email and we'll tell
             you the moment the first rotation night is open.
           </p>
           <div className="mt-6">
@@ -243,12 +243,12 @@ export function DinnerInJamaicaPage() {
           <p className="mt-6 text-sm text-muted-foreground">
             Presented by TRC Events, at{" "}
             <a
-              href="https://www.jerkyjerk.info/"
+              href="/irie-jerk-and-juggling"
               target="_blank"
               rel="noreferrer"
               className="font-medium text-foreground hover:text-gold hover:underline"
             >
-              Jerky Jerk
+              Irie Jerk
             </a>
             , with cultural programming by Ras Tafari Inc.
           </p>

@@ -1,4 +1,4 @@
-// Private brainstorming tool for Marlon (Jerky Jerk) to develop new weekly
+// Private brainstorming tool for Marlon (Irie Jerk) to develop new weekly
 // events by talking through ideas out loud. Uses the browser's native
 // SpeechRecognition API for speech-to-text (no server round-trip, no new
 // dependency) -- Chrome/Edge only, degrades to plain typing elsewhere.
@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-type EventSlug = "karaoke-thursdays" | "mingles-tuesdays" | "just-laugh-wednesday";
+type EventSlug = "mingles-tuesdays" | "just-laugh-wednesday";
 
 type SpeechRecognitionResultEvent = {
   resultIndex: number;
@@ -67,7 +67,7 @@ const GUIDED_QUESTIONS: { key: string; prompt: string }[] = [
     prompt: "Who is this event for? Picture the exact kind of person walking through the door.",
   },
   { key: "WHAT", prompt: "What actually happens, minute to minute? Walk me through the format." },
-  { key: "WHERE", prompt: "Which Jerky Jerk location — Western Avenue, Taylor Street, or both?" },
+  { key: "WHERE", prompt: "Which Irie Jerk location — Western Avenue, Taylor Street, or both?" },
   { key: "WHEN", prompt: "What day of the week is this, and is it happening every single week?" },
   { key: "START TIME", prompt: "What time does it start?" },
   { key: "END TIME", prompt: "What time does it wrap up?" },
@@ -77,7 +77,7 @@ const GUIDED_QUESTIONS: { key: string; prompt: string }[] = [
   { key: "WHY THEY COME BACK", prompt: "Why would the same person come back again next week?" },
   {
     key: "BUSINESS IMPACT",
-    prompt: "How does this turn into real food and drink sales for Jerky Jerk?",
+    prompt: "How does this turn into real food and drink sales for Irie Jerk?",
   },
   { key: "ANYTHING ELSE", prompt: "Anything else on your mind about this one?" },
 ];

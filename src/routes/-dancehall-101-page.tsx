@@ -38,11 +38,11 @@ import {
 export function dancehall101Head() {
   return {
     meta: [
-      { title: "Dancehall 101 — Free Student Entry | Jerky Jerk, Chicago" },
+      { title: "Dancehall 101 — Free Student Entry | Irie Jerk, Chicago" },
       {
         name: "description",
         content:
-          "Dancehall 101 — Friday nights at Jerky Jerk, Chicago. College students 21+ get 100% free entry with a verified .edu email.",
+          "Dancehall 101 — Friday nights at Irie Jerk, Chicago. College students 21+ get 100% free entry with a verified .edu email.",
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Dancehall 101" },
@@ -50,7 +50,7 @@ export function dancehall101Head() {
       {
         property: "og:description",
         content:
-          "Friday nights at Jerky Jerk, Chicago. 21+ college students get 100% free entry with a verified .edu email.",
+          "Friday nights at Irie Jerk, Chicago. 21+ college students get 100% free entry with a verified .edu email.",
       },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/dancehall-101` }, ...DH101_FONT_LINKS],
@@ -76,7 +76,7 @@ function SchoolPicker({ schools }: { schools: Dh101School[] }) {
           className="mx-auto mt-3.5 max-w-[560px] text-[1.05rem]"
           style={{ color: DH101_TEXT_DIM }}
         >
-          Every Friday night at Jerky Jerk, Chicago. 21+ students get 100% free entry — verify your
+          Every Friday night at Irie Jerk, Chicago. 21+ students get 100% free entry — verify your
           .edu email and get your ticket in seconds.
         </p>
         <span
@@ -237,7 +237,7 @@ function SchoolLanding({ school, ref: referralCode }: { school: Dh101School; ref
           className="mx-auto mt-3.5 max-w-[560px] text-[1.05rem]"
           style={{ color: DH101_TEXT_DIM }}
         >
-          Dancehall 101 — Fridays at Jerky Jerk. Free for {school.name} students, 21+.
+          Dancehall 101 — Fridays at Irie Jerk. Free for {school.name} students, 21+.
         </p>
         <span
           className="mt-4.5 inline-block rounded-full px-4 py-1.5 text-[0.78rem] font-bold tracking-[0.08em] text-white uppercase"

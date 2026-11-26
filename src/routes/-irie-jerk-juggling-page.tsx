@@ -171,7 +171,7 @@ export function IrieJerkJugglingPage() {
 
       <div className="presented">
         <div className="wrap">
-          Presented by Prestige Promotion · <a href="/events">All events at Jerky Jerk</a>
+          Presented by Prestige Promotion · <a href="/events">All events at Irie Jerk</a>
         </div>
       </div>
     </div>

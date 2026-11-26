@@ -2,7 +2,7 @@
 // excludes this file from route generation (TanStack Router convention) --
 // see src/routes/README.md.
 //
-// Unlisted internal brainstorm tool for Marlon (Jerky Jerk) -- see
+// Unlisted internal brainstorm tool for Marlon (Irie Jerk) -- see
 // src/components/site/EventBrainstormTool.tsx for the shared implementation
 // and supabase/sql/event_brainstorm_schema.sql for the backing table.
 import { EventBrainstormTool } from "@/components/site/EventBrainstormTool";

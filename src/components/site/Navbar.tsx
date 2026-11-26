@@ -4,6 +4,7 @@ import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 
 const EVENT_LINKS = [
+  { to: "/irie-jerk-and-juggling", label: "Irie Jerk Thursdays" },
   { to: "/events", label: "Events" },
   { to: "/work-fi-di-beach", label: "Work Fi Di Beach" },
   { to: "/dancehall-101", label: "Dancehall 101" },
@@ -43,8 +44,8 @@ export function Navbar() {
         </div>
 
         <Button asChild variant="gold" size="sm">
-          <a href="/chicago-vybez#location">
-            <MessageCircle className="size-4" /> Get the Location
+          <a href="https://www.google.com/maps/search/?api=1&query=Irie+Jerk+Bar+and+Grill+1413+W+127th+St+Calumet+Park+IL+60827" target="_blank" rel="noreferrer">
+            <MessageCircle className="size-4" /> Get Directions
           </a>
         </Button>
       </div>

@@ -57,7 +57,7 @@ export function JerkyJerkLineupGrid() {
     fetchJerkyJerkLineup()
       .then(setRows)
       .catch((err) => {
-        console.error("Failed to load the Jerky Jerk weekly lineup:", err);
+        console.error("Failed to load the Irie Jerk weekly lineup:", err);
         setError(true);
       });
   }, []);
