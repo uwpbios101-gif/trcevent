@@ -6,10 +6,17 @@
 //
 // Irie Jerk & Juggling (weekly Thursday, free, 5-9 PM, Calumet Park) takes over
 // as the front-page event on 2026-12-03, replacing Chicago Vybez. Layout and copy
-// are ported from the "Seoul Edition" design (Thursdays/irie-jerk-and-juggling-seoul.html);
-// its own navy/coral palette is kept verbatim and scoped to .ijj so it doesn't leak
-// into the site's black + gold tokens. The flyer and clip are byte-for-byte copies of
-// the supplied files (poster-3.png and "jj poster-3 - noaudio.mp4") — never re-encode.
+// are ported from the "Tokyo Edition" design (Thursdays/irie-jerk-and-juggling-tokyo.html);
+// its ice-blue palette is kept verbatim and scoped to .ijj so it doesn't leak into
+// the site's black + gold tokens. The $15 takeout section and the silent clip are
+// kept from the earlier Seoul port. All media are byte-for-byte copies of the
+// supplied files — never re-encode:
+//   tokyo-flyer.png = "Every Thursday_ Free 5P–9P-1.png"
+//   chorus.png      = "Chrome Tonearm Dancehall Chorus.png"
+//   clip.mp4        = "jj poster-3 - noaudio.mp4" (poster = flyer.png, poster-3)
+//   takeout.png     = supplied takeout photo
+import tokyoFlyerImg from "@/assets/irie-jerk-juggling-tokyo-flyer.png";
+import chorusImg from "@/assets/irie-jerk-juggling-chorus.png";
 import flyerImg from "@/assets/irie-jerk-juggling-flyer.png";
 import clipVideo from "@/assets/irie-jerk-juggling-clip.mp4";
 import takeoutImg from "@/assets/irie-jerk-juggling-takeout.png";
@@ -38,47 +45,49 @@ export function irieJerkJugglingHead() {
 }
 
 const CSS = `
-.ijj{--navy:#071233;--blue:#163ae4;--coral:#ff665b;--white:#f9faff;--muted:#cad5fb;--line:#6579c4;background:var(--navy);color:var(--white);font:1rem/1.55 system-ui,sans-serif}
-.ijj a{color:inherit;text-underline-offset:.3em}
-.ijj a:focus-visible{outline:3px solid var(--coral);outline-offset:4px}
-.ijj .wrap{width:min(92%,80rem);margin:auto}
+.ijj{--ink:#05090d;--ice:#8ce3ff;--white:#f0f7fc;--muted:#b8ccd8;--line:#315162;background:var(--ink);color:var(--white);font:1rem/1.6 system-ui,sans-serif}
+.ijj a{color:var(--ice)}
+.ijj a:focus-visible{outline:2px solid var(--ice);outline-offset:4px}
+.ijj .wrap{width:min(92%,76rem);margin:auto}
 .ijj h1,.ijj h2,.ijj h3,.ijj p,.ijj figure{margin:0}
-.ijj .stage{overflow:hidden;background:radial-gradient(ellipse at 24% 56%,#193ab2,transparent 65%),linear-gradient(122deg,#071233 56%,#112676 56% 72%,#0d1b4e 72%)}
-.ijj .hero{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);grid-template-areas:"art copy";align-items:center;gap:clamp(2rem,5vw,5rem);padding:clamp(1.9rem,5vw,5rem) 0}
-.ijj .copy{grid-area:copy}
-.ijj .credit{font-size:.75rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.ijj h1{font:italic 950 clamp(2.6rem,6vw,6.8rem)/.88 system-ui,sans-serif;letter-spacing:-.085em;text-transform:uppercase;margin:.3em 0}
-.ijj .second{display:block;color:var(--coral)}
-.ijj .intro{font-size:clamp(1.08rem,2vw,1.4rem);max-width:31ch}
-.ijj .admission{display:inline-block;margin:1.25rem 0 .8rem;padding:.42rem .85rem;background:var(--coral);color:#1b1032;clip-path:polygon(4% 0,100% 0,96% 100%,0 100%);font-weight:900;text-transform:uppercase}
+.ijj .label{font-family:ui-monospace,monospace;letter-spacing:.15em;text-transform:uppercase;color:var(--ice);font-size:.8rem}
+.ijj .hero{overflow:hidden;background:radial-gradient(ellipse at 70% 50%,#14374b 0%,#070e15 54%,var(--ink) 78%)}
+.ijj .deck{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(1.5rem,4vw,5rem);align-items:center;padding-block:clamp(2rem,6vw,5.5rem)}
+.ijj h1{font:900 clamp(2.55rem,6vw,6.2rem)/.93 system-ui,sans-serif;letter-spacing:-.075em;text-transform:uppercase;margin:.22em 0 .28em}
+.ijj h1 span{display:block;color:var(--ice)}
+.ijj h2{font-size:clamp(1.8rem,4vw,3.3rem);line-height:1.04;letter-spacing:-.045em}
+.ijj h3{line-height:1.2}
+.ijj .intro{font-size:clamp(1.1rem,2vw,1.36rem);max-width:38ch}
+.ijj .schedule{display:flex;flex-wrap:wrap;gap:.4rem 1rem;margin:1.35rem 0 .75rem;font-weight:800}
+.ijj .schedule strong{color:var(--ice)}
 .ijj address{font-style:normal;color:var(--muted)}
-.ijj .cta{display:inline-block;margin-top:1rem;padding:.58rem .9rem;border:1px solid var(--white);font-weight:800;text-decoration:none}
-.ijj .cta:hover{background:var(--white);color:var(--navy)}
-.ijj .art{grid-area:art;position:relative;margin:0 .7rem .7rem 0;isolation:isolate}
-.ijj .art:after{content:"";position:absolute;inset:.7rem -.7rem -.7rem .7rem;background:var(--coral);z-index:-1}
-.ijj .art img,.ijj .art video{display:block;width:100%;height:auto}
-.ijj .takeout{background:linear-gradient(115deg,#142aa0,#071233 70%);border-block:1px solid var(--line)}
-.ijj .takeout-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);align-items:center;gap:clamp(1.4rem,4vw,3.5rem);padding-block:clamp(2rem,5vw,4.5rem)}
-.ijj .takeout figure{border-bottom:5px solid var(--coral)}
-.ijj .takeout img{display:block;width:100%;height:auto}
-.ijj .takeout h2{text-transform:uppercase;font-size:clamp(2rem,4vw,4.25rem)}
-.ijj .takeout h2 span{display:block;color:var(--coral)}
-.ijj .takeout .offer{margin-top:1rem;font-size:1.25rem;font-weight:850}
-.ijj .takeout p{margin-top:.65rem}
-.ijj .takeout .pickup{color:var(--muted)}
-.ijj .anchor{margin-left:.65rem}
-.ijj .floor{background:var(--blue);border-block:1px solid #8a9dfc}
-.ijj .floor .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:1.5rem 4rem;align-items:start;padding-block:clamp(2.2rem,5vw,4.5rem)}
-.ijj h2{font:italic 900 clamp(2rem,4.75vw,4.4rem)/.95 system-ui,sans-serif;letter-spacing:-.065em}
-.ijj .floor p{margin-top:.75rem;max-width:57ch}
-.ijj .calendar{padding-block:3.3rem}
-.ijj .dates{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.2rem}
-.ijj .dates article{padding:1rem 1.2rem;border-top:3px solid var(--coral);background:#111f4b}
-.ijj .dates p{margin-top:.4rem;color:var(--muted)}
-.ijj .clip{padding-block:3.3rem}
-.ijj .clip .art{max-width:26rem;margin-top:1.4rem}
-.ijj .presented{border-top:1px solid var(--line);padding-block:1.1rem;color:var(--muted)}
-@media(max-width:760px){.ijj .takeout-grid{grid-template-columns:1fr}.ijj .takeout-copy{order:-1}.ijj .anchor{margin-left:0;margin-right:.65rem}.ijj .hero{grid-template-columns:1fr;grid-template-areas:"copy" "art"}.ijj .art{max-width:33rem}.ijj .floor .wrap,.ijj .dates{grid-template-columns:1fr}}
+.ijj .button{display:inline-block;margin-top:1.25rem;padding:.65rem 1rem;background:var(--ice);color:#03141c;font-weight:800;text-decoration:none}
+.ijj .button.secondary{margin-left:.45rem;background:transparent;color:var(--ice);border:1px solid var(--ice)}
+.ijj .poster{position:relative}
+.ijj .poster:before{content:"";position:absolute;inset:-1.3rem;border:1px solid #416a80;pointer-events:none}
+.ijj .poster img{display:block;width:100%;height:auto;border:1px solid #638499;box-shadow:0 0 50px #45c5ff44}
+.ijj .chorus{border-block:1px solid var(--line);background:linear-gradient(120deg,#08131c,#102c3c)}
+.ijj .split{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:center;gap:clamp(1.4rem,4vw,3rem);padding-block:clamp(2rem,5vw,4rem)}
+.ijj .split figure{border-bottom:4px solid var(--ice)}
+.ijj .split img{width:100%;height:auto;display:block}
+.ijj .split h2{text-transform:uppercase;font-weight:900}
+.ijj .split h2 span{display:block;color:var(--ice)}
+.ijj .split p{margin-top:.8rem;color:var(--muted)}
+.ijj .split .hook{color:var(--white);font-size:1.2rem;font-weight:800}
+.ijj .takeout{border-bottom:1px solid var(--line);background:linear-gradient(240deg,#08131c,#0d2533)}
+.ijj .tracks{border-bottom:1px solid var(--line);background:repeating-linear-gradient(0deg,#091118 0 5px,#0b141b 6px 7px)}
+.ijj .tracks .wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem 4rem;padding-block:3.4rem}
+.ijj .tracks p{color:var(--muted);margin-top:.8rem;max-width:55ch}
+.ijj .clip{padding-block:3.5rem}
+.ijj .clip figure{max-width:26rem;margin-top:1.4rem;border:1px solid #638499;box-shadow:0 0 50px #45c5ff44}
+.ijj .clip video{display:block;width:100%;height:auto}
+.ijj .programme{padding-block:3.5rem;border-top:1px solid var(--line)}
+.ijj .editions{margin-top:1.4rem;display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.ijj article{padding:1.35rem;background:#0b151d;scroll-margin-top:1rem}
+.ijj article h3{margin-top:.35rem}
+.ijj article p:not(.label){color:var(--muted);margin-top:.5rem}
+.ijj .presented{border-top:1px solid var(--line);padding-block:1.25rem;color:var(--muted)}
+@media(max-width:700px){.ijj .deck,.ijj .split,.ijj .tracks .wrap,.ijj .editions{grid-template-columns:1fr}.ijj .poster{width:min(90%,26rem);margin:1rem auto}.ijj .deck{gap:1.5rem}.ijj .split-copy{order:-1}.ijj .button.secondary{margin-left:0}}
 `;
 
 export function IrieJerkJugglingPage() {
@@ -86,84 +95,109 @@ export function IrieJerkJugglingPage() {
     <div className="ijj">
       <style>{CSS}</style>
 
-      <section className="stage" aria-labelledby="title">
-        <div className="wrap hero">
-          <div className="copy">
-            <p className="credit">Prestige Promotion presents</p>
+      <section className="hero" aria-labelledby="title">
+        <div className="wrap deck">
+          <div>
+            <p className="label">Prestige Promotion presents</p>
             <h1 id="title">
-              Irie Jerk <span className="second">&amp; Juggling</span>
+              Irie Jerk <span>&amp; Juggling</span>
             </h1>
             <p className="intro">
-              Clock out and meet us on 127th. It’s a Thursday evening dance party with a heavy dose
-              of dancehall and hooks the whole room can sing.
+              A Thursday evening dance party built around Jamaican food and the dancehall tunes you
+              already know by heart.
             </p>
-            <p className="admission">Free admission · Thursdays · 5–9 PM</p>
+            <p className="schedule">
+              <span>Thursdays · 5–9 PM</span>
+              <strong>Free admission</strong>
+            </p>
             <address>
               <strong>Irie Jerk Bar and Grill</strong>
               <br />
               1413 W 127th St, Calumet Park, IL 60827
             </address>
-            <a className="cta" href={MAPS_URL} target="_blank" rel="noreferrer">
+            <a className="button" href={MAPS_URL} target="_blank" rel="noreferrer">
               Get directions
             </a>{" "}
-            <a className="cta anchor" href="#takeout">
-              See the $15 takeout plate
+            <a className="button secondary" href="#singalong">
+              Get into the singalong
             </a>
           </div>
-          <figure className="art">
+          <figure className="poster">
             <img
               width={1122}
               height={1402}
-              src={flyerImg}
-              alt="Irie Jerk and Juggling flyer with two people in sculptural streetwear moving through a cobalt and coral light tunnel."
+              src={tokyoFlyerImg}
+              alt="Irie Jerk & Juggling flyer with a chrome tonearm and translucent record under ice-blue light."
             />
           </figure>
         </div>
       </section>
 
+      <section className="chorus" id="singalong" aria-labelledby="chorus-title">
+        <div className="wrap split">
+          <figure>
+            <img
+              loading="lazy"
+              width={1448}
+              height={1086}
+              src={chorusImg}
+              alt="At a chrome DJ booth, a hand pulls down the fader while two friends and the crowd sing along beyond the turntable."
+            />
+          </figure>
+          <div className="split-copy">
+            <h2 id="chorus-title">
+              The DJ cuts it. <span>You finish it.</span>
+            </h2>
+            <p className="hook">Dancehall you know by heart.</p>
+            <p>
+              You hear the first bars and turn to your friends. The DJ drops the volume right on the
+              hook. For a few bars, the whole room is louder than the speakers.
+            </p>
+            <p>
+              <strong>Free entry · Thursdays, 5–9 PM</strong>
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section className="takeout" id="takeout" aria-labelledby="takeout-title">
-        <div className="wrap takeout-grid">
+        <div className="wrap split">
           <figure>
             <img
               loading="lazy"
               width={1448}
               height={1086}
               src={takeoutImg}
-              alt="Two guests leave a cobalt-and-coral dance party with clear-lidded takeout boxes. Jerk chicken and sides are visible in the foreground."
+              alt="Two guests leave a dance party with clear-lidded takeout boxes. Jerk chicken and sides are visible in the foreground."
             />
           </figure>
-          <div className="takeout-copy">
+          <div className="split-copy">
             <h2 id="takeout-title">
               Dance now. <span>Take the jerk home.</span>
             </h2>
-            <p className="offer">$15 jerk chicken takeout plate</p>
+            <p className="hook">$15 jerk chicken takeout plate</p>
             <p>Jerk leg quarter · Rice and peas · Cabbage</p>
-            <p className="pickup">Order when you arrive. Pick it up on your way out.</p>
+            <p>Order when you arrive. Pick it up on your way out.</p>
           </div>
         </div>
       </section>
 
-      <section className="floor" aria-label="What to expect">
+      <section className="tracks" aria-label="What to expect">
         <div className="wrap">
           <div>
-            <h2>
-              Know the hook?
-              <br />
-              Take it from here.
-            </h2>
+            <h2>Catch a dance after work.</h2>
             <p>
-              The DJ juggles familiar dancehall tunes and riddims until something pulls you onto the
-              floor. Then the volume drops and the DJ calls for voices. That’s your cue to sing it
-              loud, even if you only know the chorus.
+              Meet your people on 127th Street and get on the floor when your tune comes on. The set
+              is heavy on dancehall, with familiar hooks you can jump into even if you only know the
+              chorus.
             </p>
           </div>
           <div>
-            <h2>Come hungry.</h2>
+            <h2>Jamaica from the kitchen to the dance floor.</h2>
             <p>
-              Order from Irie Jerk’s state-of-the-art Jamaican kitchen and catch up with your people
-              over a plate. When your tune comes on, the dance floor is right there. This is
-              Jamaican culture on a Thursday in Calumet Park, from the cooking to the way the crowd
-              answers the DJ.
+              Start with a plate from Irie Jerk’s state-of-the-art Jamaican kitchen. Then get up when
+              your tune comes on. The cooking, the DJ’s juggling, and the crowd singing back bring
+              Jamaican culture to life right here on 127th Street.
             </p>
           </div>
         </div>
@@ -171,7 +205,7 @@ export function IrieJerkJugglingPage() {
 
       <section className="wrap clip" aria-labelledby="clip-title">
         <h2 id="clip-title">See the vibe.</h2>
-        <figure className="art">
+        <figure>
           <video
             controls
             loop
@@ -186,21 +220,25 @@ export function IrieJerkJugglingPage() {
         </figure>
       </section>
 
-      <section className="wrap calendar" aria-labelledby="events">
+      <section className="wrap programme" aria-labelledby="events">
         <h2 id="events">Holiday nights at Irie Jerk</h2>
-        <div className="dates">
+        <div className="editions">
           <article id="christmas">
-            <h3>Christmas Eve Party</h3>
-            <p>
+            <p className="label">
               <time dateTime="2026-12-24">Thursday, December 24, 2026</time> · $20
             </p>
+            <h3>Christmas Eve Party</h3>
+            <p>A holiday edition at Irie Jerk Bar and Grill.</p>
           </article>
           <article id="nye">
-            <h3>GQ Meets VOGUE Winter Ball</h3>
-            <p>
+            <p className="label">
               <time dateTime="2026-12-31">Thursday, December 31, 2026</time> · $40
             </p>
-            <p>Formalwear, red-carpet photography, and a Best Dressed runway. Ring in 2027.</p>
+            <h3>GQ Meets VOGUE Winter Ball</h3>
+            <p>
+              Formalwear, red-carpet photography, and a Best Dressed runway. Ring in 2027 at Irie
+              Jerk.
+            </p>
           </article>
         </div>
       </section>
