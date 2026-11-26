@@ -12,6 +12,7 @@
 // the supplied files (poster-3.png and "jj poster-3 - noaudio.mp4") — never re-encode.
 import flyerImg from "@/assets/irie-jerk-juggling-flyer.png";
 import clipVideo from "@/assets/irie-jerk-juggling-clip.mp4";
+import takeoutImg from "@/assets/irie-jerk-juggling-takeout.png";
 
 const SITE_URL = "https://trcevent.com";
 const PAGE_URL = `${SITE_URL}/irie-jerk-and-juggling`;
@@ -56,6 +57,16 @@ const CSS = `
 .ijj .art{grid-area:art;position:relative;margin:0 .7rem .7rem 0;isolation:isolate}
 .ijj .art:after{content:"";position:absolute;inset:.7rem -.7rem -.7rem .7rem;background:var(--coral);z-index:-1}
 .ijj .art img,.ijj .art video{display:block;width:100%;height:auto}
+.ijj .takeout{background:linear-gradient(115deg,#142aa0,#071233 70%);border-block:1px solid var(--line)}
+.ijj .takeout-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);align-items:center;gap:clamp(1.4rem,4vw,3.5rem);padding-block:clamp(2rem,5vw,4.5rem)}
+.ijj .takeout figure{border-bottom:5px solid var(--coral)}
+.ijj .takeout img{display:block;width:100%;height:auto}
+.ijj .takeout h2{text-transform:uppercase;font-size:clamp(2rem,4vw,4.25rem)}
+.ijj .takeout h2 span{display:block;color:var(--coral)}
+.ijj .takeout .offer{margin-top:1rem;font-size:1.25rem;font-weight:850}
+.ijj .takeout p{margin-top:.65rem}
+.ijj .takeout .pickup{color:var(--muted)}
+.ijj .anchor{margin-left:.65rem}
 .ijj .floor{background:var(--blue);border-block:1px solid #8a9dfc}
 .ijj .floor .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:1.5rem 4rem;align-items:start;padding-block:clamp(2.2rem,5vw,4.5rem)}
 .ijj h2{font:italic 900 clamp(2rem,4.75vw,4.4rem)/.95 system-ui,sans-serif;letter-spacing:-.065em}
@@ -67,7 +78,7 @@ const CSS = `
 .ijj .clip{padding-block:3.3rem}
 .ijj .clip .art{max-width:26rem;margin-top:1.4rem}
 .ijj .presented{border-top:1px solid var(--line);padding-block:1.1rem;color:var(--muted)}
-@media(max-width:760px){.ijj .hero{grid-template-columns:1fr;grid-template-areas:"copy" "art"}.ijj .art{max-width:33rem}.ijj .floor .wrap,.ijj .dates{grid-template-columns:1fr}}
+@media(max-width:760px){.ijj .takeout-grid{grid-template-columns:1fr}.ijj .takeout-copy{order:-1}.ijj .anchor{margin-left:0;margin-right:.65rem}.ijj .hero{grid-template-columns:1fr;grid-template-areas:"copy" "art"}.ijj .art{max-width:33rem}.ijj .floor .wrap,.ijj .dates{grid-template-columns:1fr}}
 `;
 
 export function IrieJerkJugglingPage() {
@@ -94,6 +105,9 @@ export function IrieJerkJugglingPage() {
             </address>
             <a className="cta" href={MAPS_URL} target="_blank" rel="noreferrer">
               Get directions
+            </a>{" "}
+            <a className="cta anchor" href="#takeout">
+              See the $15 takeout plate
             </a>
           </div>
           <figure className="art">
@@ -104,6 +118,28 @@ export function IrieJerkJugglingPage() {
               alt="Irie Jerk and Juggling flyer with two people in sculptural streetwear moving through a cobalt and coral light tunnel."
             />
           </figure>
+        </div>
+      </section>
+
+      <section className="takeout" id="takeout" aria-labelledby="takeout-title">
+        <div className="wrap takeout-grid">
+          <figure>
+            <img
+              loading="lazy"
+              width={1448}
+              height={1086}
+              src={takeoutImg}
+              alt="Two guests leave a cobalt-and-coral dance party with clear-lidded takeout boxes. Jerk chicken and sides are visible in the foreground."
+            />
+          </figure>
+          <div className="takeout-copy">
+            <h2 id="takeout-title">
+              Dance now. <span>Take the jerk home.</span>
+            </h2>
+            <p className="offer">$15 jerk chicken takeout plate</p>
+            <p>Jerk leg quarter · Rice and peas · Cabbage</p>
+            <p className="pickup">Order when you arrive. Pick it up on your way out.</p>
+          </div>
         </div>
       </section>
 
