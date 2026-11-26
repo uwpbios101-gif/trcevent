@@ -4,29 +4,27 @@
 // no server). The "-" prefix excludes this file from route generation — see
 // src/routes/README.md.
 //
-// Irie Jerk & Juggling (weekly Thursday, free, 5-9 PM, Calumet Park) takes over
-// as the front-page event on 2026-12-03, replacing Chicago Vybez. Layout and copy
-// are ported from the "Tokyo Edition" design (Thursdays/irie-jerk-and-juggling-tokyo.html);
-// its ice-blue palette is kept verbatim and scoped to .ijj so it doesn't leak into
-// the site's black + gold tokens. The $15 takeout section and the silent clip are
-// kept from the earlier Seoul port. All media are byte-for-byte copies of the
-// supplied files — never re-encode:
-//   tokyo-flyer.png = "Every Thursday_ Free 5P–9P-1.png"
-//   chorus.png      = "Chrome Tonearm Dancehall Chorus.png"
-//   clip.mp4        = "jj poster-3 - noaudio.mp4" (poster = flyer.png, poster-3)
-//   takeout.png     = supplied takeout photo
-import tokyoFlyerImg from "@/assets/irie-jerk-juggling-tokyo-flyer.png";
-import chorusImg from "@/assets/irie-jerk-juggling-chorus.png";
-import flyerImg from "@/assets/irie-jerk-juggling-flyer.png";
-import clipVideo from "@/assets/irie-jerk-juggling-clip.mp4";
-import takeoutImg from "@/assets/irie-jerk-juggling-takeout.png";
+// Irie Jerk & Juggling (weekly Thursday, free, 5-9 PM, Calumet Park) is the
+// front-page event from 2026-12-03. The page ROTATES between three design editions:
+// each page load shows the next one in order (Tokyo → Copenhagen → Seoul → Tokyo …),
+// tracked per browser in localStorage. All three editions are in the static HTML; a
+// tiny inline script picks one before they're parsed, so there's no flash. On a
+// client-side navigation (where that inline script doesn't run) a layout effect does
+// the same pick before paint. Without JS the first edition (Tokyo) shows.
+//
+// Each edition lives in its own file with its palette scoped to its own class:
+//   -irie-jerk-juggling-tokyo.tsx (.ijj-tokyo), -irie-jerk-juggling-copenhagen.tsx
+//   (.ijj-cph), -irie-jerk-juggling-seoul.tsx (.ijj-seoul).
+// To add/remove an edition, change EDITIONS (order = rotation order).
+import { useLayoutEffect, useRef } from "react";
+import { IrieJerkJugglingTokyo } from "./-irie-jerk-juggling-tokyo";
+import { IrieJerkJugglingCopenhagen } from "./-irie-jerk-juggling-copenhagen";
+import { IrieJerkJugglingSeoul } from "./-irie-jerk-juggling-seoul";
 
 const SITE_URL = "https://trcevent.com";
 const PAGE_URL = `${SITE_URL}/irie-jerk-and-juggling`;
 const DESCRIPTION =
   "Irie Jerk & Juggling is a Thursday evening dancehall party in Calumet Park. Jamaican cooking, familiar hooks, and free admission from 5 to 9 PM.";
-const MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=Irie+Jerk+Bar+and+Grill+1413+W+127th+St+Calumet+Park+IL+60827";
 
 export function irieJerkJugglingHead() {
   return {
@@ -44,210 +42,56 @@ export function irieJerkJugglingHead() {
   };
 }
 
-const CSS = `
-.ijj{--ink:#05090d;--ice:#8ce3ff;--white:#f0f7fc;--muted:#b8ccd8;--line:#315162;background:var(--ink);color:var(--white);font:1rem/1.6 system-ui,sans-serif}
-.ijj a{color:var(--ice)}
-.ijj a:focus-visible{outline:2px solid var(--ice);outline-offset:4px}
-.ijj .wrap{width:min(92%,76rem);margin:auto}
-.ijj h1,.ijj h2,.ijj h3,.ijj p,.ijj figure{margin:0}
-.ijj .label{font-family:ui-monospace,monospace;letter-spacing:.15em;text-transform:uppercase;color:var(--ice);font-size:.8rem}
-.ijj .hero{overflow:hidden;background:radial-gradient(ellipse at 70% 50%,#14374b 0%,#070e15 54%,var(--ink) 78%)}
-.ijj .deck{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(1.5rem,4vw,5rem);align-items:center;padding-block:clamp(2rem,6vw,5.5rem)}
-.ijj h1{font:900 clamp(2.55rem,6vw,6.2rem)/.93 system-ui,sans-serif;letter-spacing:-.075em;text-transform:uppercase;margin:.22em 0 .28em}
-.ijj h1 span{display:block;color:var(--ice)}
-.ijj h2{font-size:clamp(1.8rem,4vw,3.3rem);line-height:1.04;letter-spacing:-.045em}
-.ijj h3{line-height:1.2}
-.ijj .intro{font-size:clamp(1.1rem,2vw,1.36rem);max-width:38ch}
-.ijj .schedule{display:flex;flex-wrap:wrap;gap:.4rem 1rem;margin:1.35rem 0 .75rem;font-weight:800}
-.ijj .schedule strong{color:var(--ice)}
-.ijj address{font-style:normal;color:var(--muted)}
-.ijj .button{display:inline-block;margin-top:1.25rem;padding:.65rem 1rem;background:var(--ice);color:#03141c;font-weight:800;text-decoration:none}
-.ijj .button.secondary{margin-left:.45rem;background:transparent;color:var(--ice);border:1px solid var(--ice)}
-.ijj .poster{position:relative}
-.ijj .poster:before{content:"";position:absolute;inset:-1.3rem;border:1px solid #416a80;pointer-events:none}
-.ijj .poster img{display:block;width:100%;height:auto;border:1px solid #638499;box-shadow:0 0 50px #45c5ff44}
-.ijj .chorus{border-block:1px solid var(--line);background:linear-gradient(120deg,#08131c,#102c3c)}
-.ijj .split{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:center;gap:clamp(1.4rem,4vw,3rem);padding-block:clamp(2rem,5vw,4rem)}
-.ijj .split figure{border-bottom:4px solid var(--ice)}
-.ijj .split img{width:100%;height:auto;display:block}
-.ijj .split h2{text-transform:uppercase;font-weight:900}
-.ijj .split h2 span{display:block;color:var(--ice)}
-.ijj .split p{margin-top:.8rem;color:var(--muted)}
-.ijj .split .hook{color:var(--white);font-size:1.2rem;font-weight:800}
-.ijj .takeout{border-bottom:1px solid var(--line);background:linear-gradient(240deg,#08131c,#0d2533)}
-.ijj .tracks{border-bottom:1px solid var(--line);background:repeating-linear-gradient(0deg,#091118 0 5px,#0b141b 6px 7px)}
-.ijj .tracks .wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem 4rem;padding-block:3.4rem}
-.ijj .tracks p{color:var(--muted);margin-top:.8rem;max-width:55ch}
-.ijj .clip{padding-block:3.5rem}
-.ijj .clip figure{max-width:26rem;margin-top:1.4rem;border:1px solid #638499;box-shadow:0 0 50px #45c5ff44}
-.ijj .clip video{display:block;width:100%;height:auto}
-.ijj .programme{padding-block:3.5rem;border-top:1px solid var(--line)}
-.ijj .editions{margin-top:1.4rem;display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
-.ijj article{padding:1.35rem;background:#0b151d;scroll-margin-top:1rem}
-.ijj article h3{margin-top:.35rem}
-.ijj article p:not(.label){color:var(--muted);margin-top:.5rem}
-.ijj .presented{border-top:1px solid var(--line);padding-block:1.25rem;color:var(--muted)}
-@media(max-width:700px){.ijj .deck,.ijj .split,.ijj .tracks .wrap,.ijj .editions{grid-template-columns:1fr}.ijj .poster{width:min(90%,26rem);margin:1rem auto}.ijj .deck{gap:1.5rem}.ijj .split-copy{order:-1}.ijj .button.secondary{margin-left:0}}
-`;
+const EDITIONS = [
+  { key: "tokyo", Component: IrieJerkJugglingTokyo },
+  { key: "copenhagen", Component: IrieJerkJugglingCopenhagen },
+  { key: "seoul", Component: IrieJerkJugglingSeoul },
+] as const;
+
+const KEYS = EDITIONS.map((e) => e.key);
+const STORAGE_KEY = "ijj-edition";
+
+// Advances the per-browser rotation and returns the edition to show. Must stay
+// self-contained: it is also serialized into the inline script below.
+function pickNextEdition(keys: readonly string[], storageKey: string): string {
+  let next: number;
+  try {
+    const last = keys.indexOf(window.localStorage.getItem(storageKey) || "");
+    next = last < 0 ? 0 : (last + 1) % keys.length;
+    window.localStorage.setItem(storageKey, keys[next]);
+  } catch {
+    // Storage blocked (private mode, etc.): at least vary it between loads.
+    next = Math.floor(Math.random() * keys.length);
+  }
+  return keys[next];
+}
+
+const INLINE_SCRIPT = `(function(){var el=document.currentScript&&document.currentScript.parentElement;if(el)el.setAttribute("data-show",(${pickNextEdition.toString()})(${JSON.stringify(KEYS)},${JSON.stringify(STORAGE_KEY)}));})();`;
+
+// Hide every edition except the chosen one; with no choice yet, show the first.
+const ROTATE_CSS =
+  KEYS.map((k) => `.ijj-rotate[data-show="${k}"]>[data-edition]:not([data-edition="${k}"])`).join(",") +
+  `,.ijj-rotate:not([data-show])>[data-edition]:not([data-edition="${KEYS[0]}"]){display:none}`;
 
 export function IrieJerkJugglingPage() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (el && !el.hasAttribute("data-show")) {
+      el.setAttribute("data-show", pickNextEdition(KEYS, STORAGE_KEY));
+    }
+  }, []);
+
   return (
-    <div className="ijj">
-      <style>{CSS}</style>
-
-      <section className="hero" aria-labelledby="title">
-        <div className="wrap deck">
-          <div>
-            <p className="label">Prestige Promotion presents</p>
-            <h1 id="title">
-              Irie Jerk <span>&amp; Juggling</span>
-            </h1>
-            <p className="intro">
-              A Thursday evening dance party built around Jamaican food and the dancehall tunes you
-              already know by heart.
-            </p>
-            <p className="schedule">
-              <span>Thursdays · 5–9 PM</span>
-              <strong>Free admission</strong>
-            </p>
-            <address>
-              <strong>Irie Jerk Bar and Grill</strong>
-              <br />
-              1413 W 127th St, Calumet Park, IL 60827
-            </address>
-            <a className="button" href={MAPS_URL} target="_blank" rel="noreferrer">
-              Get directions
-            </a>{" "}
-            <a className="button secondary" href="#singalong">
-              Get into the singalong
-            </a>
-          </div>
-          <figure className="poster">
-            <img
-              width={1122}
-              height={1402}
-              src={tokyoFlyerImg}
-              alt="Irie Jerk & Juggling flyer with a chrome tonearm and translucent record under ice-blue light."
-            />
-          </figure>
+    <div className="ijj-rotate" ref={ref} suppressHydrationWarning>
+      <style>{ROTATE_CSS}</style>
+      <script dangerouslySetInnerHTML={{ __html: INLINE_SCRIPT }} />
+      {EDITIONS.map(({ key, Component }) => (
+        <div key={key} data-edition={key}>
+          <Component />
         </div>
-      </section>
-
-      <section className="chorus" id="singalong" aria-labelledby="chorus-title">
-        <div className="wrap split">
-          <figure>
-            <img
-              loading="lazy"
-              width={1448}
-              height={1086}
-              src={chorusImg}
-              alt="At a chrome DJ booth, a hand pulls down the fader while two friends and the crowd sing along beyond the turntable."
-            />
-          </figure>
-          <div className="split-copy">
-            <h2 id="chorus-title">
-              The DJ cuts it. <span>You finish it.</span>
-            </h2>
-            <p className="hook">Dancehall you know by heart.</p>
-            <p>
-              You hear the first bars and turn to your friends. The DJ drops the volume right on the
-              hook. For a few bars, the whole room is louder than the speakers.
-            </p>
-            <p>
-              <strong>Free entry · Thursdays, 5–9 PM</strong>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="takeout" id="takeout" aria-labelledby="takeout-title">
-        <div className="wrap split">
-          <figure>
-            <img
-              loading="lazy"
-              width={1448}
-              height={1086}
-              src={takeoutImg}
-              alt="Two guests leave a dance party with clear-lidded takeout boxes. Jerk chicken and sides are visible in the foreground."
-            />
-          </figure>
-          <div className="split-copy">
-            <h2 id="takeout-title">
-              Dance now. <span>Take the jerk home.</span>
-            </h2>
-            <p className="hook">$15 jerk chicken takeout plate</p>
-            <p>Jerk leg quarter · Rice and peas · Cabbage</p>
-            <p>Order when you arrive. Pick it up on your way out.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="tracks" aria-label="What to expect">
-        <div className="wrap">
-          <div>
-            <h2>Catch a dance after work.</h2>
-            <p>
-              Meet your people on 127th Street and get on the floor when your tune comes on. The set
-              is heavy on dancehall, with familiar hooks you can jump into even if you only know the
-              chorus.
-            </p>
-          </div>
-          <div>
-            <h2>Jamaica from the kitchen to the dance floor.</h2>
-            <p>
-              Start with a plate from Irie Jerk’s state-of-the-art Jamaican kitchen. Then get up when
-              your tune comes on. The cooking, the DJ’s juggling, and the crowd singing back bring
-              Jamaican culture to life right here on 127th Street.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="wrap clip" aria-labelledby="clip-title">
-        <h2 id="clip-title">See the vibe.</h2>
-        <figure>
-          <video
-            controls
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            poster={flyerImg}
-            aria-label="Animated Irie Jerk and Juggling flyer"
-          >
-            <source src={clipVideo} type="video/mp4" />
-          </video>
-        </figure>
-      </section>
-
-      <section className="wrap programme" aria-labelledby="events">
-        <h2 id="events">Holiday nights at Irie Jerk</h2>
-        <div className="editions">
-          <article id="christmas">
-            <p className="label">
-              <time dateTime="2026-12-24">Thursday, December 24, 2026</time> · $20
-            </p>
-            <h3>Christmas Eve Party</h3>
-            <p>A holiday edition at Irie Jerk Bar and Grill.</p>
-          </article>
-          <article id="nye">
-            <p className="label">
-              <time dateTime="2026-12-31">Thursday, December 31, 2026</time> · $40
-            </p>
-            <h3>GQ Meets VOGUE Winter Ball</h3>
-            <p>
-              Formalwear, red-carpet photography, and a Best Dressed runway. Ring in 2027 at Irie
-              Jerk.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <div className="presented">
-        <div className="wrap">
-          Presented by Prestige Promotion · <a href="/events">All events at Irie Jerk</a>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }
