@@ -4,7 +4,7 @@
 -- item names/case sizes are drawn from real Jamaican recipe ingredient
 -- lists (see chat sources) rather than an existing document. case_cost and
 -- qty_used_per_plate stay at 0 -- units_per_case is a reasonable starting
--- case size for Jerky Jerk to adjust.
+-- case size for Irie Jerk to adjust.
 
 delete from plate_cost_ingredients where dish in ('curry_chicken', 'escovitch_fish', 'mannish_water');
 

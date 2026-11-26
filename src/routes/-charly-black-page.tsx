@@ -2,6 +2,7 @@
 // site is currently this one event page, rendered at both "/" and "/charly-black" (no
 // runtime redirect, since the static-exported build has no server to redirect at request
 // time). The "-" prefix excludes this file from route generation (TanStack Router convention).
+import { ArchivedEventBanner } from "@/components/site/ArchivedEventBanner";
 import { useEffect, useState } from "react";
 import {
   CalendarDays,
@@ -159,7 +160,7 @@ export function charlyBlackHead() {
       },
       { name: "twitter:image", content: imageUrl },
     ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/charly-black` }],
   };
 }
 
@@ -430,6 +431,8 @@ export function CharlyBlackPage() {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
       />
+
+      <ArchivedEventBanner date="on Friday, August 28, 2026" />
 
       {/* Hero */}
       <section className="relative overflow-hidden">

@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SOCIAL_LINKS } from "@/lib/social";
 import { supabase } from "@/lib/supabase";
-import { JerkyJerkLineupGrid } from "@/components/site/JerkyJerkLineupGrid";
+import { IrieJerkLineupGrid } from "@/components/site/IrieJerkLineupGrid";
 
 const SITE_URL = "https://trcevent.com";
 const EVENT_SLUG = "dinner-in-jamaica";
@@ -186,7 +186,7 @@ export function DinnerInJamaicaPage() {
             The Week, Track by Track
           </h2>
           <div className="mt-8">
-            <JerkyJerkLineupGrid />
+            <IrieJerkLineupGrid />
           </div>
         </section>
 

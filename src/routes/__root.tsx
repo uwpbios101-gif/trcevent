@@ -102,21 +102,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "twitter:title",
         content: "TRC Events — The Right Connection. The Reggae Connection.",
       },
-      { name: "description", content: "Chicago Reggae" },
-      { property: "og:description", content: "Chicago Reggae" },
-      { name: "twitter:description", content: "Chicago Reggae" },
       {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/45644b61-e63a-49f7-9898-d988463ee7d5",
+        name: "twitter:description",
+        content: "Chicago's home for reggae DJs, promoters, venues, and the community.",
       },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/45644b61-e63a-49f7-9898-d988463ee7d5",
-      },
+      // Self-hosted default share image (public/og-image.png). Pages with their own
+      // flyer override og:image/twitter:image in their head().
+      { property: "og:image", content: "https://trcevent.com/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "TRC Events — The Right Connection. The Reggae Connection." },
+      { name: "twitter:image", content: "https://trcevent.com/og-image.png" },
     ],
     links: [
+      { rel: "icon", href: "/favicon.ico", sizes: "48x48" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
       {
         rel: "stylesheet",
         href: appCss,

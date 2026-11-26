@@ -1,39 +1,71 @@
-// Shared by src/routes/jerky-jerk.$slug.tsx. The "-" prefix excludes this
+// Shared by src/routes/irie-jerk.$slug.tsx. The "-" prefix excludes this
 // file from route generation (TanStack Router convention) — see
 // src/routes/README.md.
 //
-// A single generic stub detail page for every row in jerky_jerk_weekly_lineup
-// that doesn't already have its own dedicated page (see jerkyJerkDetailHref in
-// src/lib/jerkyJerkLineup.ts for the one exception, Dancehall101, which
+// A single generic stub detail page for every row in irie_jerk_weekly_lineup
+// that doesn't already have its own dedicated page (see irieJerkDetailHref in
+// src/lib/irieJerkLineup.ts for the one exception, Dancehall101, which
 // points at /dancehall-101 instead of here).
 import { useEffect, useState } from "react";
 import { CalendarDays, Clock, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { fetchJerkyJerkActivityBySlug, type JerkyJerkLineupRow } from "@/lib/jerkyJerkLineup";
+import { fetchIrieJerkActivityBySlug, type IrieJerkLineupRow } from "@/lib/irieJerkLineup";
 
 const SITE_URL = "https://trcevent.com";
 
-export function jerkyJerkActivityHead() {
+// Static copy of each night's name and blurb from irie_jerk_weekly_lineup, so the
+// prerendered HTML gets a real, page-specific <title>/description/canonical
+// before the client-side Supabase fetch runs (search engines and link previews
+// only see the prerendered head). Keep in sync when a row is added or renamed.
+const ACTIVITY_SEO: Record<string, { name: string; day: string; blurb: string }> = {
+  "sunday-sessions": { name: "Sunday Sessions", day: "Sundays", blurb: "Family dinner and open mic." },
+  "sing-ova-sundays": { name: "Sing Ova Sundays", day: "Sundays", blurb: "Reggae, R&B and crossover residency, the week's Sunday gathering." },
+  "soul-sundays": { name: "Soul Sundays", day: "Sundays", blurb: "A once-a-month Sunday upgrade with a live soul vocalist and band." },
+  "nu2u-radio-sessions": { name: "NU2U Radio Sessions", day: "Mondays", blurb: "A daytime world-music, DJ-curated listening lounge." },
+  "nu2u-radio-live": { name: "NU2U Radio Live", day: "Mondays", blurb: "A DJ-led world-music night." },
+  "ackee-acid-jazz": { name: "Ackee & Acid Jazz", day: "Tuesdays", blurb: "Coffeehouse and acid jazz in a Caribbean-inflected daytime lounge." },
+  "ackee-acid-jazz-after-dark": { name: "Ackee & Acid Jazz: After Dark", day: "Tuesdays", blurb: "The acid-jazz lounge continues after dark." },
+  "just-laugh-wednesdays": { name: "Just Laugh Wednesdays", day: "Wednesdays", blurb: "Stand-up and open mic comedy." },
+  "laugh-after-dark": { name: "Laugh After Dark", day: "Wednesdays", blurb: "Comedy's late set." },
+  "dancehall101-hospitality": { name: "Dancehall101 Hospitality", day: "Fridays", blurb: "Food service all day, building into Friday's flagship night." },
+  "swiftie-saturdays": { name: "Swiftie Saturdays", day: "Saturdays", blurb: "An Eras-themed, family-friendly daytime party." },
+  "swiftie-saturdays-after-dark": { name: "Swiftie Saturdays: After Dark", day: "Saturdays", blurb: "The Eras-themed night continues after dark." },
+};
+
+export function irieJerkActivityHead({ params }: { params: { slug: string } }) {
+  const seo = ACTIVITY_SEO[params.slug];
+  const url = `${SITE_URL}/irie-jerk/${params.slug}`;
+  const title = seo
+    ? `${seo.name} | ${seo.day} at Irie Jerk | TRC Events`
+    : "This Week at Irie Jerk | TRC Events";
+  const description = seo
+    ? `${seo.name} at Irie Jerk Bar and Grill, Calumet Park: ${seo.blurb}`
+    : "Irie Jerk's weekly lineup — a different vibe every day and night.";
   return {
     meta: [
-      { title: "This Week at Irie Jerk | TRC Events" },
-      {
-        name: "description",
-        content:
-          "Irie Jerk's weekly lineup — a different vibe every day and night, 100% alcohol-free.",
-      },
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:url", content: url },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
     ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/dinner-in-jamaica` }],
+    links: [{ rel: "canonical", href: url }],
   };
 }
 
-export function JerkyJerkActivityPage({ slug }: { slug: string }) {
-  const [activity, setActivity] = useState<JerkyJerkLineupRow | null | undefined>(undefined);
+function activityTitleFromSlug(slug: string) {
+  return ACTIVITY_SEO[slug]?.name ?? "This Week at Irie Jerk";
+}
+
+export function IrieJerkActivityPage({ slug }: { slug: string }) {
+  const [activity, setActivity] = useState<IrieJerkLineupRow | null | undefined>(undefined);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    fetchJerkyJerkActivityBySlug(slug)
+    fetchIrieJerkActivityBySlug(slug)
       .then((row) => {
         if (!cancelled) setActivity(row);
       })
@@ -57,7 +89,10 @@ export function JerkyJerkActivityPage({ slug }: { slug: string }) {
   if (activity === undefined) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-24 text-center sm:px-6">
-        <p className="text-muted-foreground">Loading…</p>
+        <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+          {activityTitleFromSlug(slug)}
+        </h1>
+        <p className="mt-4 text-muted-foreground">Loading…</p>
       </div>
     );
   }

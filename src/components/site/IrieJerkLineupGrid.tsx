@@ -1,20 +1,20 @@
-// Shared by /events and /dinner-in-jamaica -- the day-by-day grid of Jerky
-// Jerk's weekly lineup, fetched from jerky_jerk_weekly_lineup (see
-// src/lib/jerkyJerkLineup.ts). Extracted here so both pages render the same
+// Shared by /events and /dinner-in-jamaica -- the day-by-day grid of Irie
+// Jerk's weekly lineup, fetched from irie_jerk_weekly_lineup (see
+// src/lib/irieJerkLineup.ts). Extracted here so both pages render the same
 // data the same way rather than maintaining two copies.
 import { useEffect, useState } from "react";
 import {
-  fetchJerkyJerkLineup,
-  jerkyJerkDetailHref,
-  type JerkyJerkLineupRow,
-} from "@/lib/jerkyJerkLineup";
+  fetchIrieJerkLineup,
+  irieJerkDetailHref,
+  type IrieJerkLineupRow,
+} from "@/lib/irieJerkLineup";
 
 const DAY_ORDER = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-function ActivityCard({ activity }: { activity: JerkyJerkLineupRow }) {
+function ActivityCard({ activity }: { activity: IrieJerkLineupRow }) {
   return (
     <a
-      href={jerkyJerkDetailHref(activity)}
+      href={irieJerkDetailHref(activity)}
       className={
         activity.is_flagship
           ? "block rounded-xl border-2 border-gold bg-gold/10 p-3 shadow-lg shadow-gold/20 transition-colors hover:border-gold"
@@ -49,12 +49,12 @@ function ActivityCard({ activity }: { activity: JerkyJerkLineupRow }) {
   );
 }
 
-export function JerkyJerkLineupGrid() {
-  const [rows, setRows] = useState<JerkyJerkLineupRow[] | null>(null);
+export function IrieJerkLineupGrid() {
+  const [rows, setRows] = useState<IrieJerkLineupRow[] | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetchJerkyJerkLineup()
+    fetchIrieJerkLineup()
       .then(setRows)
       .catch((err) => {
         console.error("Failed to load the Irie Jerk weekly lineup:", err);
@@ -92,7 +92,7 @@ export function JerkyJerkLineupGrid() {
             <p key={special.slug} className="text-center text-[0.65rem] text-muted-foreground">
               Once a month:{" "}
               <a
-                href={jerkyJerkDetailHref(special)}
+                href={irieJerkDetailHref(special)}
                 className="font-medium text-gold hover:underline"
               >
                 {special.name}

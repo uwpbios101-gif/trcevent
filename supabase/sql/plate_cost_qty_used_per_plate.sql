@@ -7,7 +7,7 @@
 -- for sources); items with no searchable standard (pickle vegetables,
 -- soup aromatics, spice pinches) use reasoned proportional estimates
 -- flagged as such in their notes. All of these are a starting point for
--- Jerky Jerk to correct against their actual recipe -- that's the point
+-- Irie Jerk to correct against their actual recipe -- that's the point
 -- of qty_used_per_plate being an editable, not fixed, field.
 --
 -- "plate portion" rows (blended/allocated items like smoking fuel or

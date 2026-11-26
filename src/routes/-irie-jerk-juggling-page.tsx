@@ -23,6 +23,8 @@ import takeoutImg from "@/assets/irie-jerk-juggling-takeout.png";
 
 const SITE_URL = "https://trcevent.com";
 const PAGE_URL = `${SITE_URL}/irie-jerk-and-juggling`;
+// 1200x630 share card built from the flyer (public/og-irie-jerk-and-juggling.png).
+const OG_IMAGE = `${SITE_URL}/og-irie-jerk-and-juggling.png`;
 const DESCRIPTION =
   "Irie Jerk & Juggling is a Thursday evening dancehall party in Calumet Park. Jamaican cooking, familiar hooks, and free admission from 5 to 9 PM.";
 const MAPS_URL =
@@ -37,8 +39,14 @@ export function irieJerkJugglingHead() {
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:url", content: PAGE_URL },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Irie Jerk & Juggling flyer: free Thursdays, 5–9 PM at Irie Jerk Bar and Grill, Calumet Park." },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Irie Jerk & Juggling | Free Thursdays, 5–9 PM" },
+      { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: PAGE_URL }],
   };

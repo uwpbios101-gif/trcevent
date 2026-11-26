@@ -2,7 +2,7 @@
 -- its 6 actual brands. No per-brand cost/quantity data exists, and
 -- liquor doesn't come in 24-bottle cases like beer -- so this makes NO
 -- assumption about case size or per-bottle cost. Every numeric field
--- stays at 0 for Jerky Jerk/the bar lead to fill in with real numbers;
+-- stays at 0 for Irie Jerk/the bar lead to fill in with real numbers;
 -- the previous $5,000 placeholder is gone, so the beverage total will
 -- read lower until these are filled in -- that's expected, not a bug.
 delete from plate_cost_beverage_items where item = 'Liquor (bottle-service stock)';

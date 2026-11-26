@@ -1,7 +1,7 @@
 -- Expand jerk_chicken's ingredient rows to match the fuller breakdown from
 -- Stephen's existing Plate_Cost.xlsx template (case-size defaults carried
 -- over as a starting point; case_cost/qty_used_per_plate still left at 0
--- for Jerky Jerk to fill in with real numbers).
+-- for Irie Jerk to fill in with real numbers).
 delete from plate_cost_ingredients where dish = 'jerk_chicken';
 
 insert into plate_cost_ingredients

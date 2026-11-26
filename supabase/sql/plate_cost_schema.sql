@@ -1,5 +1,5 @@
--- Jerky Jerk plate-cost worksheet (Charly Black "Good Times" catering).
--- Unlisted internal tool shared with an outside vendor (Jerky Jerk) -- no
+-- Irie Jerk plate-cost worksheet (Charly Black "Good Times" catering).
+-- Unlisted internal tool shared with an outside vendor (Irie Jerk) -- no
 -- login, so RLS intentionally allows anon full CRUD on just these two
 -- tables (same "obscure route + scoped RLS" model as event_notify_signups,
 -- just extended to read/update/delete for this one low-sensitivity table).

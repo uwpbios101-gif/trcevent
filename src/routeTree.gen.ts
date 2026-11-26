@@ -19,11 +19,11 @@ import { Route as RunOfShowRouteImport } from './routes/run-of-show'
 import { Route as PlateCostRouteImport } from './routes/plate-cost'
 import { Route as PastEventsRouteImport } from './routes/past-events'
 import { Route as MinglesTuesdaysBrainstormRouteImport } from './routes/mingles-tuesdays-brainstorm'
-import { Route as KaraokeThursdaysBrainstormRouteImport } from './routes/karaoke-thursdays-brainstorm'
 import { Route as JustLaughWednesdayBrainstormRouteImport } from './routes/just-laugh-wednesday-brainstorm'
 import { Route as JayReblRouteImport } from './routes/jay-rebl'
 import { Route as JamaicadayRouteImport } from './routes/jamaicaday'
 import { Route as Jamaica64RouteImport } from './routes/jamaica64'
+import { Route as IrieJerkAndJugglingRouteImport } from './routes/irie-jerk-and-juggling'
 import { Route as GetStartedRouteImport } from './routes/get-started'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as DinnerInJamaicaRouteImport } from './routes/dinner-in-jamaica'
@@ -44,6 +44,7 @@ import { Route as JayReblReggaeDayProposalRouteImport } from './routes/jay-rebl_
 import { Route as JayReblReggaeDayProductionRouteImport } from './routes/jay-rebl_.reggae-day-production'
 import { Route as JayReblNapIdeaSubmissionRouteImport } from './routes/jay-rebl_.nap-idea-submission'
 import { Route as JayReblDollyPartonTributeRouteImport } from './routes/jay-rebl_.dolly-parton-tribute'
+import { Route as IrieJerkSlugRouteImport } from './routes/irie-jerk.$slug'
 import { Route as Dancehall101TicketRouteImport } from './routes/dancehall-101_.ticket'
 import { Route as Dancehall101LeaderboardRouteImport } from './routes/dancehall-101_.leaderboard'
 import { Route as Dancehall101CheckinRouteImport } from './routes/dancehall-101_.checkin'
@@ -102,12 +103,6 @@ const MinglesTuesdaysBrainstormRoute =
     path: '/mingles-tuesdays-brainstorm',
     getParentRoute: () => rootRouteImport,
   } as any)
-const KaraokeThursdaysBrainstormRoute =
-  KaraokeThursdaysBrainstormRouteImport.update({
-    id: '/karaoke-thursdays-brainstorm',
-    path: '/karaoke-thursdays-brainstorm',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const JustLaughWednesdayBrainstormRoute =
   JustLaughWednesdayBrainstormRouteImport.update({
     id: '/just-laugh-wednesday-brainstorm',
@@ -127,6 +122,11 @@ const JamaicadayRoute = JamaicadayRouteImport.update({
 const Jamaica64Route = Jamaica64RouteImport.update({
   id: '/jamaica64',
   path: '/jamaica64',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IrieJerkAndJugglingRoute = IrieJerkAndJugglingRouteImport.update({
+  id: '/irie-jerk-and-juggling',
+  path: '/irie-jerk-and-juggling',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GetStartedRoute = GetStartedRouteImport.update({
@@ -233,6 +233,11 @@ const JayReblDollyPartonTributeRoute =
     path: '/jay-rebl/dolly-parton-tribute',
     getParentRoute: () => rootRouteImport,
   } as any)
+const IrieJerkSlugRoute = IrieJerkSlugRouteImport.update({
+  id: '/irie-jerk/$slug',
+  path: '/irie-jerk/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Dancehall101TicketRoute = Dancehall101TicketRouteImport.update({
   id: '/dancehall-101_/ticket',
   path: '/dancehall-101/ticket',
@@ -276,11 +281,11 @@ export interface FileRoutesByFullPath {
   '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
   '/events': typeof EventsRoute
   '/get-started': typeof GetStartedRoute
+  '/irie-jerk-and-juggling': typeof IrieJerkAndJugglingRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
   '/jay-rebl': typeof JayReblRoute
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
-  '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
   '/past-events': typeof PastEventsRoute
   '/plate-cost': typeof PlateCostRoute
@@ -297,6 +302,7 @@ export interface FileRoutesByFullPath {
   '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101/ticket': typeof Dancehall101TicketRoute
+  '/irie-jerk/$slug': typeof IrieJerkSlugRoute
   '/jay-rebl/dolly-parton-tribute': typeof JayReblDollyPartonTributeRoute
   '/jay-rebl/nap-idea-submission': typeof JayReblNapIdeaSubmissionRoute
   '/jay-rebl/reggae-day-production': typeof JayReblReggaeDayProductionRoute
@@ -319,11 +325,11 @@ export interface FileRoutesByTo {
   '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
   '/events': typeof EventsRoute
   '/get-started': typeof GetStartedRoute
+  '/irie-jerk-and-juggling': typeof IrieJerkAndJugglingRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
   '/jay-rebl': typeof JayReblRoute
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
-  '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
   '/past-events': typeof PastEventsRoute
   '/plate-cost': typeof PlateCostRoute
@@ -340,6 +346,7 @@ export interface FileRoutesByTo {
   '/dancehall-101/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101/ticket': typeof Dancehall101TicketRoute
+  '/irie-jerk/$slug': typeof IrieJerkSlugRoute
   '/jay-rebl/dolly-parton-tribute': typeof JayReblDollyPartonTributeRoute
   '/jay-rebl/nap-idea-submission': typeof JayReblNapIdeaSubmissionRoute
   '/jay-rebl/reggae-day-production': typeof JayReblReggaeDayProductionRoute
@@ -363,11 +370,11 @@ export interface FileRoutesById {
   '/dinner-in-jamaica': typeof DinnerInJamaicaRoute
   '/events': typeof EventsRoute
   '/get-started': typeof GetStartedRoute
+  '/irie-jerk-and-juggling': typeof IrieJerkAndJugglingRoute
   '/jamaica64': typeof Jamaica64Route
   '/jamaicaday': typeof JamaicadayRoute
   '/jay-rebl': typeof JayReblRoute
   '/just-laugh-wednesday-brainstorm': typeof JustLaughWednesdayBrainstormRoute
-  '/karaoke-thursdays-brainstorm': typeof KaraokeThursdaysBrainstormRoute
   '/mingles-tuesdays-brainstorm': typeof MinglesTuesdaysBrainstormRoute
   '/past-events': typeof PastEventsRoute
   '/plate-cost': typeof PlateCostRoute
@@ -384,6 +391,7 @@ export interface FileRoutesById {
   '/dancehall-101_/checkin': typeof Dancehall101CheckinRoute
   '/dancehall-101_/leaderboard': typeof Dancehall101LeaderboardRoute
   '/dancehall-101_/ticket': typeof Dancehall101TicketRoute
+  '/irie-jerk/$slug': typeof IrieJerkSlugRoute
   '/jay-rebl_/dolly-parton-tribute': typeof JayReblDollyPartonTributeRoute
   '/jay-rebl_/nap-idea-submission': typeof JayReblNapIdeaSubmissionRoute
   '/jay-rebl_/reggae-day-production': typeof JayReblReggaeDayProductionRoute
@@ -408,11 +416,11 @@ export interface FileRouteTypes {
     | '/dinner-in-jamaica'
     | '/events'
     | '/get-started'
+    | '/irie-jerk-and-juggling'
     | '/jamaica64'
     | '/jamaicaday'
     | '/jay-rebl'
     | '/just-laugh-wednesday-brainstorm'
-    | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
     | '/past-events'
     | '/plate-cost'
@@ -429,6 +437,7 @@ export interface FileRouteTypes {
     | '/dancehall-101/checkin'
     | '/dancehall-101/leaderboard'
     | '/dancehall-101/ticket'
+    | '/irie-jerk/$slug'
     | '/jay-rebl/dolly-parton-tribute'
     | '/jay-rebl/nap-idea-submission'
     | '/jay-rebl/reggae-day-production'
@@ -451,11 +460,11 @@ export interface FileRouteTypes {
     | '/dinner-in-jamaica'
     | '/events'
     | '/get-started'
+    | '/irie-jerk-and-juggling'
     | '/jamaica64'
     | '/jamaicaday'
     | '/jay-rebl'
     | '/just-laugh-wednesday-brainstorm'
-    | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
     | '/past-events'
     | '/plate-cost'
@@ -472,6 +481,7 @@ export interface FileRouteTypes {
     | '/dancehall-101/checkin'
     | '/dancehall-101/leaderboard'
     | '/dancehall-101/ticket'
+    | '/irie-jerk/$slug'
     | '/jay-rebl/dolly-parton-tribute'
     | '/jay-rebl/nap-idea-submission'
     | '/jay-rebl/reggae-day-production'
@@ -494,11 +504,11 @@ export interface FileRouteTypes {
     | '/dinner-in-jamaica'
     | '/events'
     | '/get-started'
+    | '/irie-jerk-and-juggling'
     | '/jamaica64'
     | '/jamaicaday'
     | '/jay-rebl'
     | '/just-laugh-wednesday-brainstorm'
-    | '/karaoke-thursdays-brainstorm'
     | '/mingles-tuesdays-brainstorm'
     | '/past-events'
     | '/plate-cost'
@@ -515,6 +525,7 @@ export interface FileRouteTypes {
     | '/dancehall-101_/checkin'
     | '/dancehall-101_/leaderboard'
     | '/dancehall-101_/ticket'
+    | '/irie-jerk/$slug'
     | '/jay-rebl_/dolly-parton-tribute'
     | '/jay-rebl_/nap-idea-submission'
     | '/jay-rebl_/reggae-day-production'
@@ -538,11 +549,11 @@ export interface RootRouteChildren {
   DinnerInJamaicaRoute: typeof DinnerInJamaicaRoute
   EventsRoute: typeof EventsRoute
   GetStartedRoute: typeof GetStartedRoute
+  IrieJerkAndJugglingRoute: typeof IrieJerkAndJugglingRoute
   Jamaica64Route: typeof Jamaica64Route
   JamaicadayRoute: typeof JamaicadayRoute
   JayReblRoute: typeof JayReblRoute
   JustLaughWednesdayBrainstormRoute: typeof JustLaughWednesdayBrainstormRoute
-  KaraokeThursdaysBrainstormRoute: typeof KaraokeThursdaysBrainstormRoute
   MinglesTuesdaysBrainstormRoute: typeof MinglesTuesdaysBrainstormRoute
   PastEventsRoute: typeof PastEventsRoute
   PlateCostRoute: typeof PlateCostRoute
@@ -559,6 +570,7 @@ export interface RootRouteChildren {
   Dancehall101CheckinRoute: typeof Dancehall101CheckinRoute
   Dancehall101LeaderboardRoute: typeof Dancehall101LeaderboardRoute
   Dancehall101TicketRoute: typeof Dancehall101TicketRoute
+  IrieJerkSlugRoute: typeof IrieJerkSlugRoute
   JayReblDollyPartonTributeRoute: typeof JayReblDollyPartonTributeRoute
   JayReblNapIdeaSubmissionRoute: typeof JayReblNapIdeaSubmissionRoute
   JayReblReggaeDayProductionRoute: typeof JayReblReggaeDayProductionRoute
@@ -642,13 +654,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MinglesTuesdaysBrainstormRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/karaoke-thursdays-brainstorm': {
-      id: '/karaoke-thursdays-brainstorm'
-      path: '/karaoke-thursdays-brainstorm'
-      fullPath: '/karaoke-thursdays-brainstorm'
-      preLoaderRoute: typeof KaraokeThursdaysBrainstormRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/just-laugh-wednesday-brainstorm': {
       id: '/just-laugh-wednesday-brainstorm'
       path: '/just-laugh-wednesday-brainstorm'
@@ -675,6 +680,13 @@ declare module '@tanstack/react-router' {
       path: '/jamaica64'
       fullPath: '/jamaica64'
       preLoaderRoute: typeof Jamaica64RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/irie-jerk-and-juggling': {
+      id: '/irie-jerk-and-juggling'
+      path: '/irie-jerk-and-juggling'
+      fullPath: '/irie-jerk-and-juggling'
+      preLoaderRoute: typeof IrieJerkAndJugglingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/get-started': {
@@ -817,6 +829,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JayReblDollyPartonTributeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/irie-jerk/$slug': {
+      id: '/irie-jerk/$slug'
+      path: '/irie-jerk/$slug'
+      fullPath: '/irie-jerk/$slug'
+      preLoaderRoute: typeof IrieJerkSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dancehall-101_/ticket': {
       id: '/dancehall-101_/ticket'
       path: '/dancehall-101/ticket'
@@ -874,11 +893,11 @@ const rootRouteChildren: RootRouteChildren = {
   DinnerInJamaicaRoute: DinnerInJamaicaRoute,
   EventsRoute: EventsRoute,
   GetStartedRoute: GetStartedRoute,
+  IrieJerkAndJugglingRoute: IrieJerkAndJugglingRoute,
   Jamaica64Route: Jamaica64Route,
   JamaicadayRoute: JamaicadayRoute,
   JayReblRoute: JayReblRoute,
   JustLaughWednesdayBrainstormRoute: JustLaughWednesdayBrainstormRoute,
-  KaraokeThursdaysBrainstormRoute: KaraokeThursdaysBrainstormRoute,
   MinglesTuesdaysBrainstormRoute: MinglesTuesdaysBrainstormRoute,
   PastEventsRoute: PastEventsRoute,
   PlateCostRoute: PlateCostRoute,
@@ -895,6 +914,7 @@ const rootRouteChildren: RootRouteChildren = {
   Dancehall101CheckinRoute: Dancehall101CheckinRoute,
   Dancehall101LeaderboardRoute: Dancehall101LeaderboardRoute,
   Dancehall101TicketRoute: Dancehall101TicketRoute,
+  IrieJerkSlugRoute: IrieJerkSlugRoute,
   JayReblDollyPartonTributeRoute: JayReblDollyPartonTributeRoute,
   JayReblNapIdeaSubmissionRoute: JayReblNapIdeaSubmissionRoute,
   JayReblReggaeDayProductionRoute: JayReblReggaeDayProductionRoute,
