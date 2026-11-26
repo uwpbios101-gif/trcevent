@@ -1,4 +1,4 @@
--- Jerky Jerk event-brainstorm tool (Karaoke Thursdays / Mingles Tuesdays /
+-- Irie Jerk event-brainstorm tool (Karaoke Thursdays / Mingles Tuesdays /
 -- Just Laugh Wednesday). Unlisted internal tool for Marlon -- no login, so
 -- RLS intentionally allows anon select/insert/update on this one table
 -- (same "obscure route + scoped RLS" model as plate_cost_ingredients; no

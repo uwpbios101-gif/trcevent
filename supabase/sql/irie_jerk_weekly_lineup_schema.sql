@@ -1,4 +1,4 @@
--- Jerky Jerk's weekly day+night activity lineup (the "14-Activity Model"),
+-- Irie Jerk's weekly day+night activity lineup (the "14-Activity Model"),
 -- sourced from Jerky_Jerk_NonAlcoholic_Food.xlsx's "Weekly Master (14
 -- Activities)" tab, cross-referenced against that workbook's Day Party
 -- Detail / Night Party Detail / Signature Menu by Event tabs (the Weekly
@@ -7,24 +7,24 @@
 --
 -- Read-only from the site: no anon write policy, since this is marketing
 -- copy Stephen/Marlon updates directly via SQL, not a vendor-editable tool
--- like plate_cost_ingredients. See src/lib/jerkyJerkLineup.ts for the reader.
+-- like plate_cost_ingredients. See src/lib/irieJerkLineup.ts for the reader.
 --
 -- detail_path is null for most rows -- the app defaults those to
--- /jerky-jerk/<slug> (a generic stub detail page). It's set explicitly for
+-- /irie-jerk/<slug> (a generic stub detail page). It's set explicitly for
 -- two exceptions that reuse an existing page instead:
 --   - Dancehall101 -> /dancehall-101 (formerly Uptown Lounge's Wednesday-night
---     event, rerouted to this Friday Jerky Jerk flagship night per Stephen's
+--     event, rerouted to this Friday Irie Jerk flagship night per Stephen's
 --     call 2026-08-14)
 --   - sing-ova-sundays -> /sing-ova-sundays/chicago (confirmed by Stephen
 --     2026-08-14 to be the same brand/event, not a coincidental name reuse --
---     see the sos_cities 'chicago' row, whose venue was updated to Jerky
+--     see the sos_cities 'chicago' row, whose venue was updated to Irie
 --     Jerk at the same time). Soul Sundays (the monthly special that swaps
 --     into this same slot) keeps its own generic stub instead, since the
 --     Sing Ova chapter page has no Soul Sundays-specific content.
--- Every other Jerky Jerk activity's ONLY venue is Jerky Jerk itself unless a
+-- Every other Irie Jerk activity's ONLY venue is Irie Jerk itself unless a
 -- row says otherwise (Stephen's explicit rule, 2026-08-14).
 
-create table if not exists jerky_jerk_weekly_lineup (
+create table if not exists irie_jerk_weekly_lineup (
   id uuid primary key default gen_random_uuid(),
   slug text not null unique,
   day_of_week text not null check (day_of_week in ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat')),
@@ -40,20 +40,20 @@ create table if not exists jerky_jerk_weekly_lineup (
   alcohol_free boolean not null default true,
   is_flagship boolean not null default false,
   is_monthly_special boolean not null default false,
-  -- Jerky Jerk venue policy (confirmed by Stephen 2026-08-14): any activity
+  -- Irie Jerk venue policy (confirmed by Stephen 2026-08-14): any activity
   -- starting at 10p is 21+, regardless of alcohol service -- day parties and
   -- the 4p-9p Sunday night slot (Sing Ova Sundays/Soul Sundays) are not.
   is_21_plus boolean not null default false,
-  replaces_slug text references jerky_jerk_weekly_lineup (slug),
+  replaces_slug text references irie_jerk_weekly_lineup (slug),
   detail_path text,
   updated_at timestamptz not null default now()
 );
 
-alter table jerky_jerk_weekly_lineup enable row level security;
+alter table irie_jerk_weekly_lineup enable row level security;
 
-create policy "Allow anon select" on jerky_jerk_weekly_lineup for select to anon using (true);
+create policy "Allow anon select" on irie_jerk_weekly_lineup for select to anon using (true);
 
-insert into jerky_jerk_weekly_lineup
+insert into irie_jerk_weekly_lineup
   (slug, day_of_week, day_index, phase, slot_order, name, time_window, description, signature_plate, signature_drinks, cover_charge, is_flagship, is_monthly_special, is_21_plus, replaces_slug, detail_path)
 values
   ('sunday-sessions', 'Sun', 0, 'day', 1, 'Sunday Sessions', '12:00p–4:00p',

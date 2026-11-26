@@ -10,6 +10,7 @@
 // for where Charly Black and the other now-past one-off events live now.
 // Free admission, no ticket outlets, and the venue is genuinely secret until
 // attendees text in — don't add a real address anywhere on this page.
+import { ArchivedEventBanner } from "@/components/site/ArchivedEventBanner";
 import { useEffect, useState } from "react";
 import {
   CalendarDays,
@@ -123,7 +124,7 @@ export function chicagoVybezHead() {
       },
       { name: "twitter:image", content: imageUrl },
     ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/chicago-vybez` }],
   };
 }
 
@@ -241,6 +242,8 @@ export function ChicagoVybezPage() {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
       />
+
+      <ArchivedEventBanner date="Labor Day Weekend, September 4–7, 2026" />
 
       {/* Hero */}
       <section className="relative overflow-hidden">

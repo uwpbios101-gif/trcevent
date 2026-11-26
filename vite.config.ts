@@ -34,26 +34,26 @@ export default defineConfig({
     // real; the still-tentative cities keep relying on the fallback for now since
     // nobody has a direct link to them yet.
     //
-    // Same reasoning applies to /jerky-jerk/$slug: the links to each stub detail
+    // Same reasoning applies to /irie-jerk/$slug: the links to each stub detail
     // page are rendered by /dinner-in-jamaica's LineupGrid only after a client-side
     // Supabase fetch resolves, so crawlLinks never sees them in the prerendered
-    // HTML either. List every real slug from jerky_jerk_weekly_lineup here (all
+    // HTML either. List every real slug from irie_jerk_weekly_lineup here (all
     // except 'dancehall101', which reuses the existing /dancehall-101 route
-    // instead of this generic stub) -- see src/lib/jerkyJerkLineup.ts.
+    // instead of this generic stub) -- see src/lib/irieJerkLineup.ts.
     pages: [
       { path: "/sing-ova-sundays/chicago" },
-      { path: "/jerky-jerk/sunday-sessions" },
-      { path: "/jerky-jerk/sing-ova-sundays" },
-      { path: "/jerky-jerk/soul-sundays" },
-      { path: "/jerky-jerk/nu2u-radio-sessions" },
-      { path: "/jerky-jerk/nu2u-radio-live" },
-      { path: "/jerky-jerk/ackee-acid-jazz" },
-      { path: "/jerky-jerk/ackee-acid-jazz-after-dark" },
-      { path: "/jerky-jerk/just-laugh-wednesdays" },
-      { path: "/jerky-jerk/laugh-after-dark" },
-      { path: "/jerky-jerk/dancehall101-hospitality" },
-      { path: "/jerky-jerk/swiftie-saturdays" },
-      { path: "/jerky-jerk/swiftie-saturdays-after-dark" },
+      { path: "/irie-jerk/sunday-sessions" },
+      { path: "/irie-jerk/sing-ova-sundays" },
+      { path: "/irie-jerk/soul-sundays" },
+      { path: "/irie-jerk/nu2u-radio-sessions" },
+      { path: "/irie-jerk/nu2u-radio-live" },
+      { path: "/irie-jerk/ackee-acid-jazz" },
+      { path: "/irie-jerk/ackee-acid-jazz-after-dark" },
+      { path: "/irie-jerk/just-laugh-wednesdays" },
+      { path: "/irie-jerk/laugh-after-dark" },
+      { path: "/irie-jerk/dancehall101-hospitality" },
+      { path: "/irie-jerk/swiftie-saturdays" },
+      { path: "/irie-jerk/swiftie-saturdays-after-dark" },
     ],
   },
 });

@@ -1,13 +1,13 @@
 // Shared by src/routes/events.tsx. The "-" prefix excludes this file from
 // route generation (TanStack Router convention) — see src/routes/README.md.
 //
-// A dedicated landing page for the nav's "Events" link: just the full Jerky
-// Jerk weekly lineup grid (see JerkyJerkLineupGrid), without Dinner in
+// A dedicated landing page for the nav's "Events" link: just the full Irie
+// Jerk weekly lineup grid (see IrieJerkLineupGrid), without Dinner in
 // Jamaica's dinner-specific narrative/hero/notify-me signup. That page still
 // carries its own hook and Culture Card story around Sunday's food; this one
 // is the plain "what's on, every day" index.
 import { CalendarDays, UtensilsCrossed } from "lucide-react";
-import { JerkyJerkLineupGrid } from "@/components/site/JerkyJerkLineupGrid";
+import { IrieJerkLineupGrid } from "@/components/site/IrieJerkLineupGrid";
 import ijjFlyer from "@/assets/irie-jerk-juggling-flyer.png";
 
 const SITE_URL = "https://trcevent.com";
@@ -83,7 +83,7 @@ export function EventsPage() {
           </div>
         </a>
 
-        <JerkyJerkLineupGrid />
+        <IrieJerkLineupGrid />
 
         <p className="mt-14 text-center text-sm text-muted-foreground">
           Curious about the story behind Sunday's food?{" "}

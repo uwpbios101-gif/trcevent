@@ -1,4 +1,4 @@
-// Called from the Jerky Jerk event-brainstorm tools (Karaoke Thursdays /
+// Called from the Irie Jerk event-brainstorm tools (Karaoke Thursdays /
 // Mingles Tuesdays / Just Laugh Wednesday) once Marlon is done talking
 // through an idea. Sends the raw transcript to Claude and returns a
 // fleshed-out event concept -- no DB access needed here, the client saves
@@ -16,14 +16,14 @@ const corsHeaders = {
 };
 const jsonHeaders = { ...corsHeaders, "Content-Type": "application/json" };
 
-const JERKY_JERK_CONTEXT = `You are helping Marlon, owner of Jerky Jerk -- a real Caribbean/Jamaican
+const IRIE_JERK_CONTEXT = `You are helping Marlon, owner of Irie Jerk -- a real Caribbean/Jamaican
 restaurant with two Chicago locations (7300 N Western Ave in West Rogers Park, and 2253 W Taylor St
 in Tri-Taylor), known for charcoal-grilled jerk chicken and other dishes made from scratch daily,
-with halal, vegetarian, and vegan options. He is developing new weekly events at Jerky Jerk that are
+with halal, vegetarian, and vegan options. He is developing new weekly events at Irie Jerk that are
 strictly day/evening and do NOT include alcohol.
 
 You will be given a raw, possibly rambling, spoken brainstorm transcript for one specific event.
-Turn it into a polished, concrete event concept designed to build the Jerky Jerk brand and drive a
+Turn it into a polished, concrete event concept designed to build the Irie Jerk brand and drive a
 real recurring crowd and business to the restaurant. Keep everything he actually said -- don't
 invent a different event -- but sharpen it into something executable.
 
@@ -32,7 +32,7 @@ Structure your response with these sections:
 2. **Format & Run of Show** -- how the night/day actually flows, start to finish.
 3. **Community & Hype Mechanics** -- what makes people want to come back weekly and bring friends
    (contests, prizes, social sharing, regulars culture, etc.).
-4. **Why It Drives Business to Jerky Jerk** -- concretely how this turns into food/drink sales and
+4. **Why It Drives Business to Irie Jerk** -- concretely how this turns into food/drink sales and
    repeat foot traffic, not alcohol sales.
 5. **First 3 Steps** -- the most practical next actions to actually launch it.
 
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
     body: JSON.stringify({
       model: "claude-opus-5",
       max_tokens: 4096,
-      system: `${JERKY_JERK_CONTEXT}\n\nThe event you're building a concept for is called "${eventName}".`,
+      system: `${IRIE_JERK_CONTEXT}\n\nThe event you're building a concept for is called "${eventName}".`,
       messages: [{ role: "user", content: transcript }],
     }),
   });
