@@ -51,8 +51,6 @@ export default defineConfig({
       { path: "/jerky-jerk/ackee-acid-jazz-after-dark" },
       { path: "/jerky-jerk/just-laugh-wednesdays" },
       { path: "/jerky-jerk/laugh-after-dark" },
-      { path: "/jerky-jerk/karaoke-thursdays" },
-      { path: "/jerky-jerk/karaoke-after-dark" },
       { path: "/jerky-jerk/dancehall101-hospitality" },
       { path: "/jerky-jerk/swiftie-saturdays" },
       { path: "/jerky-jerk/swiftie-saturdays-after-dark" },
